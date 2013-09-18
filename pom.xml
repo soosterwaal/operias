@@ -1,11 +1,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.operias.app</groupId>
-  <artifactId>operias-g</artifactId>
+  <artifactId>operias</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>operias-g</name>
   <description>Operias is an open source tool to produce diff reports between your code and a given branch on github. It shows the differences in source file and the difference in code coverage in one simple overview.</description>
-  <build>
+  <properties>
+        <jdkVersion>1.7</jdkVersion>
+        <project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+        <arguments/>
+    </properties>
+    <build>
     <plugins>
       <plugin>
           <groupId>org.eluder.coveralls</groupId>
