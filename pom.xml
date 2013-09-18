@@ -5,4 +5,16 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>operias-g</name>
   <description>Operias is an open source tool to produce diff reports between your code and a given branch on github. It shows the differences in source file and the difference in code coverage in one simple overview.</description>
+  <build>
+    <plugins>
+      <plugin>
+          <groupId>org.eluder.coveralls</groupId>
+          <artifactId>coveralls-maven-plugin</artifactId>
+          <version>2.0.0</version>
+          <configuration>
+              <repoToken>lA1yVEJS9tfbUEJWEQoQVOVrpGB5ylKZH</repoToken>
+          </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
