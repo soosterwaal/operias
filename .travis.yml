@@ -1,0 +1,5 @@
+script: mvn test
+
+
+after_success:
+  - mvn cobertura:cobertura -Dcobertura.report.format=xml coveralls:cobertura
