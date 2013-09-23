@@ -8,6 +8,7 @@
   <properties>
    	<junitVersion>4.11</junitVersion>
     <jdkVersion>1.7</jdkVersion>
+    <plugin.mvn.compiler.version>3.1</plugin.mvn.compiler.version>
     <project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
     <arguments/>
   </properties>
@@ -20,6 +21,16 @@
   </dependencies>
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${plugin.mvn.compiler.version}</version>
+        <configuration>
+          <fork>true</fork>
+          <source>${jdkVersion}</source>
+          <target>${jdkVersion}</target>
+        </configuration>
+      </plugin>
       <plugin>
           <groupId>org.eluder.coveralls</groupId>
           <artifactId>coveralls-maven-plugin</artifactId>
