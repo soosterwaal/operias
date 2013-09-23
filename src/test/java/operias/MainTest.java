@@ -7,6 +7,7 @@ import java.security.Permission;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
 public class MainTest {
 	
 	protected static class ExitException extends SecurityException 
@@ -38,7 +39,8 @@ public class MainTest {
             throw new ExitException(status);
         }
     }
-	Main main;
+	
+    Main main;
 	
 	/**
 	 * Set up the test case
