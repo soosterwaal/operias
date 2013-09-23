@@ -6,11 +6,19 @@
   <name>operias-g</name>
   <description>Operias is an open source tool to produce diff reports between your code and a given branch on github. It shows the differences in source file and the difference in code coverage in one simple overview.</description>
   <properties>
-        <jdkVersion>1.7</jdkVersion>
-        <project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
-        <arguments/>
-    </properties>
-    <build>
+   	<junitVersion>4.11</junitVersion>
+    <jdkVersion>1.7</jdkVersion>
+    <project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+    <arguments/>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junitVersion}</version>
+    </dependency>
+  </dependencies>
+  <build>
     <plugins>
       <plugin>
           <groupId>org.eluder.coveralls</groupId>
