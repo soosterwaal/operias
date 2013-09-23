@@ -1,6 +1,6 @@
 language: java
 jdk:
   - oraclejdk7
-script: mvn install -DskipTests=true -B -e
+  
 after_success:
   - mvn cobertura:cobertura -Dcobertura.report.format=xml coveralls:cobertura
