@@ -50,6 +50,7 @@ public class MainTest {
 	public void setUp() {		
 		main = new Main();
         System.setSecurityManager(new NoExitSecurityManager());
+        Configuration.resetConfiguration();
 	}
 	
 	/**

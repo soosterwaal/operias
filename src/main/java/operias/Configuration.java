@@ -90,4 +90,11 @@ public class Configuration {
 		return repositoryDirectory;
 	}
 
+	/**
+	 * Reset the configuration, used for testing mostly
+	 */
+	public static void resetConfiguration() {
+		sourceDirectory = null;
+		repositoryDirectory = null;
+	}
 }

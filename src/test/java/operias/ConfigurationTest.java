@@ -6,8 +6,15 @@ import java.io.File;
 import java.security.InvalidParameterException;
 
 import org.junit.Test;
+import org.junit.Before;
+
 public class ConfigurationTest {
 
+	@Before
+	public void setUp() {
+		Configuration.resetConfiguration();
+	}
+	
 	/**
 	 * Check setting the source directory, first try an invalid directory,
 	 * then a valid directory.
