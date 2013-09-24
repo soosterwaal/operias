@@ -52,31 +52,20 @@ public class ConfigurationTest {
 	 */
 	@Test
 	public void testSetRepositoryDirectoryInvalidAndValid() {
-		String validRepositoryDirectory = (new File("")).getAbsolutePath();
-		String invalidRepositoryDirectory = "src/test/resources/validSourceDirectory";
-		String invalidDirectory = "src/test/resources/invalidSourceDirectory";
+		String validSourceDirectory = "src/test/resources/validSourceDirectory";
+		String invalidSourceDirectory = "src/test/resource/invalidSourceDirectory";
 		
 		assertNull(Configuration.getRepositoryDirectory());
 		
 		boolean throwsException = false;
 		try {
-			Configuration.setRepositoryDirectory(invalidDirectory);
+			Configuration.setRepositoryDirectory(invalidSourceDirectory);
 		} catch (Exception e) {
 			throwsException = true;
 		}
 		
 		assertTrue("Configuration should have thrown an exception", throwsException);	
 		
-		assertNull(Configuration.getRepositoryDirectory());
-		
-		throwsException = false;
-		try {
-			Configuration.setRepositoryDirectory(invalidRepositoryDirectory);
-		} catch (Exception e) {
-			throwsException = true;
-		}
-		
-		assertTrue("Configuration should have thrown an exception", throwsException);
 
 		assertNull(Configuration.getRepositoryDirectory());
 		
@@ -91,23 +80,9 @@ public class ConfigurationTest {
 		
 		assertNull(Configuration.getRepositoryDirectory());
 		
-		Configuration.setRepositoryDirectory(validRepositoryDirectory);
+		Configuration.setRepositoryDirectory(validSourceDirectory);
 		
-		assertEquals("Repository directory should have been set to " + validRepositoryDirectory, validRepositoryDirectory, Configuration.getRepositoryDirectory());
+		assertEquals("Repository directory should have been set to " + validSourceDirectory, validSourceDirectory, Configuration.getRepositoryDirectory());
 	}
 
-	/**
-	 * Test setting the branch name
-	 */
-	@Test
-	public void testSetBranch() {
-		String branchName = "testBranch";
-		
-		assertNull(Configuration.getBranchName());
-		
-		Configuration.setBranchName(branchName);
-		
-		assertEquals(branchName, Configuration.getBranchName());
-		
-	}
 }

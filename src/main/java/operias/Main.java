@@ -1,5 +1,7 @@
 package operias;
 
+import java.security.InvalidParameterException;
+
 /**
  * Main class of operias
  * @author soosterwaal
@@ -19,10 +21,16 @@ public class Main {
 	public static void main(String[] args) {
 		
 		// If not enough arguments specified, exit
-		if (args.length < 3) {
+		if (args.length < 2) {
 			System.exit(OperiasStatus.NO_ARGUMENTS_SPECIFIED.ordinal());
+		}	
+		
+		// Set the arguments
+		try {
+			Configuration.setSourceDirectory(args[0]);
+			Configuration.setRepositoryDirectory(args[1]);
+		} catch (InvalidParameterException e) {
+			System.exit(OperiasStatus.INVALID_ARGUMENTS.ordinal());
 		}
-		
-		
 	}
 }

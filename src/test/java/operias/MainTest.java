@@ -10,6 +10,7 @@ import org.junit.Test;
 
 public class MainTest {
 	
+	@SuppressWarnings("serial")
 	protected static class ExitException extends SecurityException 
     {
         public final int status;
@@ -65,10 +66,28 @@ public class MainTest {
 	@Test
 	public void testInvalidArgumentCount() {
 	    try {
-	    	Main.main(new String[2]);
+	    	Main.main(new String[1]);
 	    }
 	    catch (ExitException e) {
             assertEquals("Exit status", OperiasStatus.NO_ARGUMENTS_SPECIFIED.ordinal(), e.status);
+	    }
+	}
+	
+	/**
+	 * Test invalid arguments
+	 */
+	@Test
+	public void testInvalidArguments() {
+
+	    try {
+	    	String[] args = new String[2];
+	    	args[0] = "non-existing-folder/";
+	    	args[1] = "src/";
+	    	
+	    	Main.main(args);
+	    }
+	    catch (ExitException e) {
+            assertEquals("Exit status", OperiasStatus.INVALID_ARGUMENTS.ordinal(), e.status);
 	    }
 	}
 	
@@ -79,7 +98,11 @@ public class MainTest {
 	public void testValidArgumentCount() {
 		boolean exitExceptionThrown = false;
 	    try {
-	    	Main.main(new String[3]);
+	    	String[] args = new String[2];
+	    	args[0] = "src/";
+	    	args[1] = "src/";
+	    	
+	    	Main.main(args);
 	    }
 	    catch (ExitException e) {
 	    	exitExceptionThrown = true;

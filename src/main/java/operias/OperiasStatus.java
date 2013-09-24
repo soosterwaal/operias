@@ -8,8 +8,17 @@ package operias;
 public enum OperiasStatus {
 
 	/**
+	 * Everything was OK
+	 */
+	OK,
+	
+	/**
 	 * No Arguments were specified
 	 */
-	NO_ARGUMENTS_SPECIFIED;	
+	NO_ARGUMENTS_SPECIFIED, 
 	
+	/**
+	 * Invalid argument supplied
+	 */
+	INVALID_ARGUMENTS;
 }
