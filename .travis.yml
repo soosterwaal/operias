@@ -1,5 +1,6 @@
-script: mvn test
-
-
+language: java
+jdk:
+  - oraclejdk7
+  
 after_success:
   - mvn cobertura:cobertura -Dcobertura.report.format=xml coveralls:cobertura
