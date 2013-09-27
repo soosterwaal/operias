@@ -1,7 +1,9 @@
 package operias;
 
 import java.io.File;
+import java.io.IOException;
 import java.security.InvalidParameterException;
+
 
 /**
  * Configuration of operias, checks and sets the source and repository directories and a branch
@@ -11,7 +13,7 @@ import java.security.InvalidParameterException;
 public class Configuration {
 
 	/**
-	 * Private class, so private constructor
+	 * Static class, so private constructor
 	 */
 	private Configuration() {
 		
@@ -27,53 +29,57 @@ public class Configuration {
 	 */
 	private static String repositoryDirectory = null;
 	
-	
 	/**
 	 * Sets and checks the source directory, will throw an exception if it is an invalid directory
+	 * A valid directory must also contain a pom.xml file to ensure that it is a maven project.
 	 * @param sourceDirectory Valid local source directory.
 	 */
 	public static void setSourceDirectory(String sourceDirectory) {
-		File file = null;
-		
-		try {
-			file = new File(sourceDirectory);
-		} catch (NullPointerException e) {
-			// invalid source directory
-			throw new InvalidParameterException("'" + sourceDirectory + "' is not a valid directory");
+		if (checkValidDirectory(sourceDirectory)) {
+			Configuration.sourceDirectory = sourceDirectory;
+		} else {
+			throw new InvalidParameterException("Error: '" + sourceDirectory + "' is not a valid directory for Operias");
 		}
-		
-		if (!file.isDirectory()){
-			// invalid source directory
-			throw new InvalidParameterException("'" + sourceDirectory + "' is not a valid directory");
-		}
-		
-		Configuration.sourceDirectory = sourceDirectory;
 	}
-	
+		
 	/**
 	 * Sets and checks the repository directory, will throw an exception if it is an invalid directory or does not contain a git repo
+	 * A valid directory must also contain a pom.xml file to ensure that it is a maven project.
 	 * @param repositoryDirectory
 	 */
 	public static void setRepositoryDirectory(String repositoryDirectory) {
-		// First check if its a valid repository
+		if (checkValidDirectory(repositoryDirectory)) {
+			Configuration.repositoryDirectory = repositoryDirectory;
+		} else {
+			throw new InvalidParameterException("Error: '" + repositoryDirectory + "' is not a valid directory for Operias");
+		}
+	}
+	
+	/**
+	 * Check if the directory is valid, should contain a pom.xml file
+	 * @param directory Directory
+	 * @return True if it is a valid directory, false otherwise
+	 */
+	private static boolean checkValidDirectory(String directory) {
 		File file = null;
 		
 		try {
-			file = new File(repositoryDirectory);
+			file = new File(directory);
 		} catch (NullPointerException e) {
-			// invalid source directory
-			throw new InvalidParameterException("'" + repositoryDirectory + "' is not a valid directory");
+			return false;
 		}
 		
 		if (!file.isDirectory()){
 			// invalid source directory
-			throw new InvalidParameterException("'" + repositoryDirectory + "' is not a valid directory");
+			return false;
 		}
 		
-		Configuration.repositoryDirectory = repositoryDirectory;
+		File pomXML = new File(file.getAbsolutePath() +  "/pom.xml");
+		
+		
+		return pomXML.exists();
 	}
-	
-	
+		
 	/**
 	 * Get the source directory name
 	 * @return Source directory
@@ -89,7 +95,7 @@ public class Configuration {
 	public static String getRepositoryDirectory() {
 		return repositoryDirectory;
 	}
-
+	
 	/**
 	 * Reset the configuration, used for testing mostly
 	 */
