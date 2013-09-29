@@ -16,15 +16,23 @@ public class Main {
 	 * 
 	 * The first argument is the directory of the new source files
 	 * The second argument is the directory of the github repository
-	 * The third argument is the branch name
 	 */
 	public static void main(String[] args) {
+		parseArguments(args);
 		
+		new Operias().constructReport().writeSite();
+	}
+	
+	/**
+	 * Parse the arguments passed by the command line
+	 * @param args
+	 */
+	private static void parseArguments(String[] args) {
 		// If not enough arguments specified, exit
 		if (args.length < 2) {
 			System.exit(OperiasStatus.NO_ARGUMENTS_SPECIFIED.ordinal());
 		}	
-		
+				
 		// Set the arguments
 		try {
 			Configuration.setSourceDirectory(args[0]);
