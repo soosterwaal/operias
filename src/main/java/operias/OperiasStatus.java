@@ -34,11 +34,17 @@ public enum OperiasStatus {
 	
 	/**
 	 * Error in constructing the clean task for the project
+	 
 	 */
 	ERROR_COBERTURA_CLEAN_TASK_CREATION,
 	
 	/**
 	 * Coverage xml file was not, probably a wrong or costum target directory
 	 */
-	COVERAGE_XML_NOT_FOUND;
+	COVERAGE_XML_NOT_FOUND, 
+	
+	/**
+	 * Given if operias is run on it self, can create a loop
+	 */
+	ERROR_COBERTURA_TASK_OPERIAS_EXECUTION;
 }

@@ -36,13 +36,13 @@ public class Operias {
 		
 		Cobertura cobertura = new Cobertura(baseDirectory);
 		
-		if (cobertura.executeCobertura()) {
-			return cobertura.constructReport();
-		} else {
+		CoberturaReport report = cobertura.executeCobertura();
+		
+		if (report == null) {
 			System.exit(OperiasStatus.ERROR_COBERTURA_TASK_EXECUTION.ordinal());	
 		}
 		
-		return null;
+		return report;
 	}
 	
 	

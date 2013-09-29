@@ -12,13 +12,14 @@ public class CoberturaTest {
     private Cobertura cobertura;
     
 	/**
-	 * Simple test which executes a mvn project
+	 * Simple test which executes a mvn project, retrieves the report and cleans up afterwards
 	 */
 	@Test
 	public void testCoberturaExecution(){
 		cobertura = new Cobertura("src/test/resources/simpleMavenProject");
 		cobertura.setOutputDirectory("target/simpleMavenProject");
-		assertTrue("Executing cobertura failed", cobertura.executeCobertura());
+		assertNotNull("Executing cobertura failed", cobertura.executeCobertura());
+		
 	}
 	
 	/**
@@ -27,7 +28,7 @@ public class CoberturaTest {
 	@Test
 	public void testFailedCoberturaExecution() {
 		cobertura = new Cobertura("src/test/resources/noMavenProject");
-		assertFalse("Executing cobertura failed", cobertura.executeCobertura());
+		assertNull("Executing cobertura failed", cobertura.executeCobertura());
 	}
 	
 	/**
@@ -36,6 +37,7 @@ public class CoberturaTest {
 	@Test
 	public void testCoverageXMLNotFound() {
         System.setSecurityManager(new NoExitSecurityManager());
+		boolean exceptionThrown = false;
 		
         cobertura = new Cobertura("src/test/resources/simpleMavenProject");
 		cobertura.setOutputDirectory("target/randomFolder");
@@ -43,9 +45,44 @@ public class CoberturaTest {
 			cobertura.executeCobertura();
 		}
 	    catch (ExitException e) {
+	    	exceptionThrown = true;
             assertEquals("Exit status invalid", OperiasStatus.COVERAGE_XML_NOT_FOUND.ordinal(), e.status);
 	    }
 		System.setSecurityManager(null);
-		
+		assertTrue("No exception was thrown", exceptionThrown);
 	}
+	
+	/**
+	 * Test an invalid directory name, see if an error occurs
+	 */
+	@Test
+	public void testInvalidDirectory() {
+		System.setSecurityManager(new NoExitSecurityManager());
+		boolean exceptionThrown = false;
+		
+        cobertura = new Cobertura(null);
+		try {
+			cobertura.executeCobertura();
+		}
+	    catch (ExitException e) {
+	    	exceptionThrown = true;
+            assertEquals("Exit status invalid", OperiasStatus.ERROR_COBERTURA_TASK_CREATION.ordinal(), e.status);
+	    }
+		
+		exceptionThrown = false;
+		
+		cobertura = new Cobertura("src/../");
+		try {
+			cobertura.executeCobertura();
+		}
+	    catch (ExitException e) {
+	    	exceptionThrown = true;
+            assertEquals("Exit status invalid", OperiasStatus.ERROR_COBERTURA_TASK_OPERIAS_EXECUTION.ordinal(), e.status);
+	    }
+
+		assertTrue("No exception was thrown", exceptionThrown);
+		
+		System.setSecurityManager(null);
+	}
+	
 }

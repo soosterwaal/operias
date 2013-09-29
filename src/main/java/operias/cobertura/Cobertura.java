@@ -1,8 +1,6 @@
 package operias.cobertura;
 
 import java.io.File;
-import java.io.IOException;
-
 import operias.OperiasStatus;
 
 /**
@@ -22,15 +20,10 @@ public class Cobertura {
 	 */
 	private String outputDirectory;
 	
-	/**
-	 * Link to the coverage file produced by cobertura
-	 */
-	private File coverageXML;
 	
 	public Cobertura(String directory) {
 		this.directory = directory;
 		this.outputDirectory = "";
-		this.coverageXML = null;
 	}
 	
 	/**
@@ -44,15 +37,45 @@ public class Cobertura {
 	/**
 	 * Execute cobertura on the given directory,
 	 * we need to execute mvn cobertura:cobertura -Dcobertura.report.format=xml -f directory on the target directory.
-	 * @return True if the execution succeeded, false otherwise
+	 * @return A Cobertura report object
 	 */
-	public boolean executeCobertura() {
-		File pomXML = new File(directory, "pom.xml");
-		ProcessBuilder builder = new ProcessBuilder("mvn","clean", "cobertura:cobertura", "-Dcobertura.report.format=xml", "-f", pomXML.getAbsolutePath());
+	public CoberturaReport executeCobertura() {
+		boolean succeeded = executeCoberturaTask();
 		
-		Process process = null;
+		if (succeeded) {
+			CoberturaReport coberturaReport = constructReport();
+			cleanUp();
+			return coberturaReport;
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Execute the cobertura task
+	 * @return true if cobertura was succesfully executed, false otherwise
+	 */
+	private boolean executeCoberturaTask() {
 		boolean executionSucceeded = false;
+
+		File pomXML = new File(directory, "pom.xml");
+		String  firstString = null, secondString = null;
+		
 		try {
+			firstString = (new File(directory)).getCanonicalPath();
+			secondString = (new File("")).getCanonicalPath();
+		} catch (Exception e) {
+			System.exit(OperiasStatus.ERROR_COBERTURA_TASK_CREATION.ordinal());
+		}
+		
+		if (firstString.equals(secondString)) {
+			System.exit(OperiasStatus.ERROR_COBERTURA_TASK_OPERIAS_EXECUTION.ordinal());
+		}
+		
+		try {
+			ProcessBuilder builder = new ProcessBuilder("mvn","clean", "cobertura:cobertura", "-Dcobertura.report.format=xml", "-f", pomXML.getAbsolutePath());
+			
+			Process process = null;
 			process = builder.start();
 			process.waitFor();
 			int exitValue = process.exitValue();
@@ -63,32 +86,20 @@ public class Cobertura {
 			System.exit(OperiasStatus.ERROR_COBERTURA_TASK_CREATION.ordinal());
 		}
 		
-		if (executionSucceeded) {
-			retrieveXMLFile();
-		}
 		
-		return executionSucceeded;
-			
+		return executionSucceeded;	
 	}
 	
-	/**
-	 * Retrieve the coverage.xml file
-	 */
-	private void retrieveXMLFile() {
-		coverageXML = new File(outputDirectory, "target/site/cobertura/coverage.xml");
-		
-		if (!coverageXML.exists()) {
-			System.exit(OperiasStatus.COVERAGE_XML_NOT_FOUND.ordinal());
-		}
-	}
 	
 	/**
 	 * Construct a report from the coverage.xml file
 	 * @return
 	 */
-	public CoberturaReport constructReport() {
-		if(coverageXML == null) {
-			return null;
+	private CoberturaReport constructReport() {
+		File coverageXML = new File(outputDirectory, "target/site/cobertura/coverage.xml");
+		
+		if (!coverageXML.exists()) {
+			System.exit(OperiasStatus.COVERAGE_XML_NOT_FOUND.ordinal());
 		}
 		
 		return new CoberturaReport(coverageXML);
@@ -97,7 +108,7 @@ public class Cobertura {
 	/**
 	 * Clean the maven project
 	 */
-	public boolean cleanUp() {
+	private boolean cleanUp() {
 		File pomXML = new File(directory, "pom.xml");
 		ProcessBuilder builder = new ProcessBuilder("mvn","clean", "-f", pomXML.getAbsolutePath());
 		
@@ -113,8 +124,6 @@ public class Cobertura {
 		} catch (Exception e) {
 			System.exit(OperiasStatus.ERROR_COBERTURA_CLEAN_TASK_CREATION.ordinal());
 		}
-		
-		coverageXML = null;
 		
 		return executionSucceeded;
 	}
