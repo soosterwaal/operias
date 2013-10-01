@@ -18,6 +18,11 @@
       <artifactId>junit</artifactId>
       <version>${junitVersion}</version>
     </dependency>
+    <dependency>
+    	<groupId>com.googlecode.java-diff-utils</groupId>
+    	<artifactId>diffutils</artifactId>
+    	<version>1.2.1</version>	
+	</dependency>		
   </dependencies>
   <build>
     <plugins>

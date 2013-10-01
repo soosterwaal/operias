@@ -1,0 +1,10 @@
+public class Test {
+
+	public int Method() {
+		int i = 1;
+		i = i * 2;
+
+		int b = 4;
+		return i;
+	}
+}
