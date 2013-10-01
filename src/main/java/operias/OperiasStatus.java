@@ -46,5 +46,11 @@ public enum OperiasStatus {
 	/**
 	 * Given if operias is run on it self, can create a loop
 	 */
-	ERROR_COBERTURA_TASK_OPERIAS_EXECUTION;
+	
+	ERROR_COBERTURA_TASK_OPERIAS_EXECUTION, 
+	
+	/**
+	 * XML file was either non readable, or the path was invalid
+	 */
+	ERROR_COBERTURA_INVALID_XML;
 }

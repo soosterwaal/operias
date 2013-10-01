@@ -1,0 +1,513 @@
+<?xml version="1.0"?>
+<!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
+
+<coverage line-rate="0.7578125" branch-rate="0.75" lines-covered="97" lines-valid="128" branches-covered="21" branches-valid="28" complexity="2.1" version="2.0.3" timestamp="1380447422282">
+	<sources>
+		<source>/Users/sebas/Documents/Eclipse Workspace/operias/src/main/java</source>
+		<source>--source</source>
+	</sources>
+	<packages>
+		<package name="operias" line-rate="0.6376811594202898" branch-rate="0.6" complexity="1.9166666666666667">
+			<classes>
+				<class name="operias.Configuration" filename="operias/Configuration.java" line-rate="0.9230769230769231" branch-rate="1.0" complexity="2.142857142857143">
+					<methods>
+						<method name="&lt;clinit&gt;" signature="()V" line-rate="1.0" branch-rate="1.0">
+							<lines>
+								<line number="25" hits="5" branch="false"/>
+								<line number="30" hits="5" branch="false"/>
+							</lines>
+						</method>
+						<method name="&lt;init&gt;" signature="()V" line-rate="0.0" branch-rate="1.0">
+							<lines>
+								<line number="18" hits="0" branch="false"/>
+								<line number="20" hits="0" branch="false"/>
+							</lines>
+						</method>
+						<method name="checkValidDirectory" signature="(Ljava/lang/String;)Z" line-rate="1.0" branch-rate="1.0">
+							<lines>
+								<line number="64" hits="40" branch="false"/>
+								<line number="67" hits="40" branch="false"/>
+								<line number="68" hits="10" branch="false"/>
+								<line number="69" hits="10" branch="false"/>
+								<line number="70" hits="30" branch="false"/>
+								<line number="72" hits="30" branch="true" condition-coverage="100% (2/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="100%"/>
+									</conditions>
+								</line>
+								<line number="74" hits="10" branch="false"/>
+								<line number="77" hits="20" branch="false"/>
+								<line number="80" hits="20" branch="false"/>
+							</lines>
+						</method>
+						<method name="getRepositoryDirectory" signature="()Ljava/lang/String;" line-rate="1.0" branch-rate="1.0">
+							<lines>
+								<line number="96" hits="25" branch="false"/>
+							</lines>
+						</method>
+						<method name="getSourceDirectory" signature="()Ljava/lang/String;" line-rate="1.0" branch-rate="1.0">
+							<lines>
+								<line number="88" hits="25" branch="false"/>
+							</lines>
+						</method>
+						<method name="resetConfiguration" signature="()V" line-rate="1.0" branch-rate="1.0">
+							<lines>
+								<line number="103" hits="10" branch="false"/>
+								<line number="104" hits="10" branch="false"/>
+								<line number="105" hits="10" branch="false"/>
+							</lines>
+						</method>
+						<method name="setRepositoryDirectory" signature="(Ljava/lang/String;)V" line-rate="1.0" branch-rate="1.0">
+							<lines>
+								<line number="51" hits="20" branch="true" condition-coverage="100% (2/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="100%"/>
+									</conditions>
+								</line>
+								<line number="52" hits="5" branch="false"/>
+								<line number="54" hits="15" branch="false"/>
+								<line number="56" hits="5" branch="false"/>
+							</lines>
+						</method>
+						<method name="setSourceDirectory" signature="(Ljava/lang/String;)V" line-rate="1.0" branch-rate="1.0">
+							<lines>
+								<line number="38" hits="20" branch="true" condition-coverage="100% (2/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="100%"/>
+									</conditions>
+								</line>
+								<line number="39" hits="5" branch="false"/>
+								<line number="41" hits="15" branch="false"/>
+								<line number="43" hits="5" branch="false"/>
+							</lines>
+						</method>
+					</methods>
+					<lines>
+						<line number="18" hits="0" branch="false"/>
+						<line number="20" hits="0" branch="false"/>
+						<line number="25" hits="5" branch="false"/>
+						<line number="30" hits="5" branch="false"/>
+						<line number="38" hits="20" branch="true" condition-coverage="100% (2/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="100%"/>
+							</conditions>
+						</line>
+						<line number="39" hits="5" branch="false"/>
+						<line number="41" hits="15" branch="false"/>
+						<line number="43" hits="5" branch="false"/>
+						<line number="51" hits="20" branch="true" condition-coverage="100% (2/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="100%"/>
+							</conditions>
+						</line>
+						<line number="52" hits="5" branch="false"/>
+						<line number="54" hits="15" branch="false"/>
+						<line number="56" hits="5" branch="false"/>
+						<line number="64" hits="40" branch="false"/>
+						<line number="67" hits="40" branch="false"/>
+						<line number="68" hits="10" branch="false"/>
+						<line number="69" hits="10" branch="false"/>
+						<line number="70" hits="30" branch="false"/>
+						<line number="72" hits="30" branch="true" condition-coverage="100% (2/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="100%"/>
+							</conditions>
+						</line>
+						<line number="74" hits="10" branch="false"/>
+						<line number="77" hits="20" branch="false"/>
+						<line number="80" hits="20" branch="false"/>
+						<line number="88" hits="25" branch="false"/>
+						<line number="96" hits="25" branch="false"/>
+						<line number="103" hits="10" branch="false"/>
+						<line number="104" hits="10" branch="false"/>
+						<line number="105" hits="10" branch="false"/>
+					</lines>
+				</class>
+				<class name="operias.Main" filename="operias/Main.java" line-rate="0.0" branch-rate="0.0" complexity="2.0">
+					<methods>
+						<method name="&lt;init&gt;" signature="()V" line-rate="0.0" branch-rate="1.0">
+							<lines>
+								<line number="10" hits="0" branch="false"/>
+							</lines>
+						</method>
+						<method name="main" signature="([Ljava/lang/String;)V" line-rate="0.0" branch-rate="1.0">
+							<lines>
+								<line number="21" hits="0" branch="false"/>
+								<line number="23" hits="0" branch="false"/>
+								<line number="24" hits="0" branch="false"/>
+							</lines>
+						</method>
+						<method name="parseArguments" signature="([Ljava/lang/String;)V" line-rate="0.0" branch-rate="0.0">
+							<lines>
+								<line number="32" hits="0" branch="true" condition-coverage="0% (0/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="0%"/>
+									</conditions>
+								</line>
+								<line number="33" hits="0" branch="false"/>
+								<line number="38" hits="0" branch="false"/>
+								<line number="39" hits="0" branch="false"/>
+								<line number="40" hits="0" branch="false"/>
+								<line number="41" hits="0" branch="false"/>
+								<line number="42" hits="0" branch="false"/>
+								<line number="43" hits="0" branch="false"/>
+							</lines>
+						</method>
+					</methods>
+					<lines>
+						<line number="10" hits="0" branch="false"/>
+						<line number="21" hits="0" branch="false"/>
+						<line number="23" hits="0" branch="false"/>
+						<line number="24" hits="0" branch="false"/>
+						<line number="32" hits="0" branch="true" condition-coverage="0% (0/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="0%"/>
+							</conditions>
+						</line>
+						<line number="33" hits="0" branch="false"/>
+						<line number="38" hits="0" branch="false"/>
+						<line number="39" hits="0" branch="false"/>
+						<line number="40" hits="0" branch="false"/>
+						<line number="41" hits="0" branch="false"/>
+						<line number="42" hits="0" branch="false"/>
+						<line number="43" hits="0" branch="false"/>
+					</lines>
+				</class>
+				<class name="operias.Operias" filename="operias/Operias.java" line-rate="0.0" branch-rate="0.0" complexity="1.3333333333333333">
+					<methods>
+						<method name="&lt;init&gt;" signature="()V" line-rate="0.0" branch-rate="1.0">
+							<lines>
+								<line number="5" hits="0" branch="false"/>
+							</lines>
+						</method>
+						<method name="constructCoberturaReport" signature="(Ljava/lang/String;)Loperias/cobertura/CoberturaReport;" line-rate="0.0" branch-rate="0.0">
+							<lines>
+								<line number="37" hits="0" branch="false"/>
+								<line number="39" hits="0" branch="false"/>
+								<line number="41" hits="0" branch="true" condition-coverage="0% (0/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="0%"/>
+									</conditions>
+								</line>
+								<line number="42" hits="0" branch="false"/>
+								<line number="45" hits="0" branch="false"/>
+							</lines>
+						</method>
+						<method name="constructReport" signature="()Loperias/Operias;" line-rate="0.0" branch-rate="1.0">
+							<lines>
+								<line number="14" hits="0" branch="false"/>
+								<line number="15" hits="0" branch="false"/>
+								<line number="23" hits="0" branch="false"/>
+							</lines>
+						</method>
+						<method name="writeSite" signature="()Loperias/Operias;" line-rate="0.0" branch-rate="1.0">
+							<lines>
+								<line number="54" hits="0" branch="false"/>
+							</lines>
+						</method>
+					</methods>
+					<lines>
+						<line number="5" hits="0" branch="false"/>
+						<line number="14" hits="0" branch="false"/>
+						<line number="15" hits="0" branch="false"/>
+						<line number="23" hits="0" branch="false"/>
+						<line number="37" hits="0" branch="false"/>
+						<line number="39" hits="0" branch="false"/>
+						<line number="41" hits="0" branch="true" condition-coverage="0% (0/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="0%"/>
+							</conditions>
+						</line>
+						<line number="42" hits="0" branch="false"/>
+						<line number="45" hits="0" branch="false"/>
+						<line number="54" hits="0" branch="false"/>
+					</lines>
+				</class>
+				<class name="operias.OperiasStatus" filename="operias/OperiasStatus.java" line-rate="0.9523809523809523" branch-rate="1.0" complexity="0.0">
+					<methods>
+						<method name="&lt;clinit&gt;" signature="()V" line-rate="1.0" branch-rate="1.0">
+							<lines>
+								<line number="10" hits="4" branch="false"/>
+								<line number="13" hits="5" branch="false"/>
+								<line number="15" hits="4" branch="false"/>
+								<line number="18" hits="5" branch="false"/>
+								<line number="20" hits="4" branch="false"/>
+								<line number="23" hits="5" branch="false"/>
+								<line number="25" hits="4" branch="false"/>
+								<line number="28" hits="5" branch="false"/>
+								<line number="30" hits="4" branch="false"/>
+								<line number="33" hits="5" branch="false"/>
+								<line number="35" hits="4" branch="false"/>
+								<line number="39" hits="5" branch="false"/>
+								<line number="41" hits="4" branch="false"/>
+								<line number="44" hits="5" branch="false"/>
+								<line number="46" hits="4" branch="false"/>
+								<line number="49" hits="1" branch="false"/>
+								<line number="50" hits="4" branch="false"/>
+								<line number="52" hits="4" branch="false"/>
+								<line number="55" hits="4" branch="false"/>
+							</lines>
+						</method>
+						<method name="&lt;init&gt;" signature="(Ljava/lang/String;I)V" line-rate="1.0" branch-rate="1.0">
+							<lines>
+								<line number="8" hits="49" branch="false"/>
+							</lines>
+						</method>
+						<method name="valueOf" signature="(Ljava/lang/String;)Loperias/OperiasStatus;" line-rate="0.0" branch-rate="1.0">
+							<lines>
+								<line number="1" hits="0" branch="false"/>
+							</lines>
+						</method>
+						<method name="values" signature="()[Loperias/OperiasStatus;" line-rate="1.0" branch-rate="1.0">
+							<lines>
+							</lines>
+						</method>
+					</methods>
+					<lines>
+						<line number="1" hits="0" branch="false"/>
+						<line number="8" hits="49" branch="false"/>
+						<line number="10" hits="4" branch="false"/>
+						<line number="13" hits="5" branch="false"/>
+						<line number="15" hits="4" branch="false"/>
+						<line number="18" hits="5" branch="false"/>
+						<line number="20" hits="4" branch="false"/>
+						<line number="23" hits="5" branch="false"/>
+						<line number="25" hits="4" branch="false"/>
+						<line number="28" hits="5" branch="false"/>
+						<line number="30" hits="4" branch="false"/>
+						<line number="33" hits="5" branch="false"/>
+						<line number="35" hits="4" branch="false"/>
+						<line number="39" hits="5" branch="false"/>
+						<line number="41" hits="4" branch="false"/>
+						<line number="44" hits="5" branch="false"/>
+						<line number="46" hits="4" branch="false"/>
+						<line number="49" hits="1" branch="false"/>
+						<line number="50" hits="4" branch="false"/>
+						<line number="52" hits="4" branch="false"/>
+						<line number="55" hits="4" branch="false"/>
+					</lines>
+				</class>
+			</classes>
+		</package>
+		<package name="operias.cobertura" line-rate="0.8983050847457628" branch-rate="0.8333333333333334" complexity="2.375">
+			<classes>
+				<class name="operias.cobertura.Cobertura" filename="operias/cobertura/Cobertura.java" line-rate="0.96" branch-rate="0.9" complexity="2.1666666666666665">
+					<methods>
+						<method name="&lt;init&gt;" signature="(Ljava/lang/String;)V" line-rate="1.0" branch-rate="1.0">
+							<lines>
+								<line number="24" hits="25" branch="false"/>
+								<line number="25" hits="25" branch="false"/>
+								<line number="26" hits="25" branch="false"/>
+								<line number="27" hits="25" branch="false"/>
+							</lines>
+						</method>
+						<method name="cleanUp" signature="()Z" line-rate="0.9230769230769231" branch-rate="0.5">
+							<lines>
+								<line number="112" hits="5" branch="false"/>
+								<line number="113" hits="5" branch="false"/>
+								<line number="115" hits="5" branch="false"/>
+								<line number="116" hits="5" branch="false"/>
+								<line number="118" hits="5" branch="false"/>
+								<line number="119" hits="5" branch="false"/>
+								<line number="120" hits="5" branch="false"/>
+								<line number="121" hits="5" branch="false"/>
+								<line number="123" hits="5" branch="true" condition-coverage="50% (1/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="50%"/>
+									</conditions>
+								</line>
+								<line number="124" hits="4" branch="false"/>
+								<line number="125" hits="0" branch="false"/>
+								<line number="126" hits="1" branch="false"/>
+								<line number="128" hits="5" branch="false"/>
+							</lines>
+						</method>
+						<method name="constructReport" signature="()Loperias/cobertura/CoberturaReport;" line-rate="1.0" branch-rate="1.0">
+							<lines>
+								<line number="99" hits="10" branch="false"/>
+								<line number="101" hits="10" branch="true" condition-coverage="100% (2/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="100%"/>
+									</conditions>
+								</line>
+								<line number="102" hits="5" branch="false"/>
+								<line number="105" hits="5" branch="false"/>
+							</lines>
+						</method>
+						<method name="executeCobertura" signature="()Loperias/cobertura/CoberturaReport;" line-rate="1.0" branch-rate="1.0">
+							<lines>
+								<line number="43" hits="25" branch="false"/>
+								<line number="45" hits="15" branch="true" condition-coverage="100% (2/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="100%"/>
+									</conditions>
+								</line>
+								<line number="46" hits="10" branch="false"/>
+								<line number="47" hits="5" branch="false"/>
+								<line number="48" hits="5" branch="false"/>
+								<line number="51" hits="5" branch="false"/>
+							</lines>
+						</method>
+						<method name="executeCoberturaTask" signature="()Z" line-rate="0.9523809523809523" branch-rate="1.0">
+							<lines>
+								<line number="59" hits="25" branch="false"/>
+								<line number="61" hits="25" branch="false"/>
+								<line number="62" hits="25" branch="false"/>
+								<line number="65" hits="25" branch="false"/>
+								<line number="66" hits="20" branch="false"/>
+								<line number="67" hits="17" branch="false"/>
+								<line number="68" hits="5" branch="false"/>
+								<line number="69" hits="4" branch="false"/>
+								<line number="71" hits="20" branch="true" condition-coverage="100% (2/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="100%"/>
+									</conditions>
+								</line>
+								<line number="72" hits="5" branch="false"/>
+								<line number="76" hits="15" branch="false"/>
+								<line number="78" hits="15" branch="false"/>
+								<line number="79" hits="15" branch="false"/>
+								<line number="80" hits="15" branch="false"/>
+								<line number="81" hits="15" branch="false"/>
+								<line number="82" hits="15" branch="false"/>
+								<line number="84" hits="15" branch="true" condition-coverage="100% (2/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="100%"/>
+									</conditions>
+								</line>
+								<line number="85" hits="12" branch="false"/>
+								<line number="86" hits="0" branch="false"/>
+								<line number="87" hits="3" branch="false"/>
+								<line number="90" hits="15" branch="false"/>
+							</lines>
+						</method>
+						<method name="setOutputDirectory" signature="(Ljava/lang/String;)V" line-rate="1.0" branch-rate="1.0">
+							<lines>
+								<line number="34" hits="10" branch="false"/>
+								<line number="35" hits="10" branch="false"/>
+							</lines>
+						</method>
+					</methods>
+					<lines>
+						<line number="24" hits="25" branch="false"/>
+						<line number="25" hits="25" branch="false"/>
+						<line number="26" hits="25" branch="false"/>
+						<line number="27" hits="25" branch="false"/>
+						<line number="34" hits="10" branch="false"/>
+						<line number="35" hits="10" branch="false"/>
+						<line number="43" hits="25" branch="false"/>
+						<line number="45" hits="15" branch="true" condition-coverage="100% (2/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="100%"/>
+							</conditions>
+						</line>
+						<line number="46" hits="10" branch="false"/>
+						<line number="47" hits="5" branch="false"/>
+						<line number="48" hits="5" branch="false"/>
+						<line number="51" hits="5" branch="false"/>
+						<line number="59" hits="25" branch="false"/>
+						<line number="61" hits="25" branch="false"/>
+						<line number="62" hits="25" branch="false"/>
+						<line number="65" hits="25" branch="false"/>
+						<line number="66" hits="20" branch="false"/>
+						<line number="67" hits="17" branch="false"/>
+						<line number="68" hits="5" branch="false"/>
+						<line number="69" hits="4" branch="false"/>
+						<line number="71" hits="20" branch="true" condition-coverage="100% (2/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="100%"/>
+							</conditions>
+						</line>
+						<line number="72" hits="5" branch="false"/>
+						<line number="76" hits="15" branch="false"/>
+						<line number="78" hits="15" branch="false"/>
+						<line number="79" hits="15" branch="false"/>
+						<line number="80" hits="15" branch="false"/>
+						<line number="81" hits="15" branch="false"/>
+						<line number="82" hits="15" branch="false"/>
+						<line number="84" hits="15" branch="true" condition-coverage="100% (2/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="100%"/>
+							</conditions>
+						</line>
+						<line number="85" hits="12" branch="false"/>
+						<line number="86" hits="0" branch="false"/>
+						<line number="87" hits="3" branch="false"/>
+						<line number="90" hits="15" branch="false"/>
+						<line number="99" hits="10" branch="false"/>
+						<line number="101" hits="10" branch="true" condition-coverage="100% (2/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="100%"/>
+							</conditions>
+						</line>
+						<line number="102" hits="5" branch="false"/>
+						<line number="105" hits="5" branch="false"/>
+						<line number="112" hits="5" branch="false"/>
+						<line number="113" hits="5" branch="false"/>
+						<line number="115" hits="5" branch="false"/>
+						<line number="116" hits="5" branch="false"/>
+						<line number="118" hits="5" branch="false"/>
+						<line number="119" hits="5" branch="false"/>
+						<line number="120" hits="5" branch="false"/>
+						<line number="121" hits="5" branch="false"/>
+						<line number="123" hits="5" branch="true" condition-coverage="50% (1/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="50%"/>
+							</conditions>
+						</line>
+						<line number="124" hits="4" branch="false"/>
+						<line number="125" hits="0" branch="false"/>
+						<line number="126" hits="1" branch="false"/>
+						<line number="128" hits="5" branch="false"/>
+					</lines>
+				</class>
+				<class name="operias.cobertura.CoberturaReport" filename="operias/cobertura/CoberturaReport.java" line-rate="0.5555555555555556" branch-rate="0.75" complexity="3.0">
+					<methods>
+						<method name="&lt;init&gt;" signature="(Ljava/io/File;)V" line-rate="1.0" branch-rate="0.75">
+							<lines>
+								<line number="12" hits="3" branch="false"/>
+								<line number="14" hits="14" branch="false"/>
+								<line number="15" hits="11" branch="true" condition-coverage="75% (6/8)">
+									<conditions>
+										<condition number="0" type="jump" coverage="100%"/>
+										<condition number="1" type="jump" coverage="100%"/>
+										<condition number="2" type="jump" coverage="50%"/>
+										<condition number="3" type="jump" coverage="50%"/>
+									</conditions>
+								</line>
+								<line number="16" hits="6" branch="false"/>
+								<line number="18" hits="5" branch="false"/>
+							</lines>
+						</method>
+						<method name="&lt;init&gt;" signature="(Loperias/cobertura/CoberturaReport;Loperias/cobertura/CoberturaReport;)V" line-rate="0.0" branch-rate="1.0">
+							<lines>
+								<line number="21" hits="0" branch="false"/>
+								<line number="23" hits="0" branch="false"/>
+								<line number="25" hits="0" branch="false"/>
+								<line number="27" hits="0" branch="false"/>
+							</lines>
+						</method>
+					</methods>
+					<lines>
+						<line number="12" hits="3" branch="false"/>
+						<line number="14" hits="14" branch="false"/>
+						<line number="15" hits="11" branch="true" condition-coverage="75% (6/8)">
+							<conditions>
+								<condition number="0" type="jump" coverage="100%"/>
+								<condition number="1" type="jump" coverage="100%"/>
+								<condition number="2" type="jump" coverage="50%"/>
+								<condition number="3" type="jump" coverage="50%"/>
+							</conditions>
+						</line>
+						<line number="16" hits="6" branch="false"/>
+						<line number="18" hits="5" branch="false"/>
+						<line number="21" hits="0" branch="false"/>
+						<line number="23" hits="0" branch="false"/>
+						<line number="25" hits="0" branch="false"/>
+						<line number="27" hits="0" branch="false"/>
+					</lines>
+				</class>
+			</classes>
+		</package>
+	</packages>
+</coverage>
