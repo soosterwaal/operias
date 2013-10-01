@@ -113,9 +113,13 @@ public class FileDiffDirectory {
 			throw new InvalidParameterException("'" +newDirectoryFile + "' is not a valid directory");
 		}
 		
+		String[] newFiles = newDirectoryFile.list();
+		Arrays.sort(newFiles);
+		String[] originalFiles = originalDirectoryFile.list();
+		Arrays.sort(originalFiles);
 		
-		List<String> filesWithinNewDirectory = Arrays.asList(newDirectoryFile.list());
-		List<String> filesWithinOriginalDirectory = Arrays.asList(originalDirectoryFile.list());
+		List<String> filesWithinNewDirectory = Arrays.asList(newFiles);
+		List<String> filesWithinOriginalDirectory = Arrays.asList(originalFiles);
 		
 		//First cmpare the original dirs with the new one to see changes and deleted file and directories
 		for(String fileName : filesWithinOriginalDirectory) {
@@ -201,7 +205,10 @@ public class FileDiffDirectory {
 	
 		File dir = new File(directory);
 		
-		List<File> filesWithinDirectory = Arrays.asList(dir.listFiles());
+		File[] files = dir.listFiles();
+		Arrays.sort(files);
+		
+		List<File> filesWithinDirectory = Arrays.asList(files);
 		
 		FileDiffDirectory diffDirectory = new FileDiffDirectory(directory, state);
 		
