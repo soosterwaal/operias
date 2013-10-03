@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-public class FileDiffDirectoryTest {
+public class FileDiffReportTest {
 
 	/**
 	 * Test the same directory
@@ -17,8 +17,13 @@ public class FileDiffDirectoryTest {
 	@Test
 	public void testSameDirectory() {
 		try {
-			FileDiffDirectory diffDir = FileDiffDirectory.compareDirectory("src/test/resources/simpleMavenProject", "src/test/resources/simpleMavenProject");
+			FileDiffReport diffReport = new FileDiffReport("src/test/resources/simpleMavenProject", "src/test/resources/simpleMavenProject");
 
+			assertEquals("src/test/resources/simpleMavenProject", diffReport.getOriginalDirectory());
+			assertEquals("src/test/resources/simpleMavenProject", diffReport.getNewDirectory());
+			
+			FileDiffDirectory diffDir = diffReport.getChangedFiles();
+				
 			checkStatus(diffDir, DiffState.SAME);
 			
 		} catch (IOException e) {
@@ -101,7 +106,8 @@ public class FileDiffDirectoryTest {
 	@Test
 	public void testDeletedDirectory() {
 		try {
-			FileDiffDirectory diffDir = FileDiffDirectory.compareDirectory("src/test/resources/simpleMavenProject", null);
+			FileDiffReport diffReport = new FileDiffReport("src/test/resources/simpleMavenProject", null);
+			FileDiffDirectory diffDir = diffReport.getChangedFiles();
 			checkStatus(diffDir, DiffState.DELETED);
 		} catch (IOException e) {
 			fail();		
@@ -114,7 +120,8 @@ public class FileDiffDirectoryTest {
 	@Test
 	public void testNewDirectory() {
 		try {
-			FileDiffDirectory diffDir = FileDiffDirectory.compareDirectory(null, "src/test/resources/simpleMavenProject");
+			FileDiffReport diffReport = new FileDiffReport(null, "src/test/resources/simpleMavenProject");
+			FileDiffDirectory diffDir = diffReport.getChangedFiles();
 			checkStatus(diffDir, DiffState.NEW);
 		} catch (IOException e) {
 			fail();		
@@ -127,7 +134,12 @@ public class FileDiffDirectoryTest {
 	@Test
 	public void testChangedDirectory() {
 		try {
-			FileDiffDirectory diffDir = FileDiffDirectory.compareDirectory("src/test/resources/simpleMavenProject", "src/test/resources/simpleMavenProject2");
+			FileDiffReport diffReport = new FileDiffReport("src/test/resources/simpleMavenProject", "src/test/resources/simpleMavenProject2");
+			FileDiffDirectory diffDir = diffReport.getChangedFiles();
+			
+			assertEquals("src/test/resources/simpleMavenProject", diffReport.getOriginalDirectory());
+			assertEquals("src/test/resources/simpleMavenProject2", diffReport.getNewDirectory());
+			
 			assertEquals(DiffState.CHANGED, diffDir.getState());
 			
 			assertEquals(DiffState.CHANGED, diffDir.getDirectories().get(0).getDirectories().get(0).getDirectories().get(0).getDirectories().get(0).getState());
@@ -156,12 +168,11 @@ public class FileDiffDirectoryTest {
 	 * Test invalid directory combinations
 	 */
 	@Test
-	@SuppressWarnings("unused")
 	public void testInvalidDirectories() {
 		boolean exceptionThrown = false;
 		
 		try {
-			FileDiffDirectory diffDir = FileDiffDirectory.compareDirectory("src/t", null);
+			new FileDiffReport("src/t", null);
 		}
 		catch (Exception e) {
 			exceptionThrown = true;
@@ -172,7 +183,7 @@ public class FileDiffDirectoryTest {
 		exceptionThrown = false;
 		
 		try {
-			FileDiffDirectory diffDir = FileDiffDirectory.compareDirectory(null, "src/t");
+			new FileDiffReport(null, "src/t");
 		}
 		catch (Exception e) {
 			exceptionThrown = true;
@@ -183,7 +194,7 @@ public class FileDiffDirectoryTest {
 		exceptionThrown = false;
 		
 		try {
-			FileDiffDirectory diffDir = FileDiffDirectory.compareDirectory("src/t", "src/t");
+			new FileDiffReport("src/t", "src/t");
 		}
 		catch (Exception e) {
 			exceptionThrown = true;
@@ -194,7 +205,7 @@ public class FileDiffDirectoryTest {
 		exceptionThrown = false;
 		
 		try {
-			FileDiffDirectory diffDir = FileDiffDirectory.compareDirectory("src", "src/t");
+			new FileDiffReport("src", "src/t");
 		}
 		catch (Exception e) {
 			exceptionThrown = true;

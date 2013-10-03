@@ -1,6 +1,9 @@
 package operias;
 
+import java.io.IOException;
+
 import operias.cobertura.*;
+import operias.diff.FileDiffReport;
 
 public class Operias {
 
@@ -14,11 +17,11 @@ public class Operias {
 		CoberturaReport reportSource = constructCoberturaReport(Configuration.getSourceDirectory());
 		CoberturaReport reportRepo = constructCoberturaReport(Configuration.getRepositoryDirectory());
 		
-		
-		//CoberturaReport reportCoverageDiff = new CoberturaReport(reportSource, reportRepo);
-		
-		// Construct the diff report
-		
+		try {
+			FileDiffReport reportFileDiff = new FileDiffReport(Configuration.getRepositoryDirectory(), Configuration.getSourceDirectory());
+		} catch (IOException e) {
+			System.exit(OperiasStatus.ERROR_FILE_DIFF_REPORT_GENERATION.ordinal());
+		}
 		
 		return this;
 	}
