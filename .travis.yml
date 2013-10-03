@@ -2,5 +2,5 @@ language: java
 jdk:
   - oraclejdk7
   
-after_success:
+script: 
   - mvn cobertura:cobertura -Dcobertura.report.format=xml coveralls:cobertura

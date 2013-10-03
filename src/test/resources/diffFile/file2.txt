@@ -1,0 +1,11 @@
+public class Test {
+
+	public int Method() {
+		int i = 2;
+		i = i * 2;
+
+		return i;
+	}
+
+	public void fail() { System.exit(0); }
+}
