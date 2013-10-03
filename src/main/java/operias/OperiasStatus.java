@@ -52,5 +52,10 @@ public enum OperiasStatus {
 	/**
 	 * XML file was either non readable, or the path was invalid
 	 */
-	ERROR_COBERTURA_INVALID_XML;
+	ERROR_COBERTURA_INVALID_XML, 
+	
+	/**
+	 * There was an error during the construction of the file diff report
+	 */
+	ERROR_FILE_DIFF_REPORT_GENERATION;
 }

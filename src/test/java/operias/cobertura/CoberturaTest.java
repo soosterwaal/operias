@@ -18,8 +18,7 @@ public class CoberturaTest {
 	public void testCoberturaExecution(){
 		cobertura = new Cobertura("src/test/resources/simpleMavenProject");
 		cobertura.setOutputDirectory("target/simpleMavenProject");
-		assertNotNull("Executing cobertura failed", cobertura.executeCobertura());
-		
+		assertNotNull("Executing cobertura failed", cobertura.executeCobertura());	
 	}
 	
 	/**
