@@ -35,8 +35,8 @@ public class Main {
 				
 		// Set the arguments
 		try {
-			Configuration.setSourceDirectory(args[0]);
-			Configuration.setRepositoryDirectory(args[1]);
+			Configuration.setRevisedDirectory(args[0]);
+			Configuration.setOriginalDirectory(args[1]);
 		} catch (InvalidParameterException e) {
 			System.exit(OperiasStatus.INVALID_ARGUMENTS.ordinal());
 		}

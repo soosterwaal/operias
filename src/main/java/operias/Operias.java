@@ -18,17 +18,17 @@ public class Operias {
 	public Operias constructReport() {
 
 		// Construct the cobertura reports
-		CoberturaReport reportSource = constructCoberturaReport(Configuration.getSourceDirectory());
-		CoberturaReport reportRepo = constructCoberturaReport(Configuration.getRepositoryDirectory());
+		CoberturaReport reportRevised = constructCoberturaReport(Configuration.getRevisedDirectory());
+		CoberturaReport reportOriginal = constructCoberturaReport(Configuration.getOriginalDirectory());
 		
 		DiffReport reportFileDiff = null;
 		try {
-			reportFileDiff = new DiffReport(Configuration.getRepositoryDirectory(), Configuration.getSourceDirectory());
+			reportFileDiff = new DiffReport(Configuration.getOriginalDirectory(), Configuration.getRevisedDirectory());
 		} catch (IOException e) {
 			System.exit(OperiasStatus.ERROR_FILE_DIFF_REPORT_GENERATION.ordinal());
 		}
 		
-		report = new OperiasReport(reportRepo, reportSource, reportFileDiff);
+		report = new OperiasReport(reportOriginal, reportRevised, reportFileDiff);
 		
 		return this;
 	}

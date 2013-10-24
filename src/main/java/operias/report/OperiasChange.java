@@ -1,5 +1,7 @@
 package operias.report;
 
+import java.util.List;
+
 import difflib.Delta;
 
 public class OperiasChange {
@@ -17,7 +19,10 @@ public class OperiasChange {
 	/**
 	 * New line number (same as sourceDiffDelta.getRevision().getPosition() if set)
 	 */
-	private int newLineNumber;
+	private int revisedLineNumber;
 	
+	private List<Boolean> originalCoverage;
+	
+	private List<Boolean> revisedCoverage;
 	
 }

@@ -21,36 +21,36 @@ public class Configuration {
 	/**
 	 * Source directory, containing the source files which needs to be compared to the branch in the repository directory
 	 */
-	private static String sourceDirectory = null;
+	private static String revisedDirectory = null;
 	
 	/**
 	 * Repository directory, containing the sources files which are used as a base for the comparison
 	 */
-	private static String repositoryDirectory = null;
+	private static String originalDirectory = null;
 	
 	/**
 	 * Sets and checks the source directory, will throw an exception if it is an invalid directory
 	 * A valid directory must also contain a pom.xml file to ensure that it is a maven project.
-	 * @param sourceDirectory Valid local source directory.
+	 * @param revisedDirectory Valid local source directory.
 	 */
-	public static void setSourceDirectory(String sourceDirectory) {
-		if (checkValidDirectory(sourceDirectory)) {
-			Configuration.sourceDirectory = sourceDirectory;
+	public static void setRevisedDirectory(String revisedDirectory) {
+		if (checkValidDirectory(revisedDirectory)) {
+			Configuration.revisedDirectory = revisedDirectory;
 		} else {
-			throw new InvalidParameterException("Error: '" + sourceDirectory + "' is not a valid directory for Operias");
+			throw new InvalidParameterException("Error: '" + revisedDirectory + "' is not a valid directory for Operias");
 		}
 	}
 		
 	/**
 	 * Sets and checks the repository directory, will throw an exception if it is an invalid directory or does not contain a git repo
 	 * A valid directory must also contain a pom.xml file to ensure that it is a maven project.
-	 * @param repositoryDirectory
+	 * @param originalDirectory
 	 */
-	public static void setRepositoryDirectory(String repositoryDirectory) {
-		if (checkValidDirectory(repositoryDirectory)) {
-			Configuration.repositoryDirectory = repositoryDirectory;
+	public static void setOriginalDirectory(String originalDirectory) {
+		if (checkValidDirectory(originalDirectory)) {
+			Configuration.originalDirectory = originalDirectory;
 		} else {
-			throw new InvalidParameterException("Error: '" + repositoryDirectory + "' is not a valid directory for Operias");
+			throw new InvalidParameterException("Error: '" + originalDirectory + "' is not a valid directory for Operias");
 		}
 	}
 	
@@ -83,23 +83,23 @@ public class Configuration {
 	 * Get the source directory name
 	 * @return Source directory
 	 */
-	public static String getSourceDirectory(){
-		return sourceDirectory;
+	public static String getRevisedDirectory(){
+		return revisedDirectory;
 	}
 	
 	/**
 	 * Get the repository directory name
 	 * @return Repository directory name
 	 */
-	public static String getRepositoryDirectory() {
-		return repositoryDirectory;
+	public static String getOriginalDirectory() {
+		return originalDirectory;
 	}
 	
 	/**
 	 * Reset the configuration, used for testing mostly
 	 */
 	public static void resetConfiguration() {
-		sourceDirectory = null;
-		repositoryDirectory = null;
+		revisedDirectory = null;
+		originalDirectory = null;
 	}
 }

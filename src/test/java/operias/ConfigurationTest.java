@@ -26,11 +26,11 @@ public class ConfigurationTest {
 		
 		
 		// Test the error for invalid directory
-		assertNull(Configuration.getSourceDirectory());
+		assertNull(Configuration.getRevisedDirectory());
 		
 		boolean throwsException = false;
 		try {
-			Configuration.setSourceDirectory(invalidDirectory);
+			Configuration.setRevisedDirectory(invalidDirectory);
 		} catch (InvalidParameterException e) {
 			throwsException = true;
 		}
@@ -40,34 +40,34 @@ public class ConfigurationTest {
 		
 		
 		// Test the error for valid directory but missing maven project
-		assertNull(Configuration.getSourceDirectory());
+		assertNull(Configuration.getRevisedDirectory());
 		
 		throwsException = false;
 		try {
-			Configuration.setSourceDirectory(validDirectory);
+			Configuration.setRevisedDirectory(validDirectory);
 		} catch (InvalidParameterException e) {
 			throwsException = true;
 		}
 		
 		assertTrue("Configuration should have thrown an exception", throwsException);
 
-		assertNull(Configuration.getSourceDirectory());
+		assertNull(Configuration.getRevisedDirectory());
 		
 		
 		throwsException = false;
 		try {
-			Configuration.setSourceDirectory(null);
+			Configuration.setRevisedDirectory(null);
 		} catch (InvalidParameterException e) {
 			throwsException = true;
 		}
 		
 		assertTrue("Configuration should have thrown an exception", throwsException);
 		
-		assertNull(Configuration.getSourceDirectory());
+		assertNull(Configuration.getRevisedDirectory());
 		
-		Configuration.setSourceDirectory(validMavenDirectory);
+		Configuration.setRevisedDirectory(validMavenDirectory);
 		
-		assertEquals("Source directory should have been set to " + validMavenDirectory, validMavenDirectory, Configuration.getSourceDirectory());
+		assertEquals("Source directory should have been set to " + validMavenDirectory, validMavenDirectory, Configuration.getRevisedDirectory());
 	}
 	
 	/**
@@ -82,11 +82,11 @@ public class ConfigurationTest {
 		
 		
 		// Test the error for invalid directory
-		assertNull(Configuration.getRepositoryDirectory());
+		assertNull(Configuration.getOriginalDirectory());
 		
 		boolean throwsException = false;
 		try {
-			Configuration.setRepositoryDirectory(invalidDirectory);
+			Configuration.setOriginalDirectory(invalidDirectory);
 		} catch (InvalidParameterException e) {
 			throwsException = true;
 		}
@@ -96,34 +96,34 @@ public class ConfigurationTest {
 		
 		
 		// Test the error for valid directory but missing maven project
-		assertNull(Configuration.getRepositoryDirectory());
+		assertNull(Configuration.getOriginalDirectory());
 		
 		throwsException = false;
 		try {
-			Configuration.setRepositoryDirectory(validDirectory);
+			Configuration.setOriginalDirectory(validDirectory);
 		} catch (InvalidParameterException e) {
 			throwsException = true;
 		}
 		
 		assertTrue("Configuration should have thrown an exception", throwsException);
 
-		assertNull(Configuration.getRepositoryDirectory());
+		assertNull(Configuration.getOriginalDirectory());
 		
 		
 		throwsException = false;
 		try {
-			Configuration.setRepositoryDirectory(null);
+			Configuration.setOriginalDirectory(null);
 		} catch (InvalidParameterException e) {
 			throwsException = true;
 		}
 		
 		assertTrue("Configuration should have thrown an exception", throwsException);
 		
-		assertNull(Configuration.getRepositoryDirectory());
+		assertNull(Configuration.getOriginalDirectory());
 		
-		Configuration.setRepositoryDirectory(validMavenDirectory);
+		Configuration.setOriginalDirectory(validMavenDirectory);
 		
-		assertEquals("Source directory should have been set to " + validMavenDirectory, validMavenDirectory, Configuration.getRepositoryDirectory());
+		assertEquals("Source directory should have been set to " + validMavenDirectory, validMavenDirectory, Configuration.getOriginalDirectory());
 	}
 
 }

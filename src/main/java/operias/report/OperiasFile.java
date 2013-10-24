@@ -39,7 +39,7 @@ public class OperiasFile {
 	/**
 	 * New class coverage information
 	 */
-	private CoberturaClass newClass;
+	private CoberturaClass revisedClass;
 	
 	/**
 	 * Source diff information
@@ -50,18 +50,18 @@ public class OperiasFile {
 	/**
 	 * Construct a new operias file diff for the changes
 	 * @param originalClass
-	 * @param newClass
+	 * @param revisedClass
 	 * @param sourceDiff
 	 */
-	public OperiasFile(CoberturaClass originalClass, CoberturaClass newClass, DiffFile sourceDiff) {
+	public OperiasFile(CoberturaClass originalClass, CoberturaClass revisedClass, DiffFile sourceDiff) {
 		this.fileName = sourceDiff.getFileName();
 		this.className = originalClass.getName();
 		this.changes = new LinkedList<OperiasChange>();
 		this.originalClass = originalClass;
-		this.newClass = newClass;
+		this.revisedClass = revisedClass;
 		this.sourceDiff = sourceDiff;
 		
-		if (!originalClass.getName().equals(newClass.getName())) {
+		if (!originalClass.getName().equals(revisedClass.getName())) {
 			// Invalid class comparison, may not happen!
 			System.exit(OperiasStatus.ERROR_OPERIAS_DIFF_INVALID_CLASS_COMPARISON.ordinal());
 		}
@@ -78,7 +78,7 @@ public class OperiasFile {
 		if (change == null) {
 			// No source diff, check the coverage difference between the lines
 			CoberturaLine originalLine = originalClass.tryGetLine(originalClassLine);
-			CoberturaLine newLine = newClass.tryGetLine(newClassLine);
+			CoberturaLine newLine = revisedClass.tryGetLine(newClassLine);
 			
 			if (originalLine == null ^ newLine == null) {
 				// Something went wrong!
@@ -96,9 +96,11 @@ public class OperiasFile {
 					if ((originalLine.getHits() == 0 && newLine.getHits() > 0) ||
 							(!originalLine.isConditionCompletelyCovered() && newLine.isConditionCompletelyCovered())) {
 						// Increase delta
+						
 					} else if ((originalLine.getHits() > 0 && newLine.getHits() == 0) ||
 							(originalLine.isConditionCompletelyCovered() && !newLine.isConditionCompletelyCovered())) {
 						// Decrease delta
+						
 					}
 				} else {
 					if (originalLine.getHits() == 0 && newLine.getHits() > 0) {
@@ -109,6 +111,8 @@ public class OperiasFile {
 					}
 				}
 			}
+			
+			CompareLines(originalClassLine + 1, newClassLine + 1);
 			
 		} else {
 			
