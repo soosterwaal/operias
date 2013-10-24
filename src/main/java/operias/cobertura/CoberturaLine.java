@@ -1,8 +1,5 @@
 package operias.cobertura;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Contains coverage information for a line of code
  * @author sebas

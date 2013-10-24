@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import operias.OperiasStatus;
 import operias.test.general.ExitException;
@@ -103,7 +104,7 @@ public class CoberturaReportTest {
 		assertEquals(1.0, cClass.getBranchRate(), delta);
 		
 		// Check lines in class
-		ArrayList<CoberturaLine> classLines = (ArrayList<CoberturaLine>) cClass.getLines();
+		LinkedList<CoberturaLine> classLines = (LinkedList<CoberturaLine>) cClass.getLines();
 		
 		assertEquals(26, classLines.size());
 		

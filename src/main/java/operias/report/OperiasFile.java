@@ -3,7 +3,9 @@ package operias.report;
 import java.util.LinkedList;
 import java.util.List;
 
+import difflib.ChangeDelta;
 import difflib.Delta;
+import difflib.InsertDelta;
 import operias.OperiasStatus;
 import operias.cobertura.CoberturaClass;
 import operias.cobertura.CoberturaLine;
@@ -56,6 +58,7 @@ public class OperiasFile {
 	public OperiasFile(CoberturaClass originalClass, CoberturaClass revisedClass, DiffFile sourceDiff) {
 		this.fileName = sourceDiff.getFileName();
 		this.className = originalClass.getName();
+		this.packageName = originalClass.getPackageName();
 		this.changes = new LinkedList<OperiasChange>();
 		this.originalClass = originalClass;
 		this.revisedClass = revisedClass;
@@ -65,20 +68,27 @@ public class OperiasFile {
 			// Invalid class comparison, may not happen!
 			System.exit(OperiasStatus.ERROR_OPERIAS_DIFF_INVALID_CLASS_COMPARISON.ordinal());
 		}
+		
+		CompareLines(0, 0);
 	}
 	
 	/**
 	 * Compare lines with each other
 	 * @param originalClassLine Line in the original class coverage information
-	 * @param newClassLine Line in the new class coverage information
+	 * @param revisedClassLine Line in the new class coverage information
 	 */
-	public void CompareLines(int originalClassLine, int newClassLine) {
+	public void CompareLines(int originalClassLine, int revisedClassLine) {
+		if (originalClassLine > originalClass.getMaxLineNumber() && 
+				revisedClassLine > revisedClass.getMaxLineNumber()) {
+			return;
+		}
+		
 		Delta change = sourceDiff.tryGetChange(originalClassLine);
 		
 		if (change == null) {
 			// No source diff, check the coverage difference between the lines
 			CoberturaLine originalLine = originalClass.tryGetLine(originalClassLine);
-			CoberturaLine newLine = revisedClass.tryGetLine(newClassLine);
+			CoberturaLine newLine = revisedClass.tryGetLine(revisedClassLine);
 			
 			if (originalLine == null ^ newLine == null) {
 				// Something went wrong!
@@ -92,30 +102,36 @@ public class OperiasFile {
 					System.exit(OperiasStatus.ERROR_OPERIAS_INVALID_LINE_COMPARISON.ordinal());				
 				}
 				
-				if (originalLine.isCondition()) {
-					if ((originalLine.getHits() == 0 && newLine.getHits() > 0) ||
-							(!originalLine.isConditionCompletelyCovered() && newLine.isConditionCompletelyCovered())) {
-						// Increase delta
-						
-					} else if ((originalLine.getHits() > 0 && newLine.getHits() == 0) ||
-							(originalLine.isConditionCompletelyCovered() && !newLine.isConditionCompletelyCovered())) {
-						// Decrease delta
-						
-					}
-				} else {
-					if (originalLine.getHits() == 0 && newLine.getHits() > 0) {
-						// Increase delta
-					} else if (originalLine.getHits() > 0 && newLine.getHits() == 0) {
-						// Decrease delta
-						
-					}
+				if ((originalLine.getHits() == 0 && newLine.getHits() > 0) ||
+						(originalLine.isCondition() && (!originalLine.isConditionCompletelyCovered() && newLine.isConditionCompletelyCovered()))) {
+					// Increase delta
+					changes.add(new CoverageIncreaseChange(originalClassLine, revisedClassLine));
+				} else if ((originalLine.getHits() > 0 && newLine.getHits() == 0) ||
+						(originalLine.isCondition() && (originalLine.isConditionCompletelyCovered() && !newLine.isConditionCompletelyCovered()))) {
+					// Decrease delta
+					changes.add(new CoverageDecreaseChange(originalClassLine, revisedClassLine));
 				}
 			}
-			
-			CompareLines(originalClassLine + 1, newClassLine + 1);
-			
+			CompareLines(originalClassLine + 1, revisedClassLine + 1);	
 		} else {
-			
+			if (change instanceof InsertDelta) {
+				// New code was inserted
+				InsertSourceChange insertChanges = new InsertSourceChange(originalClassLine, revisedClassLine, (InsertDelta) change);
+				
+				changes.add(insertChanges);
+				
+				CompareLines(originalClassLine + 1, revisedClassLine + change.getRevised().getLines().size());
+				
+			} else if (change instanceof ChangeDelta) {
+				
+			}
 		}
+	}
+
+	/**
+	 * @return the changes
+	 */
+	public List<OperiasChange> getChanges() {
+		return changes;
 	}
 }

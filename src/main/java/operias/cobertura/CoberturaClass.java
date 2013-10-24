@@ -1,6 +1,5 @@
 package operias.cobertura;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,7 +20,6 @@ public class CoberturaClass {
 	 */
 	private String packageName;
 	
-	
 	/**
 	 * File name of the class
 	 */
@@ -37,13 +35,10 @@ public class CoberturaClass {
 	 */
 	private double branchRate;
 	
-	
-
 	/**
 	 * A list of all lines within this class
 	 */
 	private LinkedList<CoberturaLine> lines;
-	
 	
 	/**
 	 * Construct a cobertura class definition
@@ -129,4 +124,13 @@ public class CoberturaClass {
 	public int getMaxLineNumber() {
 		return lines.getLast().getNumber();
 	}
+
+	/**
+	 * Get the package name
+	 * @return
+	 */
+	public String getPackageName() {
+		return packageName;
+	}
+
 }

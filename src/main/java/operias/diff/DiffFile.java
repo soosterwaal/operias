@@ -38,6 +38,7 @@ public class DiffFile {
 	public DiffFile(String fileName, SourceDiffState state) {
 		this.fileName = fileName;
 		this.sourceState = state;
+		this.changes = new LinkedList<Delta>();
 	}
 	
 	/**
