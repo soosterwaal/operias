@@ -1,6 +1,8 @@
 package operias.cobertura;
 
 import java.io.File;
+import java.io.IOException;
+
 import operias.OperiasStatus;
 
 /**
@@ -40,12 +42,17 @@ public class Cobertura {
 	 * @return A Cobertura report object
 	 */
 	public CoberturaReport executeCobertura() {
-		boolean succeeded = executeCoberturaTask();
-		
-		if (succeeded) {
-			CoberturaReport coberturaReport = constructReport();
-			cleanUp();
-			return coberturaReport;
+		boolean succeeded;
+		try {
+			succeeded = executeCoberturaTask();		
+			if (succeeded) {
+				CoberturaReport coberturaReport = constructReport();
+				cleanUp();
+				return coberturaReport;
+			}
+			
+		} catch (IOException | InterruptedException e) {
+			System.exit(OperiasStatus.ERROR_COBERTURA_TASK_CREATION.ordinal());
 		}
 		
 		return null;
@@ -54,8 +61,10 @@ public class Cobertura {
 	/**
 	 * Execute the cobertura task
 	 * @return true if cobertura was succesfully executed, false otherwise
+	 * @throws IOException 
+	 * @throws InterruptedException 
 	 */
-	private boolean executeCoberturaTask() {
+	private boolean executeCoberturaTask() throws IOException, InterruptedException {
 		boolean executionSucceeded = false;
 
 		File pomXML = new File(directory, "pom.xml");
@@ -72,19 +81,15 @@ public class Cobertura {
 			System.exit(OperiasStatus.ERROR_COBERTURA_TASK_OPERIAS_EXECUTION.ordinal());
 		}
 		
-		try {
-			ProcessBuilder builder = new ProcessBuilder("mvn","clean", "cobertura:cobertura", "-Dcobertura.report.format=xml", "-f", pomXML.getAbsolutePath());
-			
-			Process process = null;
-			process = builder.start();
-			process.waitFor();
-			int exitValue = process.exitValue();
-			process.destroy();
-			
-			executionSucceeded = exitValue == 0;
-		} catch (Exception e) {
-			System.exit(OperiasStatus.ERROR_COBERTURA_TASK_CREATION.ordinal());
-		}
+		ProcessBuilder builder = new ProcessBuilder("mvn","clean", "cobertura:cobertura", "-Dcobertura.report.format=xml", "-f", pomXML.getAbsolutePath());
+		
+		Process process = null;
+		process = builder.start();
+		process.waitFor();
+		int exitValue = process.exitValue();
+		process.destroy();
+		
+		executionSucceeded = exitValue == 0;
 		
 		
 		return executionSucceeded;	
@@ -107,24 +112,18 @@ public class Cobertura {
 	
 	/**
 	 * Clean the maven project
+	 * @throws InterruptedException 
+	 * @throws IOException 
 	 */
-	private boolean cleanUp() {
+	private boolean cleanUp() throws InterruptedException, IOException {
 		File pomXML = new File(directory, "pom.xml");
 		ProcessBuilder builder = new ProcessBuilder("mvn","clean", "-f", pomXML.getAbsolutePath());
 		
-		Process process = null;
-		boolean executionSucceeded = false;
-		try {
-			process = builder.start();
-			process.waitFor();
-			int exitValue = process.exitValue();
-			process.destroy();
+		Process process = builder.start();
+		process.waitFor();
+		int exitValue = process.exitValue();
+		process.destroy();
 			
-			executionSucceeded = exitValue == 0;
-		} catch (Exception e) {
-			System.exit(OperiasStatus.ERROR_COBERTURA_CLEAN_TASK_CREATION.ordinal());
-		}
-		
-		return executionSucceeded;
+		return exitValue == 0;
 	}
 }

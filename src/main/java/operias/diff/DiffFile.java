@@ -12,7 +12,7 @@ import difflib.Delta;
 import difflib.DiffUtils;
 import difflib.Patch;
 
-public class FileDiffFile {
+public class DiffFile {
 
 	/**
 	 * File name
@@ -22,20 +22,22 @@ public class FileDiffFile {
 	/**
 	 * State of the diff file
 	 */
-	private DiffState state;
+	private SourceDiffState sourceState;
 	
+		
 	/**
 	 * Changed in the file
 	 */
 	private List<Delta> changes;
+	
 
 	/**
 	 * Construct a new file for the file diff report
 	 * @param fileName
 	 */
-	public FileDiffFile(String fileName, DiffState state) {
+	public DiffFile(String fileName, SourceDiffState state) {
 		this.fileName = fileName;
-		this.state = state;
+		this.sourceState = state;
 	}
 	
 	/**
@@ -64,8 +66,8 @@ public class FileDiffFile {
 	 * @param newFile
 	 * @throws IOException 
 	 */
-	public static FileDiffFile compareFile(String originalFile, String newFile) throws IOException {
-		FileDiffFile diffFile = new FileDiffFile(newFile, DiffState.CHANGED);
+	public static DiffFile compareFile(String originalFile, String newFile) throws IOException {
+		DiffFile diffFile = new DiffFile(newFile, SourceDiffState.CHANGED);
 		
 		List<String> originalFileList = new ArrayList<String>();
 		List<String> newFileList = new ArrayList<String>();
@@ -73,13 +75,13 @@ public class FileDiffFile {
 		try {
 			 originalFileList = fileToLines(originalFile);
 		} catch (NullPointerException | FileNotFoundException e) {
-			diffFile = new FileDiffFile(newFile, DiffState.NEW); 
+			diffFile = new DiffFile(newFile, SourceDiffState.NEW); 
 		}
 		
 		try {
 			newFileList = fileToLines(newFile);
 		} catch (NullPointerException | FileNotFoundException e) {
-			diffFile = new FileDiffFile(originalFile, DiffState.DELETED); 
+			diffFile = new DiffFile(originalFile, SourceDiffState.DELETED); 
 		}
 		
 		Patch difference = DiffUtils.diff(originalFileList, newFileList);
@@ -99,10 +101,11 @@ public class FileDiffFile {
 	/**
 	 * @return the state
 	 */
-	public DiffState getState() {
-		return state;
+	public SourceDiffState getSourceState() {
+		return sourceState;
 	}
-
+	
+	
 	/**
 	 * @return the changes
 	 */
@@ -115,9 +118,27 @@ public class FileDiffFile {
 	 */
 	public void setChanges(List<Delta> changes) {
 		if (changes.isEmpty()) {
-			state = DiffState.SAME;
+			sourceState = SourceDiffState.SAME;
 		}
 		
 		this.changes = changes;
 	}
+	
+	/**
+	 * Get the delta for the original line number
+	 * @param originalLineNumber Line number for the original file
+	 * @return
+	 */
+	public Delta tryGetChange(int originalLineNumber) {
+		for(Delta change : changes) {
+			if (change.getOriginal().getPosition() == originalLineNumber) {
+				return change;
+			} else if (change.getOriginal().getPosition() > originalLineNumber) {
+				break;
+			}
+		}
+		
+		return null;
+	}
+
 }

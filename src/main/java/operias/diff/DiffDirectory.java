@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class FileDiffDirectory {
+public class DiffDirectory {
 
 	/**
 	 * Directory name
@@ -17,27 +17,27 @@ public class FileDiffDirectory {
 	/**
 	 * List of changed files within the directory
 	 */
-	private List<FileDiffFile> files;
+	private List<DiffFile> files;
 	
 	/**
 	 * List of changed files within the directory
 	 */
-	private List<FileDiffDirectory> directories;
+	private List<DiffDirectory> directories;
 	
 	/**
 	 * Diff state of the directory
 	 */
-	private DiffState state;
+	private SourceDiffState state;
 	
 	/**
 	 * Construct a new direcotyr for in the diff report
 	 * @param directoryName
 	 */
-	public FileDiffDirectory(String directoryName, DiffState state) {
+	public DiffDirectory(String directoryName, SourceDiffState state) {
 		this.directoryName = directoryName;
 		this.state = state;
-		this.files = new ArrayList<FileDiffFile>();
-		this.directories = new ArrayList<FileDiffDirectory>();
+		this.files = new ArrayList<DiffFile>();
+		this.directories = new ArrayList<DiffDirectory>();
 	}
 	
 	/**
@@ -50,21 +50,21 @@ public class FileDiffDirectory {
 	/**
 	 * @return the files
 	 */
-	public List<FileDiffFile> getFiles() {
+	public List<DiffFile> getFiles() {
 		return files;
 	}
 	
 	/**
 	 * @return the state
 	 */
-	public DiffState getState() {
+	public SourceDiffState getState() {
 		return state;
 	}
 
 	/**
 	 * @param state the state to set
 	 */
-	public void setState(DiffState state) {
+	public void setState(SourceDiffState state) {
 		this.state = state;
 	}
 
@@ -72,7 +72,7 @@ public class FileDiffDirectory {
 	 * Add a new file to the files within this directory;
 	 * @param file
 	 */
-	public void addFile(FileDiffFile file) {
+	public void addFile(DiffFile file) {
 		files.add(file);
 	}
 	
@@ -80,7 +80,7 @@ public class FileDiffDirectory {
 	 * Add a new directory to this directory
 	 * @param directory
 	 */
-	public void addDirectory(FileDiffDirectory directory) {
+	public void addDirectory(DiffDirectory directory) {
 		this.directories.add(directory);
 	}
 	
@@ -90,17 +90,17 @@ public class FileDiffDirectory {
 	 * @param newDirectory
 	 * @throws IOException 
 	 */
-	public static FileDiffDirectory compareDirectory(String originalDirectory, String newDirectory) throws IOException {
+	public static DiffDirectory compareDirectory(String originalDirectory, String newDirectory) throws IOException {
 		
 		// Short cuts 
 		if (originalDirectory == null) {
-			return fillDirectoryDiff(newDirectory, DiffState.NEW);
+			return fillDirectoryDiff(newDirectory, SourceDiffState.NEW);
 		} else if (newDirectory == null) {
-			return fillDirectoryDiff(originalDirectory, DiffState.DELETED);
+			return fillDirectoryDiff(originalDirectory, SourceDiffState.DELETED);
 		} 
 		
 		// Both directories should exists, if not, throw exceptions
-		FileDiffDirectory diffDirectory = new FileDiffDirectory(originalDirectory, DiffState.SAME);
+		DiffDirectory diffDirectory = new DiffDirectory(originalDirectory, SourceDiffState.SAME);
 		
 		File originalDirectoryFile = new File(originalDirectory);
 		File newDirectoryFile = new File(newDirectory);
@@ -133,19 +133,19 @@ public class FileDiffDirectory {
 				if (filesWithinNewDirectory.indexOf(fileName) >= 0) {
 					// Directory exists
 					File newDir = new File(newDirectoryFile, fileName);
-					diffDirectory.addDirectory(FileDiffDirectory.compareDirectory(originalFile.getAbsolutePath(), newDir.getAbsolutePath()));
+					diffDirectory.addDirectory(DiffDirectory.compareDirectory(originalFile.getAbsolutePath(), newDir.getAbsolutePath()));
 				} else {
 					// Directory was deleted
-					diffDirectory.addDirectory(FileDiffDirectory.compareDirectory(originalFile.getAbsolutePath(), null));
+					diffDirectory.addDirectory(DiffDirectory.compareDirectory(originalFile.getAbsolutePath(), null));
 				}
 			} else {
 				if (filesWithinNewDirectory.indexOf(fileName) >= 0) {
 					// File exists
 					File newFile = new File(newDirectoryFile, fileName);
-					diffDirectory.addFile(FileDiffFile.compareFile(originalFile.getAbsolutePath(), newFile.getAbsolutePath()));
+					diffDirectory.addFile(DiffFile.compareFile(originalFile.getAbsolutePath(), newFile.getAbsolutePath()));
 				} else {
 					// File was deleted
-					diffDirectory.addFile(FileDiffFile.compareFile(originalFile.getAbsolutePath(), null));
+					diffDirectory.addFile(DiffFile.compareFile(originalFile.getAbsolutePath(), null));
 				}
 			}
 		}
@@ -160,11 +160,11 @@ public class FileDiffDirectory {
 			if (filesWithinOriginalDirectory.indexOf(fileName) < 0) {
 				if (newFile.isDirectory()) {
 					// directory is new
-					diffDirectory.addDirectory(FileDiffDirectory.compareDirectory(null, newFile.getAbsolutePath()));		
+					diffDirectory.addDirectory(DiffDirectory.compareDirectory(null, newFile.getAbsolutePath()));		
 				} else {
 					// file is new
-					diffDirectory.addFile(FileDiffFile.compareFile(null, newFile.getAbsolutePath()));					
-				}
+					diffDirectory.addFile(DiffFile.compareFile(null, newFile.getAbsolutePath()));					
+				} 
 			}
 		}
 		
@@ -180,16 +180,16 @@ public class FileDiffDirectory {
 	 * Set the status to CHANGED if any directory or file within this directory is changed
 	 */
 	private void setNewStatusIfNeeded() {
-		for(FileDiffDirectory dir : directories ) {
-			if (dir.getState() != DiffState.SAME) {
-				setState(DiffState.CHANGED);
+		for(DiffDirectory dir : directories ) {
+			if (dir.getState() != SourceDiffState.SAME) {
+				setState(SourceDiffState.CHANGED);
 				return;
 			}
 		}
 		
-		for(FileDiffFile file : files ) {
-			if (file.getState() != DiffState.SAME) {
-				setState(DiffState.CHANGED);
+		for(DiffFile file : files ) {
+			if (file.getSourceState() != SourceDiffState.SAME) {
+				setState(SourceDiffState.CHANGED);
 				return;
 			}
 		}
@@ -201,7 +201,7 @@ public class FileDiffDirectory {
 	 * @return
 	 * @throws IOException 
 	 */
-	private static FileDiffDirectory fillDirectoryDiff(String directory, DiffState state) throws IOException {
+	private static DiffDirectory fillDirectoryDiff(String directory, SourceDiffState state) throws IOException {
 	
 		File dir = new File(directory);
 		
@@ -210,7 +210,7 @@ public class FileDiffDirectory {
 		
 		List<File> filesWithinDirectory = Arrays.asList(files);
 		
-		FileDiffDirectory diffDirectory = new FileDiffDirectory(directory, state);
+		DiffDirectory diffDirectory = new DiffDirectory(directory, state);
 		
 		for(File file : filesWithinDirectory) {
 			
@@ -219,16 +219,16 @@ public class FileDiffDirectory {
 			}
 			
 			if (file.isFile()) {
-				if (state.equals(DiffState.DELETED)) {
-					diffDirectory.addFile(FileDiffFile.compareFile(file.getAbsolutePath(), null));
+				if (state.equals(SourceDiffState.DELETED)) {
+					diffDirectory.addFile(DiffFile.compareFile(file.getAbsolutePath(), null));
 				} else {
-					diffDirectory.addFile(FileDiffFile.compareFile(null, file.getAbsolutePath()));
+					diffDirectory.addFile(DiffFile.compareFile(null, file.getAbsolutePath()));
 				}
 			} else {
-				if (state.equals(DiffState.DELETED)) {
-					diffDirectory.addDirectory(FileDiffDirectory.compareDirectory(file.getAbsolutePath(), null));
+				if (state.equals(SourceDiffState.DELETED)) {
+					diffDirectory.addDirectory(DiffDirectory.compareDirectory(file.getAbsolutePath(), null));
 				} else {
-					diffDirectory.addDirectory(FileDiffDirectory.compareDirectory(null, file.getAbsolutePath()));
+					diffDirectory.addDirectory(DiffDirectory.compareDirectory(null, file.getAbsolutePath()));
 				}
 			}
 		}
@@ -244,7 +244,7 @@ public class FileDiffDirectory {
 		
 		boolean isEmpty = files.size() == 0;
 		
-		for(FileDiffDirectory dir : directories) {
+		for(DiffDirectory dir : directories) {
 			isEmpty &= dir.isEmpty();
 		}
 		
@@ -254,7 +254,34 @@ public class FileDiffDirectory {
 	/**
 	 * @return the directories
 	 */
-	public List<FileDiffDirectory> getDirectories() {
+	public List<DiffDirectory> getDirectories() {
 		return directories;
+	}
+	
+	/**
+	 * Get the file diff instance of the given file
+	 * @param filename
+	 * @return
+	 */
+	public DiffFile getFile(String filename) {
+		
+		// Search the files of this directory
+		for(DiffFile file : files) {
+			if (file.getFileName().equals(filename)) {
+				return file;
+			}
+		}
+		
+		//Not found in file, search in directories
+		for (DiffDirectory dir : directories) {
+			DiffFile sFile = dir.getFile(filename);
+			
+			if (sFile != null) {
+				return sFile;
+			}
+		}
+		
+		// file not found
+		return null;
 	}
 }

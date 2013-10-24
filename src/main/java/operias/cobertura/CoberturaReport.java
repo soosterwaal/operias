@@ -92,10 +92,9 @@ public class CoberturaReport {
 			double classLineRate = Double.parseDouble(eClass.getAttribute("line-rate"));
 			double classBranchRate = Double.parseDouble(eClass.getAttribute("branch-rate"));
 			
-			CoberturaClass cClass = new CoberturaClass(className,fileName, classLineRate,classBranchRate);
+			CoberturaClass cClass = new CoberturaClass(className,fileName, cPackage.getName(), classLineRate,classBranchRate);
 			
 			addLinesToClass(cClass, eClass);
-			addMethodsToClass(cClass, eClass);
 			
 			cPackage.addClass(cClass);
 		}
@@ -119,85 +118,23 @@ public class CoberturaReport {
 			int number 			= Integer.parseInt(eLine.getAttribute("number"));
 			int hits			= Integer.parseInt(eLine.getAttribute("hits"));
 			boolean condition 	= Boolean.parseBoolean(eLine.getAttribute("branch"));
-			
-			CoberturaLine cLine = new CoberturaLine(number, hits,condition);
+			boolean conditionCompletelyCovered = false;
 			
 			if (condition) {
-				addConditionsToLines(cLine, eLine);
+				conditionCompletelyCovered = eLine.getAttribute("condition-coverage").startsWith("100");
 			}
+
+			
+			CoberturaLine cLine = new CoberturaLine(number, hits, condition, conditionCompletelyCovered);
+			
+			
 			
 			cClass.addLine(cLine);
 		}
 	}
 	
-	/**
-	 * Add methods to the cobertura class
-	 * @param cClass	Cobertura class
-	 * @param eClass	XML class element 
-	 */
-	private void addMethodsToClass(CoberturaClass cClass, Element eClass) {
-		NodeList lines = eClass.getElementsByTagName("method");
-		
-		for(int i = 0; i < lines.getLength(); i++){
-			Element eMethod = (Element) lines.item(i);
-
-			String name = eMethod.getAttribute("name");
-			double lineRate = Double.parseDouble(eMethod.getAttribute("line-rate"));
-			double branchRate = Double.parseDouble(eMethod.getAttribute("branch-rate"));
-			
-			CoberturaMethod cMethod = new CoberturaMethod(name, lineRate ,branchRate);
-			
-			addLinesToMethod(cMethod, eMethod);
-			
-			
-			cClass.addMethod(cMethod);
-		}
-	}
 	
-	/**
-	 * Add lines to the cobertura method
-	 * @param cMethod	Cobertura method
-	 * @param eMethod	XML method element
-	 */
-	private void addLinesToMethod(CoberturaMethod cMethod, Element eMethod) {
-		NodeList lines = eMethod.getElementsByTagName("line");
-		
-		for(int i = 0; i < lines.getLength(); i++){
-			Element eLine = (Element) lines.item(i);
-			
-			int number 			= Integer.parseInt(eLine.getAttribute("number"));
-			int hits			= Integer.parseInt(eLine.getAttribute("hits"));
-			boolean condition 	= Boolean.parseBoolean(eLine.getAttribute("branch"));
-			
-			CoberturaLine cLine = new CoberturaLine(number, hits,condition);
-			
-			if (condition) {
-				addConditionsToLines(cLine, eLine);
-			}
-			
-			cMethod.addLine(cLine);
-		}
-	}
-	
-	/**
-	 * Add conditions to the coberture line
-	 * @param cLine	CoberturaLine
-	 * @param eLine	XML line element
-	 */
-	private void addConditionsToLines(CoberturaLine cLine, Element eLine) {
-		NodeList lines = eLine.getElementsByTagName("condition");
-		
-		for(int i = 0; i < lines.getLength(); i++){
-			Element eMethod = (Element) lines.item(i);
 
-			int number = Integer.parseInt(eMethod.getAttribute("number"));
-			String coverage = eMethod.getAttribute("coverage");
-			
-			CoberturaCondition cCondition = new CoberturaCondition(number, coverage);
-			
-			cLine.addCondition(cCondition);
-		}
-	}
 
 	/**
 	 * @return the lineRate
@@ -218,5 +155,21 @@ public class CoberturaReport {
 	 */
 	public List<CoberturaPackage> getPackages() {
 		return packages;
+	}
+	
+	
+	/**
+	 * Get the package with the given name, null otherwise
+	 * @param packageName
+	 * @return
+	 */
+	public CoberturaPackage getPackage(String packageName) {
+		for(CoberturaPackage cPackage : packages) {
+			if (cPackage.getName().equals(packageName)) {
+				return cPackage;
+			}
+		}
+		
+		return null;
 	}
 }

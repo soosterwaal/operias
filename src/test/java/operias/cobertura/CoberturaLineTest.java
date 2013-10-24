@@ -11,22 +11,22 @@ public class CoberturaLineTest {
 	 */
 	@Test
 	public void testEquals() {
-		CoberturaLine line1 = new CoberturaLine(1, 2, false);
+		CoberturaLine line1 = new CoberturaLine(1, 2, false, false);
 		
 		assertFalse(line1.equals(null));
 		assertFalse(line1.equals(10));
 		assertTrue(line1.equals(line1));
 		
-		CoberturaLine line2 = new CoberturaLine(2, 2, false);
+		CoberturaLine line2 = new CoberturaLine(2, 2, false, false);
 		assertFalse(line1.equals(line2));
 		
-		line2 = new CoberturaLine(1, 1, false);
+		line2 = new CoberturaLine(1, 1, false, false);
 		assertFalse(line1.equals(line2));
 		
-		line2 = new CoberturaLine(1, 2, true);
+		line2 = new CoberturaLine(1, 2, true, false);
 		assertFalse(line1.equals(line2));
 		
-		line2 = new CoberturaLine(1, 2, false);
+		line2 = new CoberturaLine(1, 2, false, false);
 		assertTrue(line1.equals(line2));
 	}
 }

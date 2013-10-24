@@ -77,4 +77,19 @@ public class CoberturaPackage {
 	public List<CoberturaClass> getClasses() {
 		return classes;
 	}
+	
+	/**
+	 * Get the class in the package with the given name, null otherwise
+	 * @param className
+	 * @return
+	 */
+	public CoberturaClass getClass(String className) {
+		for(CoberturaClass cClass : classes) {
+			if (cClass.getName().equals(className)) {
+				return cClass;
+			}
+		}
+		
+		return null;
+	}
 }
