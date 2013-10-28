@@ -9,7 +9,6 @@ import operias.report.OperiasReport;
 public class Operias {
 
 	
-	private OperiasReport report;
 	
 	/**
 	 * Construct a report based on the difference in source files and coverage between the two folders in the configuration
@@ -28,7 +27,7 @@ public class Operias {
 			System.exit(OperiasStatus.ERROR_FILE_DIFF_REPORT_GENERATION.ordinal());
 		}
 		
-		report = new OperiasReport(reportOriginal, reportRevised, reportFileDiff);
+		new OperiasReport(reportOriginal, reportRevised, reportFileDiff);
 		
 		return this;
 	}

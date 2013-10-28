@@ -15,6 +15,7 @@ import operias.test.general.NoExitSecurityManager;
 import org.junit.Before;
 import org.junit.Test;
 
+import difflib.ChangeDelta;
 import difflib.Chunk;
 import difflib.DeleteDelta;
 import difflib.Delta;
@@ -406,6 +407,73 @@ public class OperiasFileTest {
 		assertTrue(oFile.getChanges().getFirst().getOriginalCoverage().get(0));
 		assertFalse(oFile.getChanges().getFirst().getOriginalCoverage().get(1));
 		assertNull(oFile.getChanges().getFirst().getOriginalCoverage().get(2));
+	}
+	
+	/**
+	 * Test a simple change in source file
+	 */
+	@Test
+	public void testSimpleChange() {
+		LinkedList<String> originalLines = new LinkedList<String>();
+		originalLines.add("orig1");
+		originalLines.add("orig2");
+		Chunk original = new Chunk(4, originalLines);
 		
+
+		LinkedList<String> revisedLines = new LinkedList<String>();
+		revisedLines.add("rev1");
+		revisedLines.add("rev2");
+		revisedLines.add("rev3");
+		Chunk revised = new Chunk(4, revisedLines);
+		
+		ChangeDelta delta = new ChangeDelta(original, revised);
+		
+		LinkedList<Delta> changes = new LinkedList<Delta>();
+		changes.add(delta);
+		
+		DiffFile dFile = new DiffFile("simple/simple.java", SourceDiffState.SAME);
+		dFile.setChanges(changes);
+		
+		CoberturaLine line1 = new CoberturaLine(2, 2, false, false);
+		CoberturaLine lineo_4 = new CoberturaLine(4, 4, false, false);
+		CoberturaLine liner_5 = new CoberturaLine(5, 0, false, false);
+		CoberturaLine liner_6 = new CoberturaLine(6, 5, false, false);
+		
+		originalClass.addLine(line1);
+		originalClass.addLine(lineo_4);
+		
+		revisedClass.addLine(line1);
+		revisedClass.addLine(liner_5);
+		revisedClass.addLine(liner_6);
+		
+		OperiasFile oFile = new OperiasFile(originalClass, revisedClass, dFile);
+		
+		assertEquals(1, oFile.getChanges().size());
+		assertTrue(oFile.getChanges().getFirst() instanceof ChangeSourceChange);
+		assertEquals(2, oFile.getChanges().getFirst().getOriginalCoverage().size());
+		assertTrue(oFile.getChanges().getFirst().getOriginalCoverage().get(0));
+		assertNull(oFile.getChanges().getFirst().getOriginalCoverage().get(1));
+		
+		assertEquals(3, oFile.getChanges().getFirst().getRevisedCoverage().size());
+		assertNull(oFile.getChanges().getFirst().getRevisedCoverage().get(0));
+		assertFalse(oFile.getChanges().getFirst().getRevisedCoverage().get(1));
+		assertTrue(oFile.getChanges().getFirst().getRevisedCoverage().get(2));
+	}
+	
+	@Test
+	public void testInvalidClassComparison() {
+		System.setSecurityManager(new NoExitSecurityManager());
+		boolean exceptionThrown = false;
+		revisedClass = new CoberturaClass("Simple2" , "simple2/Simple2.java", "Simple2", 1, 1);
+		DiffFile sourceDiff = new DiffFile("simple/Simple.java", SourceDiffState.SAME);
+		try {
+			new OperiasFile(originalClass, revisedClass, sourceDiff);
+			
+		} catch (ExitException e) {
+	    	exceptionThrown = true;
+            assertEquals("Invalid line comparison", OperiasStatus.ERROR_OPERIAS_DIFF_INVALID_CLASS_COMPARISON.ordinal(), e.status);
+	    }	
+		assertTrue(exceptionThrown);
+		System.setSecurityManager(null);
 	}
 }

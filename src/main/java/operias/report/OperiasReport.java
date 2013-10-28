@@ -86,6 +86,19 @@ public class OperiasReport {
 			
 			if (oPackage == null) {
 				// Package was new so, all classes should be "new"
+				for(CoberturaClass rClass : rPackage.getClasses()) {
+					changedClasses.add(new OperiasFile(rClass));
+				}
+			} else {
+				// Package was found, check which classes are new
+				for(CoberturaClass rClass : rPackage.getClasses()) {
+					CoberturaClass oClass = oPackage.getClass(rClass.getName());
+					
+					if (oClass == null) {
+						// Class was new
+						changedClasses.add(new OperiasFile(rClass));
+					}
+				}
 			}
 		}
 	}
