@@ -130,11 +130,11 @@ public class DiffFile {
 	 * @param originalLineNumber Line number for the original file
 	 * @return
 	 */
-	public Delta tryGetChange(int originalLineNumber) {
+	public Delta tryGetChange(int originalLineNumber, int revisedLineNumber) {
 		for(Delta change : changes) {
-			if (change.getOriginal().getPosition() == originalLineNumber) {
+			if (change.getOriginal().getPosition() == originalLineNumber && change.getRevised().getPosition() == revisedLineNumber) {
 				return change;
-			} else if (change.getOriginal().getPosition() > originalLineNumber) {
+			} else if (change.getOriginal().getPosition() > originalLineNumber && change.getRevised().getPosition() > revisedLineNumber) {
 				break;
 			}
 		}

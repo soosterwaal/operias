@@ -2,11 +2,11 @@ package operias.report;
 
 import java.util.LinkedList;
 
-import difflib.InsertDelta;
+import difflib.DeleteDelta;
 
-public class InsertSourceChange extends SourceChange {
-
-	public InsertSourceChange(int originalLineNumber, int revisedLineNumber, InsertDelta additions) {
+public class DeleteSourceChange extends SourceChange {
+	
+	public DeleteSourceChange(int originalLineNumber, int revisedLineNumber, DeleteDelta additions) {
 		this.originalLineNumber = originalLineNumber;
 		this.revisedLineNumber = revisedLineNumber;
 		this.originalCoverage = new LinkedList<Boolean>();
@@ -14,5 +14,6 @@ public class InsertSourceChange extends SourceChange {
 		this.sourceDiffDelta = additions;
 		
 	}
+	
 	
 }

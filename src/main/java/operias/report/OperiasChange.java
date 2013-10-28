@@ -30,5 +30,40 @@ public class OperiasChange {
 	 * A list of booleans with the coverage information about the of the revised file
 	 */
 	protected List<Boolean> revisedCoverage;
+
+	/**
+	 * @return the sourceDiffDelta
+	 */
+	public Delta getSourceDiffDelta() {
+		return sourceDiffDelta;
+	}
+
+	/**
+	 * @return the originalLineNumber
+	 */
+	public int getOriginalLineNumber() {
+		return originalLineNumber;
+	}
+
+	/**
+	 * @return the revisedLineNumber
+	 */
+	public int getRevisedLineNumber() {
+		return revisedLineNumber;
+	}
+
+	/**
+	 * @return the originalCoverage
+	 */
+	public List<Boolean> getOriginalCoverage() {
+		return originalCoverage;
+	}
+
+	/**
+	 * @return the revisedCoverage
+	 */
+	public List<Boolean> getRevisedCoverage() {
+		return revisedCoverage;
+	}
 	
 }

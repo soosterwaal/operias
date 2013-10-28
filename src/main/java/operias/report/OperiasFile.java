@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import difflib.ChangeDelta;
+import difflib.DeleteDelta;
 import difflib.Delta;
 import difflib.InsertDelta;
 import operias.OperiasStatus;
@@ -31,7 +32,7 @@ public class OperiasFile {
 	/**
 	 * Changes of the file
 	 */
-	private List<OperiasChange> changes;
+	private LinkedList<OperiasChange> changes;
 	
 	/**
 	 * Original class coverage information
@@ -83,55 +84,102 @@ public class OperiasFile {
 			return;
 		}
 		
-		Delta change = sourceDiff.tryGetChange(originalClassLine);
+		Delta change = sourceDiff.tryGetChange(originalClassLine, revisedClassLine);
 		
 		if (change == null) {
 			// No source diff, check the coverage difference between the lines
 			CoberturaLine originalLine = originalClass.tryGetLine(originalClassLine);
-			CoberturaLine newLine = revisedClass.tryGetLine(revisedClassLine);
+			CoberturaLine revisedLine = revisedClass.tryGetLine(revisedClassLine);
 			
-			if (originalLine == null ^ newLine == null) {
+			if (originalLine == null ^ revisedLine == null) {
 				// Something went wrong!
 				System.exit(OperiasStatus.ERROR_OPERIAS_INVALID_LINE_COMPARISON.ordinal());
 			}
 			
 			if (originalLine != null) {
 				// Lines found, compare!
-				if (originalLine.isCondition() ^ newLine.isCondition()) {
+				if (originalLine.isCondition() ^ revisedLine.isCondition()) {
 					// Again something went wrong i suppose... no change in the line, so is either should both be conditions or not
 					System.exit(OperiasStatus.ERROR_OPERIAS_INVALID_LINE_COMPARISON.ordinal());				
 				}
 				
-				if ((originalLine.getHits() == 0 && newLine.getHits() > 0) ||
-						(originalLine.isCondition() && (!originalLine.isConditionCompletelyCovered() && newLine.isConditionCompletelyCovered()))) {
+				if (!originalLine.isCovered() && revisedLine.isCovered()) {
 					// Increase delta
 					changes.add(new CoverageIncreaseChange(originalClassLine, revisedClassLine));
-				} else if ((originalLine.getHits() > 0 && newLine.getHits() == 0) ||
-						(originalLine.isCondition() && (originalLine.isConditionCompletelyCovered() && !newLine.isConditionCompletelyCovered()))) {
+				} else if (originalLine.isCovered() && !revisedLine.isCovered()) {
 					// Decrease delta
 					changes.add(new CoverageDecreaseChange(originalClassLine, revisedClassLine));
 				}
 			}
 			CompareLines(originalClassLine + 1, revisedClassLine + 1);	
-		} else {
-			if (change instanceof InsertDelta) {
-				// New code was inserted
-				InsertSourceChange insertChanges = new InsertSourceChange(originalClassLine, revisedClassLine, (InsertDelta) change);
-				
-				changes.add(insertChanges);
-				
-				CompareLines(originalClassLine + 1, revisedClassLine + change.getRevised().getLines().size());
-				
-			} else if (change instanceof ChangeDelta) {
-				
+		} else if (change instanceof InsertDelta) {
+			// New code was inserted
+			InsertSourceChange insertChanges = new InsertSourceChange(originalClassLine, revisedClassLine, (InsertDelta) change);
+			
+			for(int i = revisedClassLine; i < revisedClassLine + change.getRevised().getLines().size(); i++) {
+				CoberturaLine line = revisedClass.tryGetLine(i);
+				if (line == null) {
+					insertChanges.addRevisedCoverageLine(null);
+				} else {
+					insertChanges.addRevisedCoverageLine(line.isCovered());
+				}
 			}
+			
+			changes.add(insertChanges);
+			
+			// Next comparison after the insert
+			CompareLines(originalClassLine, revisedClassLine + change.getRevised().getLines().size());
+			
+		} else if (change instanceof ChangeDelta) {
+			ChangeSourceChange changeChanges = new ChangeSourceChange(originalClassLine, revisedClassLine, (ChangeDelta) change);
+			
+			for(int i = originalClassLine; i < originalClassLine + change.getOriginal().getLines().size(); i++) {
+				CoberturaLine line = originalClass.tryGetLine(i);
+				if (line == null) {
+					changeChanges.addOriginalCoverageLine(null);
+				} else {
+					changeChanges.addOriginalCoverageLine(line.isCovered());
+				}
+			}
+			
+			for(int i = revisedClassLine; i < revisedClassLine + change.getRevised().getLines().size(); i++) {
+				CoberturaLine line = revisedClass.tryGetLine(i);
+				if (line == null) {
+					changeChanges.addRevisedCoverageLine(null);
+				} else {
+					changeChanges.addRevisedCoverageLine(line.isCovered());
+				}
+			}
+		
+			changes.add(changeChanges);
+			
+			// Next comparison after the change
+			CompareLines(originalClassLine + change.getOriginal().getLines().size(), revisedClassLine + change.getRevised().getLines().size());
+			
+		} else {
+			//Delete delta
+			DeleteSourceChange deleteChanges = new DeleteSourceChange(originalClassLine, revisedClassLine, (DeleteDelta) change);
+		
+			for(int i = originalClassLine; i < originalClassLine + change.getOriginal().getLines().size(); i++) {
+				CoberturaLine line = originalClass.tryGetLine(i);
+				if (line == null) {
+					deleteChanges.addOriginalCoverageLine(null);
+				} else {
+					deleteChanges.addOriginalCoverageLine(line.isCovered());
+				}
+			}
+			changes.add(deleteChanges);
+			
+			//Next comparison after the deletion
+			CompareLines(originalClassLine + change.getOriginal().getLines().size(), revisedClassLine);
 		}
+		
 	}
 
 	/**
 	 * @return the changes
 	 */
-	public List<OperiasChange> getChanges() {
+	public LinkedList<OperiasChange> getChanges() {
 		return changes;
 	}
 }

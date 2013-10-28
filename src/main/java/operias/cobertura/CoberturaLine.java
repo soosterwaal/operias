@@ -85,4 +85,13 @@ public class CoberturaLine {
 				otherLine.getNumber() == getNumber() && 
 				otherLine.isCondition() == isCondition();
 	}
+
+
+
+	/**
+	 * Check if the line can be considered covered
+	 */
+	public Boolean isCovered() {
+		return condition ? conditionCompletelyCovered : hits > 0;
+	}
 }
