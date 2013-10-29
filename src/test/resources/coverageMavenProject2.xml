@@ -1,0 +1,165 @@
+<?xml version="1.0"?>
+<!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
+
+<coverage line-rate="0.7272727272727273" branch-rate="0.8461538461538461" lines-covered="16" lines-valid="22" branches-covered="11" branches-valid="13" complexity="3.4" version="2.0.3" timestamp="1383038804313">
+	<sources>
+		<source>--source</source>
+		<source>/Users/sebas/Documents/Eclipse Workspace/mavenProject/src/main/java</source>
+	</sources>
+	<packages>
+		<package name="example" line-rate="0.7058823529411765" branch-rate="0.9" complexity="3.0">
+			<classes>
+				<class name="example.Calculations" filename="example/Calculations.java" line-rate="0.875" branch-rate="0.75" complexity="3.0">
+					<methods>
+						<method name="&lt;init&gt;" signature="()V" line-rate="1.0" branch-rate="1.0">
+							<lines>
+								<line number="3" hits="2" branch="false"/>
+								<line number="5" hits="2" branch="false"/>
+							</lines>
+						</method>
+						<method name="calculateSomethings" signature="(II)I" line-rate="0.6666666666666666" branch-rate="0.5">
+							<lines>
+								<line number="8" hits="1" branch="true" condition-coverage="50% (1/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="50%"/>
+									</conditions>
+								</line>
+								<line number="9" hits="1" branch="false"/>
+								<line number="11" hits="0" branch="false"/>
+							</lines>
+						</method>
+						<method name="someOtherCalculations" signature="(II)I" line-rate="1.0" branch-rate="1.0">
+							<lines>
+								<line number="16" hits="2" branch="true" condition-coverage="100% (2/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="100%"/>
+									</conditions>
+								</line>
+								<line number="17" hits="1" branch="false"/>
+								<line number="19" hits="1" branch="false"/>
+							</lines>
+						</method>
+					</methods>
+					<lines>
+						<line number="3" hits="2" branch="false"/>
+						<line number="5" hits="2" branch="false"/>
+						<line number="8" hits="1" branch="true" condition-coverage="50% (1/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="50%"/>
+							</conditions>
+						</line>
+						<line number="9" hits="1" branch="false"/>
+						<line number="11" hits="0" branch="false"/>
+						<line number="16" hits="2" branch="true" condition-coverage="100% (2/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="100%"/>
+							</conditions>
+						</line>
+						<line number="17" hits="1" branch="false"/>
+						<line number="19" hits="1" branch="false"/>
+					</lines>
+				</class>
+				<class name="example.Loops" filename="example/Loops.java" line-rate="1.0" branch-rate="1.0" complexity="5.0">
+					<methods>
+						<method name="&lt;init&gt;" signature="()V" line-rate="1.0" branch-rate="1.0">
+							<lines>
+								<line number="3" hits="1" branch="false"/>
+							</lines>
+						</method>
+						<method name="LoopLoop" signature="(I)I" line-rate="1.0" branch-rate="1.0">
+							<lines>
+								<line number="6" hits="193" branch="true" condition-coverage="100% (2/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="100%"/>
+									</conditions>
+								</line>
+								<line number="7" hits="192" branch="true" condition-coverage="100% (4/4)">
+									<conditions>
+										<condition number="0" type="jump" coverage="100%"/>
+										<condition number="1" type="jump" coverage="100%"/>
+									</conditions>
+								</line>
+								<line number="8" hits="1" branch="false"/>
+								<line number="13" hits="1" branch="false"/>
+							</lines>
+						</method>
+					</methods>
+					<lines>
+						<line number="3" hits="1" branch="false"/>
+						<line number="6" hits="193" branch="true" condition-coverage="100% (2/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="100%"/>
+							</conditions>
+						</line>
+						<line number="7" hits="192" branch="true" condition-coverage="100% (4/4)">
+							<conditions>
+								<condition number="0" type="jump" coverage="100%"/>
+								<condition number="1" type="jump" coverage="100%"/>
+							</conditions>
+						</line>
+						<line number="8" hits="1" branch="false"/>
+						<line number="13" hits="1" branch="false"/>
+					</lines>
+				</class>
+				<class name="example.NewClass" filename="example/NewClass.java" line-rate="0.0" branch-rate="1.0" complexity="1.0">
+					<methods>
+						<method name="&lt;init&gt;" signature="()V" line-rate="0.0" branch-rate="1.0">
+							<lines>
+								<line number="3" hits="0" branch="false"/>
+							</lines>
+						</method>
+						<method name="testing" signature="()V" line-rate="0.0" branch-rate="1.0">
+							<lines>
+								<line number="6" hits="0" branch="false"/>
+								<line number="7" hits="0" branch="false"/>
+								<line number="8" hits="0" branch="false"/>
+							</lines>
+						</method>
+					</methods>
+					<lines>
+						<line number="3" hits="0" branch="false"/>
+						<line number="6" hits="0" branch="false"/>
+						<line number="7" hits="0" branch="false"/>
+						<line number="8" hits="0" branch="false"/>
+					</lines>
+				</class>
+			</classes>
+		</package>
+		<package name="moreExamples" line-rate="0.8" branch-rate="0.6666666666666666" complexity="5.0">
+			<classes>
+				<class name="moreExamples.Switch" filename="moreExamples/Switch.java" line-rate="0.8" branch-rate="0.6666666666666666" complexity="5.0">
+					<methods>
+						<method name="&lt;init&gt;" signature="()V" line-rate="1.0" branch-rate="1.0">
+							<lines>
+								<line number="3" hits="1" branch="false"/>
+							</lines>
+						</method>
+						<method name="DoSwitch" signature="(I)I" line-rate="0.75" branch-rate="0.6666666666666666">
+							<lines>
+								<line number="6" hits="2" branch="true" condition-coverage="66% (2/3)">
+									<conditions>
+										<condition number="0" type="switch" coverage="66%"/>
+									</conditions>
+								</line>
+								<line number="7" hits="1" branch="false"/>
+								<line number="8" hits="1" branch="false"/>
+								<line number="9" hits="0" branch="false"/>
+							</lines>
+						</method>
+					</methods>
+					<lines>
+						<line number="3" hits="1" branch="false"/>
+						<line number="6" hits="2" branch="true" condition-coverage="66% (2/3)">
+							<conditions>
+								<condition number="0" type="switch" coverage="66%"/>
+							</conditions>
+						</line>
+						<line number="7" hits="1" branch="false"/>
+						<line number="8" hits="1" branch="false"/>
+						<line number="9" hits="0" branch="false"/>
+					</lines>
+				</class>
+			</classes>
+		</package>
+	</packages>
+</coverage>

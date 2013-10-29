@@ -57,5 +57,20 @@ public enum OperiasStatus {
 	/**
 	 * There was an error during the construction of the file diff report
 	 */
-	ERROR_FILE_DIFF_REPORT_GENERATION;
+	ERROR_FILE_DIFF_REPORT_GENERATION, 
+	
+	/**
+	 * The source report diff says the files were the same, but the class was not found in the new cobertura erport
+	 */
+	ERROR_COBERTURA_CLASS_REPORT_NOT_FOUND, 
+	
+	/**
+	 * Two different class were compared
+	 */
+	ERROR_OPERIAS_DIFF_INVALID_CLASS_COMPARISON, 
+	
+	/**
+	 * Invalid line comparison
+	 */
+	ERROR_OPERIAS_INVALID_LINE_COMPARISON;
 }

@@ -1,8 +1,5 @@
 package operias.cobertura;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Contains coverage information for a line of code
  * @author sebas
@@ -26,9 +23,9 @@ public class CoberturaLine {
 	private boolean condition;
 	
 	/**
-	 * List of conditions
+	 * True if the branches were covered
 	 */
-	private List<CoberturaCondition> conditions;
+	private boolean conditionCompletelyCovered;
 	
 	/**
 	 * Construct a new coberture line instance
@@ -36,20 +33,14 @@ public class CoberturaLine {
 	 * @param hits			Number of hits
 	 * @param condition		Condition in line
 	 */
-	public CoberturaLine(int number, int hits, boolean condition){
+	public CoberturaLine(int number, int hits, boolean condition, boolean conditionCompletelyCovered){
 		this.number = number;
 		this.hits = hits;
 		this.condition = condition;
-		this.conditions = new ArrayList<CoberturaCondition>();
+		this.conditionCompletelyCovered = conditionCompletelyCovered;
 	}
 	
-	/**
-	 * Add a condition to the line
-	 * @param condition Condition
-	 */
-	public void addCondition(CoberturaCondition condition) {
-		conditions.add(condition);
-	}
+	
 
 	/**
 	 * @return the number
@@ -73,11 +64,12 @@ public class CoberturaLine {
 	}
 
 	/**
-	 * @return the conditions
+	 * @return the conditionCompletelyCovered
 	 */
-	public List<CoberturaCondition> getConditions() {
-		return conditions;
+	public boolean isConditionCompletelyCovered() {
+		return conditionCompletelyCovered;
 	}
+	
 	
 	/**
 	 * Override the equals implementation
@@ -92,5 +84,14 @@ public class CoberturaLine {
 		return otherLine.getHits() == getHits() && 
 				otherLine.getNumber() == getNumber() && 
 				otherLine.isCondition() == isCondition();
+	}
+
+
+
+	/**
+	 * Check if the line can be considered covered
+	 */
+	public Boolean isCovered() {
+		return condition ? conditionCompletelyCovered : hits > 0;
 	}
 }

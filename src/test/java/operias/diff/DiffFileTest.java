@@ -5,13 +5,13 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import operias.diff.DiffState;
+import operias.diff.SourceDiffState;
 
 import org.junit.Test;
 
 import difflib.Delta;
 
-public class FileDiffFileTest {
+public class DiffFileTest {
 
 	/**
 	 * Check if it correctly notes that teh file is deleted
@@ -19,26 +19,26 @@ public class FileDiffFileTest {
 	 */
 	@Test
 	public void testFileDiffDeleted() {
-		FileDiffFile diffFile = null;
+		DiffFile diffFile = null;
 		
 		try {
-			diffFile = FileDiffFile.compareFile("src/test/resources/diffFile/file1.txt", null);
+			diffFile = DiffFile.compareFile("src/test/resources/diffFile/file1.txt", null);
 		} catch (Exception e) {
 			fail();
 		}
 		
-		assertEquals(DiffState.DELETED, diffFile.getState());
+		assertEquals(SourceDiffState.DELETED, diffFile.getSourceState());
 		assertEquals("src/test/resources/diffFile/file1.txt", diffFile.getFileName());
 		//1 change, the complete file
 		assertEquals(1, diffFile.getChanges().size());
 
 		try {
-			diffFile = FileDiffFile.compareFile("src/test/resources/diffFile/file1.txt", "src/test/resources/diffFile/nonExistingFile.txt");
+			diffFile = DiffFile.compareFile("src/test/resources/diffFile/file1.txt", "src/test/resources/diffFile/nonExistingFile.txt");
 		} catch (Exception e) {
 			fail();
 		}
 		
-		assertEquals(DiffState.DELETED, diffFile.getState());
+		assertEquals(SourceDiffState.DELETED, diffFile.getSourceState());
 		assertEquals("src/test/resources/diffFile/file1.txt", diffFile.getFileName());
 		//1 change, the complete file
 		assertEquals(1, diffFile.getChanges().size());
@@ -50,26 +50,26 @@ public class FileDiffFileTest {
 	 */
 	@Test
 	public void testfileDiffNew() {
-		FileDiffFile diffFile = null;
+		DiffFile diffFile = null;
 		try {
-			diffFile = FileDiffFile.compareFile(null, "src/test/resources/diffFile/file2.txt");
+			diffFile = DiffFile.compareFile(null, "src/test/resources/diffFile/file2.txt");
 		} catch (Exception e) {
 			fail();
 		}
 		
-		assertEquals(DiffState.NEW, diffFile.getState());
+		assertEquals(SourceDiffState.NEW, diffFile.getSourceState());
 		assertEquals("src/test/resources/diffFile/file2.txt", diffFile.getFileName());
 		//1 change, the complete file
 		assertEquals(1, diffFile.getChanges().size());
 		
 		
 		try {
-			diffFile = FileDiffFile.compareFile("src/test/resources/diffFile/nonExistingFile.txt", "src/test/resources/diffFile/file2.txt");
+			diffFile = DiffFile.compareFile("src/test/resources/diffFile/nonExistingFile.txt", "src/test/resources/diffFile/file2.txt");
 		} catch (Exception e) {
 			fail();
 		}
 		
-		assertEquals(DiffState.NEW, diffFile.getState());
+		assertEquals(SourceDiffState.NEW, diffFile.getSourceState());
 		assertEquals("src/test/resources/diffFile/file2.txt", diffFile.getFileName());
 		//1 change, the complete file
 		assertEquals(1, diffFile.getChanges().size());
@@ -80,14 +80,14 @@ public class FileDiffFileTest {
 	 */
 	@Test
 	public void testFileDiffEqualFile() {
-		FileDiffFile diffFile = null;
+		DiffFile diffFile = null;
 		try {
-			diffFile = FileDiffFile.compareFile("src/test/resources/diffFile/file1.txt", "src/test/resources/diffFile/file1.txt");
+			diffFile = DiffFile.compareFile("src/test/resources/diffFile/file1.txt", "src/test/resources/diffFile/file1.txt");
 		} catch (Exception e) {
 			fail();
 		}
 		
-		assertEquals(DiffState.SAME, diffFile.getState());
+		assertEquals(SourceDiffState.SAME, diffFile.getSourceState());
 		assertEquals("src/test/resources/diffFile/file1.txt", diffFile.getFileName());
 		assertEquals(0, diffFile.getChanges().size());
 	}
@@ -97,14 +97,14 @@ public class FileDiffFileTest {
 	 */
 	@Test
 	public void testFileDiff()  {
-		FileDiffFile diffFile = null;
+		DiffFile diffFile = null;
 		try {
-			diffFile = FileDiffFile.compareFile("src/test/resources/diffFile/file1.txt", "src/test/resources/diffFile/file2.txt");
+			diffFile = DiffFile.compareFile("src/test/resources/diffFile/file1.txt", "src/test/resources/diffFile/file2.txt");
 		} catch (Exception e) {
 			fail();
 		}
 		
-		assertEquals(DiffState.CHANGED, diffFile.getState());
+		assertEquals(SourceDiffState.CHANGED, diffFile.getSourceState());
 		assertEquals("src/test/resources/diffFile/file2.txt", diffFile.getFileName());
 		assertEquals(3, diffFile.getChanges().size());
 		

@@ -5,7 +5,7 @@ package operias.diff;
  * @author soosterwaal
  *
  */
-public enum DiffState {
+public enum SourceDiffState {
 	
 	/**
 	 * New file

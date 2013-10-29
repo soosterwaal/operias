@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import operias.OperiasStatus;
 import operias.test.general.ExitException;
@@ -102,52 +103,11 @@ public class CoberturaReportTest {
 		assertEquals(0.9230769230769231, cClass.getLineRate(), delta);
 		assertEquals(1.0, cClass.getBranchRate(), delta);
 		
-		
-		// Check methods
-		ArrayList<CoberturaMethod> methods = (ArrayList<CoberturaMethod>) cClass.getMethods();
-		
-		assertEquals(8, methods.size());
-		
-		CoberturaMethod cMethod = methods.get(2);
-
-		assertEquals("checkValidDirectory", cMethod.getName());
-		assertEquals(1.0, cMethod.getLineRate(), delta);
-		assertEquals(1.0, cMethod.getBranchRate(), delta);
-		
-		// Check lines in method
-		ArrayList<CoberturaLine> lines = (ArrayList<CoberturaLine>) cMethod.getLines();
-		
-		assertEquals(9, lines.size());
-		
-		CoberturaLine cNoConditionLine = lines.get(0);
-		
-		assertEquals(64, cNoConditionLine.getNumber());
-		assertEquals(40, cNoConditionLine.getHits());
-		assertFalse(cNoConditionLine.isCondition());
-		
-		CoberturaLine cConditionLine = lines.get(5);
-	
-		assertEquals(72, cConditionLine.getNumber());
-		assertEquals(30, cConditionLine.getHits());
-		assertTrue(cConditionLine.isCondition());
-		
-		// Check conditions
-		ArrayList<CoberturaCondition> conditions = (ArrayList<CoberturaCondition>) cConditionLine.getConditions();
-		
-		assertEquals(1, conditions.size());
-		
-		CoberturaCondition cCondition = conditions.get(0);
-		
-		assertEquals(0, cCondition.getNumber());
-		assertEquals("100%" , cCondition.getCoverage());
-		
 		// Check lines in class
-		ArrayList<CoberturaLine> classLines = (ArrayList<CoberturaLine>) cClass.getLines();
+		LinkedList<CoberturaLine> classLines = (LinkedList<CoberturaLine>) cClass.getLines();
 		
 		assertEquals(26, classLines.size());
 		
-		assertEquals(cNoConditionLine, classLines.get(12));
-		assertEquals(cConditionLine, classLines.get(17));
 		
 	}
 }

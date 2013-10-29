@@ -3,10 +3,13 @@ package operias;
 import java.io.IOException;
 
 import operias.cobertura.*;
-import operias.diff.FileDiffReport;
+import operias.diff.DiffReport;
+import operias.report.OperiasReport;
 
 public class Operias {
 
+	
+	
 	/**
 	 * Construct a report based on the difference in source files and coverage between the two folders in the configuration
 	 * @return Operias instance
@@ -14,19 +17,20 @@ public class Operias {
 	public Operias constructReport() {
 
 		// Construct the cobertura reports
-		CoberturaReport reportSource = constructCoberturaReport(Configuration.getSourceDirectory());
-		CoberturaReport reportRepo = constructCoberturaReport(Configuration.getRepositoryDirectory());
+		CoberturaReport reportRevised = constructCoberturaReport(Configuration.getRevisedDirectory());
+		CoberturaReport reportOriginal = constructCoberturaReport(Configuration.getOriginalDirectory());
 		
+		DiffReport reportFileDiff = null;
 		try {
-			FileDiffReport reportFileDiff = new FileDiffReport(Configuration.getRepositoryDirectory(), Configuration.getSourceDirectory());
+			reportFileDiff = new DiffReport(Configuration.getOriginalDirectory(), Configuration.getRevisedDirectory());
 		} catch (IOException e) {
 			System.exit(OperiasStatus.ERROR_FILE_DIFF_REPORT_GENERATION.ordinal());
 		}
 		
+		new OperiasReport(reportOriginal, reportRevised, reportFileDiff);
+		
 		return this;
 	}
-	
-	
 	
 	/**
 	 * Construct a cobertura coverage report for the given directory
