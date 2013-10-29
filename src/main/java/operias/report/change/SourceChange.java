@@ -1,4 +1,4 @@
-package operias.report;
+package operias.report.change;
 
 public abstract class SourceChange extends OperiasChange {
 	

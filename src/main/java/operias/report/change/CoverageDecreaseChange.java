@@ -1,21 +1,21 @@
-package operias.report;
+package operias.report.change;
 
 import java.util.LinkedList;
 
-public class CoverageIncreaseChange extends OperiasChange {
+public class CoverageDecreaseChange extends OperiasChange {
 
-	public CoverageIncreaseChange(int originalLineNumber, int revisedLineNumber) {
+	public CoverageDecreaseChange(int originalLineNumber, int revisedLineNumber) {
 		this.originalLineNumber = originalLineNumber;
 		this.revisedLineNumber = revisedLineNumber;
 		this.originalCoverage = new LinkedList<Boolean>();
 		this.revisedCoverage = new LinkedList<Boolean>();
 		this.sourceDiffDelta = null;
 		
-		this.originalCoverage.add(false);
-		this.revisedCoverage.add(true);
+		this.originalCoverage.add(true);
+		this.revisedCoverage.add(false);
 	}
 	
-	public CoverageIncreaseChange(int revisedLineNumber) {
+	public CoverageDecreaseChange(int revisedLineNumber) {
 		this(-1, revisedLineNumber);
 	}
 }

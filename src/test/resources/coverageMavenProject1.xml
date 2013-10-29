@@ -1,12 +1,28 @@
 <?xml version="1.0"?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
 
-<coverage line-rate="0.7777777777777778" branch-rate="0.5" lines-covered="7" lines-valid="9" branches-covered="3" branches-valid="6" complexity="2.3333333333333335" version="2.0.3" timestamp="1383036646928">
+<coverage line-rate="0.7" branch-rate="0.5" lines-covered="7" lines-valid="10" branches-covered="3" branches-valid="6" complexity="2.3333333333333335" version="2.0.3" timestamp="1383038644387">
 	<sources>
 		<source>--source</source>
 		<source>/Users/sebas/Documents/Eclipse Workspace/mavenProject/src/main/java</source>
 	</sources>
 	<packages>
+		<package name="deletablePackage" line-rate="0.0" branch-rate="1.0" complexity="0.0">
+			<classes>
+				<class name="deletablePackage.DeletableClass" filename="deletablePackage/DeletableClass.java" line-rate="0.0" branch-rate="1.0" complexity="0.0">
+					<methods>
+						<method name="&lt;init&gt;" signature="()V" line-rate="0.0" branch-rate="1.0">
+							<lines>
+								<line number="3" hits="0" branch="false"/>
+							</lines>
+						</method>
+					</methods>
+					<lines>
+						<line number="3" hits="0" branch="false"/>
+					</lines>
+				</class>
+			</classes>
+		</package>
 		<package name="example" line-rate="0.7777777777777778" branch-rate="0.5" complexity="2.3333333333333335">
 			<classes>
 				<class name="example.Calculations" filename="example/Calculations.java" line-rate="0.75" branch-rate="1.0" complexity="1.0">

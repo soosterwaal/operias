@@ -1,6 +1,7 @@
 package operias.report;
 
 import java.util.LinkedList;
+
 import difflib.ChangeDelta;
 import difflib.DeleteDelta;
 import difflib.Delta;
@@ -9,6 +10,13 @@ import operias.OperiasStatus;
 import operias.cobertura.CoberturaClass;
 import operias.cobertura.CoberturaLine;
 import operias.diff.DiffFile;
+import operias.report.change.ChangeSourceChange;
+import operias.report.change.CoverageDecreaseChange;
+import operias.report.change.CoverageIncreaseChange;
+import operias.report.change.DeleteSourceChange;
+import operias.report.change.InsertSourceChange;
+import operias.report.change.OperiasChange;
+import operias.report.change.SourceChange;
 
 public class OperiasFile {
 

@@ -1,4 +1,4 @@
-package operias.report;
+package operias.report.change;
 
 import java.util.List;
 

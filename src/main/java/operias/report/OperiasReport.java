@@ -63,19 +63,16 @@ public class OperiasReport {
 					
 					DiffFile fileDiff = sourceDiffReport.getFile("src/main/java/" + oClass.getFileName());
 					
-					// Only if the source was changed or the same
-					if (fileDiff.getSourceState() == SourceDiffState.SAME || fileDiff.getSourceState() == SourceDiffState.CHANGED) {
-							
-						CoberturaClass rClass = rPackage.getClass(oClass.getName());
-						
-						// if nClass == null, the class was deleted, but the diffstate says its stayed the same, so we have an error that cannot occur!
-						if (rClass == null) {
-							System.exit(OperiasStatus.ERROR_COBERTURA_CLASS_REPORT_NOT_FOUND.ordinal());
-						} else {
-							// We got the class, so we can compare the classes for any differences
-							changedClasses.add(new OperiasFile(oClass, rClass, fileDiff));
-						}
-					} 
+					CoberturaClass rClass = rPackage.getClass(oClass.getName());
+					
+					// if nClass == null, the class was deleted, but the diffstate says its stayed the same, so we have an error that cannot occur!
+					if (rClass == null) {
+						System.exit(OperiasStatus.ERROR_COBERTURA_CLASS_REPORT_NOT_FOUND.ordinal());
+					} else {
+						// We got the class, so we can compare the classes for any differences
+						changedClasses.add(new OperiasFile(oClass, rClass, fileDiff));
+					}
+					
 				}
 			}
 		}
@@ -101,6 +98,13 @@ public class OperiasReport {
 				}
 			}
 		}
+	}
+
+	/**
+	 * @return the changedClasses
+	 */
+	public List<OperiasFile> getChangedClasses() {
+		return changedClasses;
 	}
 
 }

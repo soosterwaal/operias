@@ -9,6 +9,12 @@ import operias.OperiasStatus;
 import operias.cobertura.*;
 import operias.diff.DiffFile;
 import operias.diff.SourceDiffState;
+import operias.report.change.ChangeSourceChange;
+import operias.report.change.CoverageDecreaseChange;
+import operias.report.change.CoverageIncreaseChange;
+import operias.report.change.DeleteSourceChange;
+import operias.report.change.InsertSourceChange;
+import operias.report.change.OperiasChange;
 import operias.test.general.ExitException;
 import operias.test.general.NoExitSecurityManager;
 
