@@ -312,12 +312,12 @@ public class OperiasFileTest {
 	 */
 	@Test
 	public void testSimpleInsertion() {
-		Chunk original = new Chunk(3, new ArrayList<String>());
+		Chunk original = new Chunk(2, new ArrayList<String>());
 		ArrayList<String> lines = new ArrayList<String>();
 		lines.add("first line");
 		lines.add("second line");
 		lines.add("third line");
-		Chunk revised = new Chunk(3, lines);
+		Chunk revised = new Chunk(2, lines);
 		InsertDelta delta = new InsertDelta(original, revised);
 		
 		LinkedList<Delta> changes = new LinkedList<Delta>();
@@ -363,12 +363,12 @@ public class OperiasFileTest {
 	 */
 	@Test
 	public void testSimpleDeletion() {
-		Chunk revised = new Chunk(3, new ArrayList<String>());
+		Chunk revised = new Chunk(2, new ArrayList<String>());
 		ArrayList<String> lines = new ArrayList<String>();
 		lines.add("first line");
 		lines.add("second line");
 		lines.add("third line");
-		Chunk original = new Chunk(3, lines);
+		Chunk original = new Chunk(2, lines);
 		DeleteDelta delta = new DeleteDelta(original, revised);
 		
 		LinkedList<Delta> changes = new LinkedList<Delta>();
@@ -417,14 +417,14 @@ public class OperiasFileTest {
 		LinkedList<String> originalLines = new LinkedList<String>();
 		originalLines.add("orig1");
 		originalLines.add("orig2");
-		Chunk original = new Chunk(4, originalLines);
+		Chunk original = new Chunk(3, originalLines);
 		
 
 		LinkedList<String> revisedLines = new LinkedList<String>();
 		revisedLines.add("rev1");
 		revisedLines.add("rev2");
 		revisedLines.add("rev3");
-		Chunk revised = new Chunk(4, revisedLines);
+		Chunk revised = new Chunk(3, revisedLines);
 		
 		ChangeDelta delta = new ChangeDelta(original, revised);
 		
@@ -460,6 +460,9 @@ public class OperiasFileTest {
 		assertTrue(oFile.getChanges().getFirst().getRevisedCoverage().get(2));
 	}
 	
+	/**
+	 * Test invalid classes
+	 */
 	@Test
 	public void testInvalidClassComparison() {
 		System.setSecurityManager(new NoExitSecurityManager());
@@ -475,5 +478,30 @@ public class OperiasFileTest {
 	    }	
 		assertTrue(exceptionThrown);
 		System.setSecurityManager(null);
+	}
+	
+	/**
+	 * Test a new class, only needs 1 revisedClass as argument
+	 */
+	@Test
+	public void testNewClassOnly() {
+		
+		CoberturaLine line1 = new CoberturaLine(1, 1, false, false);
+		CoberturaLine line2 = new CoberturaLine(2, 5, true, false);
+		
+		CoberturaLine line3 = new CoberturaLine(3, 1, false, false);
+		
+		
+		revisedClass.addLine(line1);
+		revisedClass.addLine(line2);
+		revisedClass.addLine(line3);
+		
+		OperiasFile oFile = new OperiasFile(revisedClass);
+		
+		assertEquals(3, oFile.getChanges().size());
+		assertTrue(oFile.getChanges().getFirst() instanceof CoverageIncreaseChange);
+		assertTrue(oFile.getChanges().get(1) instanceof CoverageDecreaseChange);
+		assertTrue(oFile.getChanges().get(2) instanceof CoverageIncreaseChange);
+		
 	}
 }

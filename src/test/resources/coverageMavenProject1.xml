@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
+
+<coverage line-rate="0.7777777777777778" branch-rate="0.5" lines-covered="7" lines-valid="9" branches-covered="3" branches-valid="6" complexity="2.3333333333333335" version="2.0.3" timestamp="1383036646928">
+	<sources>
+		<source>--source</source>
+		<source>/Users/sebas/Documents/Eclipse Workspace/mavenProject/src/main/java</source>
+	</sources>
+	<packages>
+		<package name="example" line-rate="0.7777777777777778" branch-rate="0.5" complexity="2.3333333333333335">
+			<classes>
+				<class name="example.Calculations" filename="example/Calculations.java" line-rate="0.75" branch-rate="1.0" complexity="1.0">
+					<methods>
+						<method name="&lt;init&gt;" signature="()V" line-rate="1.0" branch-rate="1.0">
+							<lines>
+								<line number="3" hits="1" branch="false"/>
+								<line number="5" hits="1" branch="false"/>
+							</lines>
+						</method>
+						<method name="calculateSomethings" signature="(II)I" line-rate="1.0" branch-rate="1.0">
+							<lines>
+								<line number="8" hits="1" branch="false"/>
+							</lines>
+						</method>
+						<method name="someOtherCalculations" signature="(II)I" line-rate="0.0" branch-rate="1.0">
+							<lines>
+								<line number="12" hits="0" branch="false"/>
+							</lines>
+						</method>
+					</methods>
+					<lines>
+						<line number="3" hits="1" branch="false"/>
+						<line number="5" hits="1" branch="false"/>
+						<line number="8" hits="1" branch="false"/>
+						<line number="12" hits="0" branch="false"/>
+					</lines>
+				</class>
+				<class name="example.Loops" filename="example/Loops.java" line-rate="0.8" branch-rate="0.5" complexity="5.0">
+					<methods>
+						<method name="&lt;init&gt;" signature="()V" line-rate="1.0" branch-rate="1.0">
+							<lines>
+								<line number="3" hits="1" branch="false"/>
+							</lines>
+						</method>
+						<method name="LoopLoop" signature="(I)I" line-rate="0.75" branch-rate="0.5">
+							<lines>
+								<line number="6" hits="101" branch="true" condition-coverage="100% (2/2)">
+									<conditions>
+										<condition number="0" type="jump" coverage="100%"/>
+									</conditions>
+								</line>
+								<line number="7" hits="100" branch="true" condition-coverage="25% (1/4)">
+									<conditions>
+										<condition number="0" type="jump" coverage="50%"/>
+										<condition number="1" type="jump" coverage="0%"/>
+									</conditions>
+								</line>
+								<line number="8" hits="0" branch="false"/>
+								<line number="13" hits="1" branch="false"/>
+							</lines>
+						</method>
+					</methods>
+					<lines>
+						<line number="3" hits="1" branch="false"/>
+						<line number="6" hits="101" branch="true" condition-coverage="100% (2/2)">
+							<conditions>
+								<condition number="0" type="jump" coverage="100%"/>
+							</conditions>
+						</line>
+						<line number="7" hits="100" branch="true" condition-coverage="25% (1/4)">
+							<conditions>
+								<condition number="0" type="jump" coverage="50%"/>
+								<condition number="1" type="jump" coverage="0%"/>
+							</conditions>
+						</line>
+						<line number="8" hits="0" branch="false"/>
+						<line number="13" hits="1" branch="false"/>
+					</lines>
+				</class>
+			</classes>
+		</package>
+	</packages>
+</coverage>

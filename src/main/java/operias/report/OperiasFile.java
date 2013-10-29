@@ -90,7 +90,7 @@ public class OperiasFile {
 			System.exit(OperiasStatus.ERROR_OPERIAS_DIFF_INVALID_CLASS_COMPARISON.ordinal());
 		}
 		
-		CompareLines(0, 0);
+		CompareLines(1, 1);
 	}
 	
 	/**
@@ -104,7 +104,8 @@ public class OperiasFile {
 			return;
 		}
 		
-		Delta change = sourceDiff.tryGetChange(originalClassLine, revisedClassLine);
+		// Source diff starts at lines 0
+		Delta change = sourceDiff.tryGetChange(originalClassLine - 1, revisedClassLine - 1);
 		
 		if (change == null) {
 			// No source diff, check the coverage difference between the lines
