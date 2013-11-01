@@ -4,6 +4,11 @@ import java.util.LinkedList;
 
 import difflib.DeleteDelta;
 
+/**
+ * Contains the coverage information about a piece of code which was deleted.
+ * @author soosterwaal
+ *
+ */
 public class DeleteSourceChange extends SourceChange {
 	
 	public DeleteSourceChange(int originalLineNumber, int revisedLineNumber, DeleteDelta additions) {

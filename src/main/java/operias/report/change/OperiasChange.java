@@ -4,6 +4,11 @@ import java.util.List;
 
 import difflib.Delta;
 
+/**
+ * Contains the coverage information about a piece of code, and if neccessary also the source diff information
+ * @author soosterwaal
+ *
+ */
 public class OperiasChange {
 
 	/**

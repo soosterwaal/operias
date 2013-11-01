@@ -3,6 +3,11 @@ package operias.diff;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * A source diff report containing 1 DiffDirectory which includes the source diff changes for the complete project
+ * @author soosterwaal
+ *
+ */
 public class DiffReport {
 
 	/**

@@ -2,6 +2,11 @@ package operias.report.change;
 
 import java.util.LinkedList;
 
+/**
+ * Contains the information for a line of which the coverage was decreased
+ * @author soosterwaal
+ *
+ */
 public class CoverageDecreaseChange extends OperiasChange {
 
 	public CoverageDecreaseChange(int originalLineNumber, int revisedLineNumber) {

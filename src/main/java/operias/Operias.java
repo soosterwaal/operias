@@ -6,10 +6,13 @@ import operias.cobertura.*;
 import operias.diff.DiffReport;
 import operias.report.OperiasReport;
 
+/**
+ * Base class of the tool, where the information is combined and the reports and html sites are generated
+ * @author soosterwaal
+ *
+ */
 public class Operias {
 
-	
-	
 	/**
 	 * Construct a report based on the difference in source files and coverage between the two folders in the configuration
 	 * @return Operias instance

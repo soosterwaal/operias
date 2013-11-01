@@ -18,6 +18,17 @@ import operias.report.change.InsertSourceChange;
 import operias.report.change.OperiasChange;
 import operias.report.change.SourceChange;
 
+/**
+ * Operias File class.
+ * 
+ * An operias file contains the information for a class in the project.
+ * The changes consists of 5 types, CoverageDecreaseChange, CoverageIncreaseChange,
+ * DeleteSourceChange, InsertSourceChange and ChangeSourceChange. 
+ * These changes are a result of combining the information from cobertura and the source diff report.
+ * 
+ * @author soosterwaal
+ *
+ */
 public class OperiasFile {
 
 	/**

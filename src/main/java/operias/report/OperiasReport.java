@@ -11,6 +11,17 @@ import operias.diff.DiffFile;
 import operias.diff.DiffReport;
 import operias.diff.SourceDiffState;
 
+/**
+ * Operias Report class.
+ * This class contains the combined information from the source diff report 
+ * the two cobertura reports, which were created in the first phase.
+ * 
+ * This report can be used to generate the HTML report for a pretty visualisation
+ * of the information
+ * 
+ * @author soosterwaal
+ *
+ */
 public class OperiasReport {
 
 	/**

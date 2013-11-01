@@ -12,6 +12,11 @@ import difflib.Delta;
 import difflib.DiffUtils;
 import difflib.Patch;
 
+/**
+ * Contains the source diff changes for a file
+ * @author soosterwaal
+ *
+ */
 public class DiffFile {
 
 	/**
