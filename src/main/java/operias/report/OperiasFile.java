@@ -3,6 +3,7 @@ package operias.report;
 import java.util.LinkedList;
 
 import difflib.ChangeDelta;
+import difflib.Chunk;
 import difflib.DeleteDelta;
 import difflib.Delta;
 import difflib.InsertDelta;
@@ -67,26 +68,33 @@ public class OperiasFile {
 	private DiffFile sourceDiff;
 	
 	/**
-	 * Construct a new operias file diff for the given class,  for which the original class is unkown and thus source diff is also unkown
+	 * Construct a new operias file diff for the given class, which should be a new class
 	 * @param cClass
 	 */
-	public OperiasFile(CoberturaClass revisedClass) {
+	public OperiasFile(CoberturaClass revisedClass, DiffFile sourceDiff) {
 		
-		this.fileName = revisedClass.getFileName();
+		this.fileName = sourceDiff.getFileName();
 		this.className = revisedClass.getName();
 		this.packageName = revisedClass.getPackageName();
 		this.changes = new LinkedList<OperiasChange>();
 		this.originalClass = null;
 		this.revisedClass = revisedClass;
-		this.sourceDiff = null;
+		this.sourceDiff = sourceDiff;
 		
-		for(CoberturaLine line : revisedClass.getLines()) {
-			if(line.isCovered()) {
-				changes.add(new CoverageIncreaseChange(line.getNumber()));
+		InsertSourceChange insertChange = new InsertSourceChange(1, 1, (InsertDelta) sourceDiff.getChanges().get(0));
+		
+		for(int i = 0; i < sourceDiff.getChanges().get(0).getRevised().getLines().size(); i++) {
+			// Add offset
+			CoberturaLine line = revisedClass.tryGetLine(i + 1);
+			
+			if (line != null) {
+				insertChange.addRevisedCoverageLine(line.isCovered());
 			} else {
-				changes.add(new CoverageDecreaseChange(line.getNumber()));
+				insertChange.addRevisedCoverageLine(null);
 			}
 		}
+		
+		changes.add(insertChange);
 	}
 	
 	/**
@@ -132,11 +140,15 @@ public class OperiasFile {
 			CoberturaLine revisedLine = revisedClass.tryGetLine(revisedClassLine);
 			
 			if (originalLine == null ^ revisedLine == null) {
-				// Something went wrong!
-				System.exit(OperiasStatus.ERROR_OPERIAS_INVALID_LINE_COMPARISON.ordinal());
-			}
-			
-			if (originalLine != null) {
+				// This can be the case, if a constructor has been removed!
+				// The class line will be marked as either covered or uncovered, but no information was known about the other class
+				
+				if (originalLine == null && revisedLine.isCovered() || revisedLine == null && originalLine.isCovered()) {
+					changes.add(new CoverageIncreaseChange(originalClassLine, revisedClassLine));
+				} else {
+					changes.add(new CoverageDecreaseChange(originalClassLine, revisedClassLine));
+				}
+			} else if (originalLine != null) {
 				// Lines found, compare!
 				if (originalLine.isCondition() ^ revisedLine.isCondition()) {
 					// Again something went wrong i suppose... no change in the line, so is either should both be conditions or not
@@ -216,5 +228,26 @@ public class OperiasFile {
 	 */
 	public String getClassName() {
 		return className;
+	}
+
+	/**
+	 * @return the originalClass
+	 */
+	public CoberturaClass getOriginalClass() {
+		return originalClass;
+	}
+
+	/**
+	 * @return the revisedClass
+	 */
+	public CoberturaClass getRevisedClass() {
+		return revisedClass;
+	}
+
+	/**
+	 * @return the sourceDiff
+	 */
+	public DiffFile getSourceDiff() {
+		return sourceDiff;
 	}
 }

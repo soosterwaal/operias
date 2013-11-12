@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<link href='http://fonts.googleapis.com/css?family=Raleway:300' rel='stylesheet' type='text/css'>
+		<link href='css/style.css' rel='stylesheet' type='text/css'>
+		<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$("#showAllChanges").click(function() {
+					$(".deletedRow, .notCovered, .isCovered, .wasCovered, .wasNotCovered, .insertedRow").show();
+				});
+			
+				$("#showOriginal").click(function() {
+					$(".deletedRow,  .wasCovered, .wasNotCovered").show();
+					$(".insertedRow,  .isCovered, .notCovered").hide();
+				});
+				
+				$("#showNew").click(function() {
+					$(".deletedRow,  .wasCovered, .wasNotCovered").hide();
+					$(".insertedRow,  .isCovered, .notCovered").show();
+				});
+			});
+			
+		</script>
+		<title>Operias</title>
+	</head>
+	<body>
+		<header>
+			<div id="title">
+				<h1>Operias</h1>
+			</div>
+		</header>

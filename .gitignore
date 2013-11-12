@@ -7,3 +7,5 @@
 .project
 
 *.ser
+
+site*

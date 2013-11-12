@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import operias.cobertura.*;
 import operias.diff.DiffReport;
+import operias.html.HTMLReport;
 import operias.report.OperiasReport;
 
 /**
@@ -13,6 +14,7 @@ import operias.report.OperiasReport;
  */
 public class Operias {
 
+	OperiasReport report;
 	/**
 	 * Construct a report based on the difference in source files and coverage between the two folders in the configuration
 	 * @return Operias instance
@@ -30,7 +32,7 @@ public class Operias {
 			System.exit(OperiasStatus.ERROR_FILE_DIFF_REPORT_GENERATION.ordinal());
 		}
 		
-		new OperiasReport(reportOriginal, reportRevised, reportFileDiff);
+		report = new OperiasReport(reportOriginal, reportRevised, reportFileDiff);
 		
 		return this;
 	}
@@ -61,6 +63,12 @@ public class Operias {
 	 * @return Operias instance
 	 */
 	public Operias writeSite() {
+		try {
+			(new HTMLReport(report)).generateSite();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return this;
 	}
 }

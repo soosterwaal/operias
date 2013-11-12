@@ -1,0 +1,51 @@
+body {margin:0px; background-color: #f1f1f1; font-family: 'Raleway', sans-serif;  color: #22008A; font-size: 12pt; } 
+table { border-collapse:collapse; width: 100%; font-size: 11pt; }
+
+2d5900
+
+.code td { height: 20px; }
+.code tr { border-top: 1px solid #f1f1f1 }
+
+.code td:last-child {  border-left: 1px solid #22008A; padding-left: 10px; }
+.code td:first-child { border-right: 1px solid #22008A; }
+
+.classOverview tr { border-bottom: 1px solid #22008A; }
+.classOverview th { text-align: left; font-weight: bold; font-size:13pt;}
+.classOverview td { padding-top: 17px; }
+
+.classIncreasedCoverage { color: #13BD00; }
+.classDecreasedCoverage { color: #F0002A; }
+
+#mainContent { margin:auto; width: 1000px; padding-top: 20px; padding-bottom: 30px; }
+#tableContent {  }
+
+#title {height: 115px;  width: 1000px;  margin:auto; }
+	
+h1 { font-size: 78px; font-weight: lighter; }
+h2 { font-size: 30px; font-weight: bolder; }
+	
+header { width: 100%; margin: 0px; border-bottom: 2px dashed #22008A; }
+footer  {width: 100%;margin: 0px;border-top: 2px dashed #22008A;text-align: center;padding-top: 20px;font-size: 10px;padding-bottom: 20px; }
+	
+pre {font-family: Menlo,Monaco,Consolas,"Courier New",monospace; color: #101010;
+margin: 1px;
+font-size: 10pt; }
+
+.wasCovered { background-color: #ACF3A4; background-image:url('../img/arc.png');}
+.isCovered, .coverageIncrease { background-color: #ACF3A4; }
+
+.notCovered, .coverageDecrease, .wasNotCovered { background-color: #F3A4B2; }
+.deletedRow, .wasNotCovered { background-image:url('../img/arc.png'); }
+
+.keyword { color: #001D91; font-weight: bold; }
+
+.top { border-top: 3px solid #22008A; }
+.bottom { border-bottom: 3px solid #22008A; }
+.left { border-left: 3px solid #22008A; }
+.right { border-right: 3px solid #22008A; }
+
+#informationContent,#breadcrumb   { width : 1000px; margin: auto; border-bottom: 1px dashed #22008A;  }
+#informationContent { padding-top: 15px; padding-bottom: 15px;}
+
+a, a:visited { color: #22008A; text-decoration: none; }
+a:hover {text-decoration: underline; }

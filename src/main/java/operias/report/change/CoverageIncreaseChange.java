@@ -20,7 +20,4 @@ public class CoverageIncreaseChange extends OperiasChange {
 		this.revisedCoverage.add(true);
 	}
 	
-	public CoverageIncreaseChange(int revisedLineNumber) {
-		this(-1, revisedLineNumber);
-	}
 }

@@ -25,7 +25,7 @@ public class Cobertura {
 	
 	public Cobertura(String directory) {
 		this.directory = directory;
-		this.outputDirectory = "";
+		this.outputDirectory = directory;
 	}
 	
 	/**
@@ -103,6 +103,7 @@ public class Cobertura {
 	private CoberturaReport constructReport() {
 		File coverageXML = new File(outputDirectory, "target/site/cobertura/coverage.xml");
 		
+		System.out.println(coverageXML.getAbsolutePath());
 		if (!coverageXML.exists()) {
 			System.exit(OperiasStatus.COVERAGE_XML_NOT_FOUND.ordinal());
 		}

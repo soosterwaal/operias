@@ -95,7 +95,8 @@ public class OperiasReport {
 			if (oPackage == null) {
 				// Package was new so, all classes should be "new"
 				for(CoberturaClass rClass : rPackage.getClasses()) {
-					changedClasses.add(new OperiasFile(rClass));
+					DiffFile fileDiff = sourceDiffReport.getFile("src/main/java/" + rClass.getFileName());
+					changedClasses.add(new OperiasFile(rClass, fileDiff));
 				}
 			} else {
 				// Package was found, check which classes are new
@@ -104,7 +105,8 @@ public class OperiasReport {
 					
 					if (oClass == null) {
 						// Class was new
-						changedClasses.add(new OperiasFile(rClass));
+						DiffFile fileDiff = sourceDiffReport.getFile("src/main/java/" + rClass.getFileName());
+						changedClasses.add(new OperiasFile(rClass, fileDiff));
 					}
 				}
 			}
