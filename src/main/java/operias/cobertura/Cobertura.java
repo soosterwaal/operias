@@ -82,7 +82,7 @@ public class Cobertura {
 		}
 		
 		ProcessBuilder builder = new ProcessBuilder("mvn","clean", "cobertura:cobertura", "-Dcobertura.report.format=xml", "-f", pomXML.getAbsolutePath());
-		System.out.println("Start executing mvn");
+
 		Process process = null;
 		process = builder.start();
 		process.waitFor();
@@ -90,7 +90,6 @@ public class Cobertura {
 		process.destroy();
 		
 		executionSucceeded = exitValue == 0;
-		System.out.println("Execution of mvn complete : " + executionSucceeded);
 		
 		return executionSucceeded;	
 	}
@@ -103,7 +102,6 @@ public class Cobertura {
 	private CoberturaReport constructReport() {
 		File coverageXML = new File(outputDirectory, "target/site/cobertura/coverage.xml");
 		
-		System.out.println(coverageXML.getAbsolutePath());
 		if (!coverageXML.exists()) {
 			System.exit(OperiasStatus.COVERAGE_XML_NOT_FOUND.ordinal());
 		}
@@ -123,8 +121,7 @@ public class Cobertura {
 		Process process = builder.start();
 		process.waitFor();
 		int exitValue = process.exitValue();
-		process.destroy();
-			
+		process.destroy();			
 		return exitValue == 0;
 	}
 }

@@ -15,6 +15,12 @@ import operias.report.OperiasReport;
 public class Operias {
 
 	OperiasReport report;
+	
+	CoberturaReport reportRevised;
+	
+	CoberturaReport reportOriginal;
+	
+	DiffReport reportFileDiff;
 	/**
 	 * Construct a report based on the difference in source files and coverage between the two folders in the configuration
 	 * @return Operias instance
@@ -22,14 +28,27 @@ public class Operias {
 	public Operias constructReport() {
 
 		// Construct the cobertura reports
-		CoberturaReport reportRevised = constructCoberturaReport(Configuration.getRevisedDirectory());
-		CoberturaReport reportOriginal = constructCoberturaReport(Configuration.getOriginalDirectory());
+		Thread reportRevisedThread = new Thread() { public void run() { reportRevised = constructCoberturaReport(Configuration.getRevisedDirectory());}};
+		Thread reportOriginalThread = new Thread() { public void run() { reportOriginal = constructCoberturaReport(Configuration.getOriginalDirectory());}};
+		Thread reportFileDiffThread = new Thread() { public void run() {
+			try {
+				reportFileDiff = new DiffReport(Configuration.getOriginalDirectory(), Configuration.getRevisedDirectory());
+			} catch (IOException e) {
+				System.exit(OperiasStatus.ERROR_FILE_DIFF_REPORT_GENERATION.ordinal());
+			}
+		}};
 		
-		DiffReport reportFileDiff = null;
+		
+		reportRevisedThread.start();
+		reportOriginalThread.start();
+		reportFileDiffThread.start();
+		
 		try {
-			reportFileDiff = new DiffReport(Configuration.getOriginalDirectory(), Configuration.getRevisedDirectory());
-		} catch (IOException e) {
-			System.exit(OperiasStatus.ERROR_FILE_DIFF_REPORT_GENERATION.ordinal());
+			reportRevisedThread.join();
+			reportOriginalThread.join();
+			reportFileDiffThread.join();
+		} catch (InterruptedException e1) {
+			System.exit(OperiasStatus.ERROR_THREAD_JOINING.ordinal());
 		}
 		
 		report = new OperiasReport(reportOriginal, reportRevised, reportFileDiff);

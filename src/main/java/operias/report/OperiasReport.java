@@ -9,7 +9,6 @@ import operias.cobertura.CoberturaPackage;
 import operias.cobertura.CoberturaReport;
 import operias.diff.DiffFile;
 import operias.diff.DiffReport;
-import operias.diff.SourceDiffState;
 
 /**
  * Operias Report class.

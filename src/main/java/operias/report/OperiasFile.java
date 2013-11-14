@@ -3,7 +3,6 @@ package operias.report;
 import java.util.LinkedList;
 
 import difflib.ChangeDelta;
-import difflib.Chunk;
 import difflib.DeleteDelta;
 import difflib.Delta;
 import difflib.InsertDelta;

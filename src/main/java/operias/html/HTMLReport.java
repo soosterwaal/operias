@@ -1,20 +1,16 @@
 package operias.html;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import org.apache.commons.io.IOUtils;
 
 import operias.report.OperiasFile;
 import operias.report.OperiasReport;
-import operias.report.change.*;
 
 /**
  * Html Report generates html pages for a given operias report

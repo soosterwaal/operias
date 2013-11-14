@@ -42,9 +42,9 @@ public class JavaToHtml {
 
 	// TODO: Set a style for JavaDoc tags
 	//private static final Collection javaJavaDocTags;
-	private static final Collection javaKeywords;
-	private static final Collection javaPrimitiveLiterals;
-	private static final Collection javaPrimitiveTypes;
+	private static final Collection<String> javaKeywords;
+	private static final Collection<String> javaPrimitiveLiterals;
+	private static final Collection<String> javaPrimitiveTypes;
 
 	static {
 		// TODO: Probably need to add anything new in J2SE 5.0
@@ -63,9 +63,9 @@ public class JavaToHtml {
 		final String javaPrimitiveLiteralsArray[] = {"false", "null", "true"};
 
 		//javaJavaDocTags = new HashSet(Arrays.asList(javaJavaDocTagsArray));
-		javaKeywords = new HashSet(Arrays.asList(javaKeywordsArray));
-		javaPrimitiveTypes = new HashSet(Arrays.asList(javaPrimitiveTypesArray));
-		javaPrimitiveLiterals = new HashSet(Arrays
+		javaKeywords = new HashSet<String>(Arrays.asList(javaKeywordsArray));
+		javaPrimitiveTypes = new HashSet<String>(Arrays.asList(javaPrimitiveTypesArray));
+		javaPrimitiveLiterals = new HashSet<String>(Arrays
 				.asList(javaPrimitiveLiteralsArray));
 	}
 
