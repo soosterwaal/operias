@@ -49,7 +49,7 @@ public class HTMLReport {
 		
 		// Create all pages for the viewing of the files
 		for(OperiasFile oFile : this.report.getChangedClasses()) {
-			new HTMLFileView(oFile);
+			new HTMLFileView(oFile, report.getChangedClasses());
 			if (packageNames.indexOf(oFile.getPackageName()) < 0) {
 				packageNames.add(oFile.getPackageName());
 			}
@@ -109,7 +109,6 @@ public class HTMLReport {
 	    folder.delete();
 	}
 	
-
 	
 	
 	

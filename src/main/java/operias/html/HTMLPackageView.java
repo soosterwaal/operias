@@ -16,6 +16,12 @@ import operias.report.OperiasFile;
 public class HTMLPackageView {
 
 	/**
+	 * List containing the changed files
+	 */
+	private List<OperiasFile> changedFiles;
+	
+	
+	/**
 	 * Construct a html page for the given package
 	 * @param changedFiles
 	 * @param packageName
@@ -23,6 +29,7 @@ public class HTMLPackageView {
 	 */
 	public HTMLPackageView(List<OperiasFile> changedFiles, String packageName) throws IOException {
 		// Add the file to the table
+		this.changedFiles = changedFiles;
 		
 		File classHTMLFile = new File(packageName == "" ? "site/index.html" : "site/package." + packageName + ".html");
 		classHTMLFile.createNewFile();
@@ -129,10 +136,28 @@ public class HTMLPackageView {
 		// All package links
 		for(int i = 0; i < packagesAndClasses.length - 1; i++) {
 			completePackageName += "." + packagesAndClasses[i];
-			outputStreamHTMLFile.print("<a href='package"+completePackageName+".html'>"+packagesAndClasses[i]+"</a> / ");
+			if (packageExists(completePackageName)) {
+				outputStreamHTMLFile.print("<a href='package"+completePackageName+".html'>"+packagesAndClasses[i]+"</a> / ");
+			} else {
+				outputStreamHTMLFile.print(""+packagesAndClasses[i]+" / ");
+			}
 		}
 		outputStreamHTMLFile.print(packagesAndClasses[packagesAndClasses.length - 1]);
 		outputStreamHTMLFile.println("</h2>");
 		outputStreamHTMLFile.println("</div>");
+	}
+	
+	/**
+	 * Checks whether there is a file in the given package
+	 * @param packageName
+	 * @return
+	 */
+	private boolean packageExists(String packageName) {
+		for(OperiasFile oFile : changedFiles){
+			if (oFile.getPackageName().equals(packageName)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

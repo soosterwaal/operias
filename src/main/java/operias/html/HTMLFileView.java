@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 
@@ -19,12 +20,15 @@ import operias.report.change.OperiasChange;
 
 public class HTMLFileView {
 	
+	private List<OperiasFile> changedFiles;
+	
 	/**
 	 * Create a new hTML file view page
 	 * @param file
 	 * @throws IOException
 	 */
-	public HTMLFileView(OperiasFile file) throws IOException {
+	public HTMLFileView(OperiasFile file, List<OperiasFile> changedFiles) throws IOException {
+		this.changedFiles = changedFiles;
 		BufferedReader sourceFileReader = new BufferedReader(new FileReader(file.getFileName()));
 		
 		File classHTMLFile = new File("site/" + file.getClassName() + ".html");
@@ -62,7 +66,11 @@ public class HTMLFileView {
 	 */
 	private void generateCode(PrintStream outputStreamHTMLFile, OperiasFile file, BufferedReader sourceFileReader) throws IOException {
 
-
+		if (file.getChanges().size() == 0) {
+			System.out.println("EMPTY FILE!");
+			return;
+		}
+		
 	    JavaToHtml jth = new JavaToHtml();
 	    
 		int changeIndex = 0;
@@ -197,7 +205,11 @@ public class HTMLFileView {
 		// All package links
 		for(int i = 0; i < packagesAndClasses.length - 1; i++) {
 			completePackageName += "." + packagesAndClasses[i];
-			outputStreamHTMLFile.print("<a href='package"+completePackageName+".html'>"+packagesAndClasses[i]+"</a> / ");
+			if (packageExists(completePackageName)) {
+				outputStreamHTMLFile.print("<a href='package"+completePackageName+".html'>"+packagesAndClasses[i]+"</a> / ");
+			} else {
+				outputStreamHTMLFile.print(""+packagesAndClasses[i]+" / ");
+			}
 		}
 		outputStreamHTMLFile.print(packagesAndClasses[packagesAndClasses.length - 1]);
 		outputStreamHTMLFile.println("</h2>");
@@ -270,5 +282,19 @@ public class HTMLFileView {
 			
 			outputStreamHTMLFile.println("</div>");
 		}
+	}
+
+	/**
+	 * Checks whether there is a file in the given package
+	 * @param packageName
+	 * @return
+	 */
+	private boolean packageExists(String packageName) {
+		for(OperiasFile oFile : changedFiles){
+			if (oFile.getPackageName().equals(packageName)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

@@ -81,7 +81,10 @@ public class OperiasReport {
 						System.exit(OperiasStatus.ERROR_COBERTURA_CLASS_REPORT_NOT_FOUND.ordinal());
 					} else {
 						// We got the class, so we can compare the classes for any differences
-						changedClasses.add(new OperiasFile(oClass, rClass, fileDiff));
+						OperiasFile newOFile = new OperiasFile(oClass, rClass, fileDiff);
+						if (newOFile.getChanges().size() > 0) {
+							changedClasses.add(newOFile);
+						}
 					}
 					
 				}
@@ -96,7 +99,10 @@ public class OperiasReport {
 				// Package was new so, all classes should be "new"
 				for(CoberturaClass rClass : rPackage.getClasses()) {
 					DiffFile fileDiff = sourceDiffReport.getFile("src/main/java/" + rClass.getFileName());
-					changedClasses.add(new OperiasFile(rClass, fileDiff));
+					OperiasFile newOFile = new OperiasFile(rClass, fileDiff);
+					if (newOFile.getChanges().size() > 0) {
+						changedClasses.add(newOFile);
+					}
 				}
 			} else {
 				// Package was found, check which classes are new
@@ -106,7 +112,10 @@ public class OperiasReport {
 					if (oClass == null) {
 						// Class was new
 						DiffFile fileDiff = sourceDiffReport.getFile("src/main/java/" + rClass.getFileName());
-						changedClasses.add(new OperiasFile(rClass, fileDiff));
+						OperiasFile newOFile = new OperiasFile(rClass, fileDiff);
+						if (newOFile.getChanges().size() > 0) {
+							changedClasses.add(newOFile);
+						}
 					}
 				}
 			}

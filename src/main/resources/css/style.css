@@ -38,6 +38,8 @@ font-size: 10pt; }
 .deletedRow, .wasNotCovered { background-image:url('../img/arc.png'); }
 
 .keyword { color: #001D91; font-weight: bold; }
+.comment { color: #9E9E9E; }
+.string { color: #4CA1FC; }
 
 .top { border-top: 3px solid #22008A; }
 .bottom { border-bottom: 3px solid #22008A; }
