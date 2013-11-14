@@ -4,6 +4,11 @@ import java.util.LinkedList;
 
 import difflib.ChangeDelta;
 
+/**
+ * Contains information for a change in the source and the coverage for both pieces of code
+ * @author soosterwaal
+ *
+ */
 public class ChangeSourceChange extends SourceChange {
 	
 	public ChangeSourceChange(int originalLineNumber, int revisedLineNumber, ChangeDelta additions) {

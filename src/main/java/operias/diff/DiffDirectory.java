@@ -7,6 +7,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Contains the source diff information for a directory and all its sub directories
+ * @author soosterwaal
+ *
+ */
 public class DiffDirectory {
 
 	/**

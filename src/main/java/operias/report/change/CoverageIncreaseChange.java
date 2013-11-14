@@ -2,6 +2,11 @@ package operias.report.change;
 
 import java.util.LinkedList;
 
+/**
+ * Contains the information for a line of which the coverage was increased
+ * @author soosterwaal
+ *
+ */
 public class CoverageIncreaseChange extends OperiasChange {
 
 	public CoverageIncreaseChange(int originalLineNumber, int revisedLineNumber) {
@@ -15,7 +20,4 @@ public class CoverageIncreaseChange extends OperiasChange {
 		this.revisedCoverage.add(true);
 	}
 	
-	public CoverageIncreaseChange(int revisedLineNumber) {
-		this(-1, revisedLineNumber);
-	}
 }

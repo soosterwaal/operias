@@ -9,8 +9,18 @@ import operias.cobertura.CoberturaPackage;
 import operias.cobertura.CoberturaReport;
 import operias.diff.DiffFile;
 import operias.diff.DiffReport;
-import operias.diff.SourceDiffState;
 
+/**
+ * Operias Report class.
+ * This class contains the combined information from the source diff report 
+ * the two cobertura reports, which were created in the first phase.
+ * 
+ * This report can be used to generate the HTML report for a pretty visualisation
+ * of the information
+ * 
+ * @author soosterwaal
+ *
+ */
 public class OperiasReport {
 
 	/**
@@ -70,7 +80,10 @@ public class OperiasReport {
 						System.exit(OperiasStatus.ERROR_COBERTURA_CLASS_REPORT_NOT_FOUND.ordinal());
 					} else {
 						// We got the class, so we can compare the classes for any differences
-						changedClasses.add(new OperiasFile(oClass, rClass, fileDiff));
+						OperiasFile newOFile = new OperiasFile(oClass, rClass, fileDiff);
+						if (newOFile.getChanges().size() > 0) {
+							changedClasses.add(newOFile);
+						}
 					}
 					
 				}
@@ -84,7 +97,11 @@ public class OperiasReport {
 			if (oPackage == null) {
 				// Package was new so, all classes should be "new"
 				for(CoberturaClass rClass : rPackage.getClasses()) {
-					changedClasses.add(new OperiasFile(rClass));
+					DiffFile fileDiff = sourceDiffReport.getFile("src/main/java/" + rClass.getFileName());
+					OperiasFile newOFile = new OperiasFile(rClass, fileDiff);
+					if (newOFile.getChanges().size() > 0) {
+						changedClasses.add(newOFile);
+					}
 				}
 			} else {
 				// Package was found, check which classes are new
@@ -93,7 +110,11 @@ public class OperiasReport {
 					
 					if (oClass == null) {
 						// Class was new
-						changedClasses.add(new OperiasFile(rClass));
+						DiffFile fileDiff = sourceDiffReport.getFile("src/main/java/" + rClass.getFileName());
+						OperiasFile newOFile = new OperiasFile(rClass, fileDiff);
+						if (newOFile.getChanges().size() > 0) {
+							changedClasses.add(newOFile);
+						}
 					}
 				}
 			}

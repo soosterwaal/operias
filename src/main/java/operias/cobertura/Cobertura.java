@@ -25,7 +25,7 @@ public class Cobertura {
 	
 	public Cobertura(String directory) {
 		this.directory = directory;
-		this.outputDirectory = "";
+		this.outputDirectory = directory;
 	}
 	
 	/**
@@ -82,7 +82,7 @@ public class Cobertura {
 		}
 		
 		ProcessBuilder builder = new ProcessBuilder("mvn","clean", "cobertura:cobertura", "-Dcobertura.report.format=xml", "-f", pomXML.getAbsolutePath());
-		
+
 		Process process = null;
 		process = builder.start();
 		process.waitFor();
@@ -90,7 +90,6 @@ public class Cobertura {
 		process.destroy();
 		
 		executionSucceeded = exitValue == 0;
-		
 		
 		return executionSucceeded;	
 	}
@@ -122,8 +121,7 @@ public class Cobertura {
 		Process process = builder.start();
 		process.waitFor();
 		int exitValue = process.exitValue();
-		process.destroy();
-			
+		process.destroy();			
 		return exitValue == 0;
 	}
 }

@@ -72,5 +72,10 @@ public enum OperiasStatus {
 	/**
 	 * Invalid line comparison
 	 */
-	ERROR_OPERIAS_INVALID_LINE_COMPARISON;
+	ERROR_OPERIAS_INVALID_LINE_COMPARISON, 
+	
+	/**
+	 * Error when joining the threads
+	 */
+	ERROR_THREAD_JOINING;
 }

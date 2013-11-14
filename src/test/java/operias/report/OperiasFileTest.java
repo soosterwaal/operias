@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import operias.OperiasStatus;
 import operias.cobertura.*;
@@ -197,69 +198,15 @@ public class OperiasFileTest {
 		assertEquals(0, changes.size());
 	}
 	
+	
+	
+	
+	
 	/**
 	 * Test invalid data, such as missing lines or missing branches
 	 */
 	@Test
 	public void testInvalidCoverageReports1() {
-		
-		CoberturaLine line1 = new CoberturaLine(1, 0, false, false);
-		CoberturaLine line2 = new CoberturaLine(2, 0, false, false);
-
-		originalClass.addLine(line1);
-		revisedClass.addLine(line2);
-
-		DiffFile sourceDiff = new DiffFile("simple/Simple.java", SourceDiffState.SAME);
-		
-		System.setSecurityManager(new NoExitSecurityManager());
-		boolean exceptionThrown = false;
-		
-		try {
-			new OperiasFile(originalClass, revisedClass, sourceDiff);
-			
-		} catch (ExitException e) {
-	    	exceptionThrown = true;
-            assertEquals("Invalid line comparison", OperiasStatus.ERROR_OPERIAS_INVALID_LINE_COMPARISON.ordinal(), e.status);
-	    }
-		
-		assertTrue(exceptionThrown);
-		System.setSecurityManager(null);
-	}
-	
-	/**
-	 * Test invalid data, such as missing lines or missing branches
-	 */
-	@Test
-	public void testInvalidCoverageReports2() {
-	
-		CoberturaLine line1 = new CoberturaLine(1, 0, false, false);
-		CoberturaLine line2 = new CoberturaLine(2, 0, false, false);
-
-		originalClass.addLine(line2);
-		revisedClass.addLine(line1);
-
-		DiffFile sourceDiff = new DiffFile("simple/Simple.java", SourceDiffState.SAME);
-		
-		System.setSecurityManager(new NoExitSecurityManager());
-		boolean exceptionThrown = false;
-		
-		try {
-			new OperiasFile(originalClass, revisedClass, sourceDiff);
-			
-		} catch (ExitException e) {
-	    	exceptionThrown = true;
-            assertEquals("Invalid line comparison", OperiasStatus.ERROR_OPERIAS_INVALID_LINE_COMPARISON.ordinal(), e.status);
-	    }
-		
-		assertTrue(exceptionThrown);
-		System.setSecurityManager(null);
-	}
-	
-	/**
-	 * Test invalid data, such as missing lines or missing branches
-	 */
-	@Test
-	public void testInvalidCoverageReports3() {
 	
 		CoberturaLine line1 = new CoberturaLine(1, 0, true, false);
 		CoberturaLine line2 = new CoberturaLine(1, 0, false, false);
@@ -288,7 +235,7 @@ public class OperiasFileTest {
 	 * Test invalid data, such as missing lines or missing branches
 	 */
 	@Test
-	public void testInvalidCoverageReports4() {
+	public void testInvalidCoverageReports2() {
 	
 		CoberturaLine line1 = new CoberturaLine(1, 0, true, false);
 		CoberturaLine line2 = new CoberturaLine(1, 0, false, false);
@@ -501,13 +448,27 @@ public class OperiasFileTest {
 		revisedClass.addLine(line1);
 		revisedClass.addLine(line2);
 		revisedClass.addLine(line3);
+
+		List<String> lines = new ArrayList<String>();
+		lines.add(" line1");
+		lines.add(" line2");
+		lines.add(" line3");
 		
-		OperiasFile oFile = new OperiasFile(revisedClass);
+		Chunk revised = new Chunk(1, lines);
+		InsertDelta insertDelta = new InsertDelta(new Chunk(1, new ArrayList<String>()), revised);
 		
-		assertEquals(3, oFile.getChanges().size());
-		assertTrue(oFile.getChanges().getFirst() instanceof CoverageIncreaseChange);
-		assertTrue(oFile.getChanges().get(1) instanceof CoverageDecreaseChange);
-		assertTrue(oFile.getChanges().get(2) instanceof CoverageIncreaseChange);
+		List<Delta> changes = new LinkedList<Delta>();
+		changes.add(insertDelta);
+		
+		DiffFile diffFile = new DiffFile("test", SourceDiffState.CHANGED);
+		diffFile.setChanges(changes);
+		
+		OperiasFile oFile = new OperiasFile(revisedClass, diffFile);
+		
+		assertEquals(1, oFile.getChanges().size());
+		assertTrue(oFile.getChanges().getFirst() instanceof InsertSourceChange);
+		
+		
 		
 	}
 }

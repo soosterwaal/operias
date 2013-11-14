@@ -122,7 +122,11 @@ public class CoberturaClass {
 	 * @return
 	 */
 	public int getMaxLineNumber() {
-		return lines.getLast().getNumber();
+		if (lines.isEmpty()) {
+			return 0;
+		} else {
+			return lines.getLast().getNumber();
+		}
 	}
 
 	/**

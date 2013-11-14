@@ -4,13 +4,16 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedList;
 
 import operias.cobertura.CoberturaReport;
 import operias.diff.DiffReport;
+import operias.html.HTMLReport;
 import operias.report.change.ChangeSourceChange;
 import operias.report.change.CoverageDecreaseChange;
 import operias.report.change.CoverageIncreaseChange;
+import operias.report.change.InsertSourceChange;
 
 import org.junit.Test;
 
@@ -31,13 +34,15 @@ public class OperiasReportTest {
 		
 		LinkedList<OperiasFile> changedClasses = (LinkedList<OperiasFile>)report.getChangedClasses();
 		
-		assertEquals(4, changedClasses.size());
+		
+		assertEquals(5, changedClasses.size());
 		
 		OperiasFile firstClass = changedClasses.getFirst();
 		
 		assertEquals("example", firstClass.getPackageName());
 		assertEquals("example.Calculations", firstClass.getClassName());
 		assertEquals((new File("")).getAbsolutePath() + "/src/test/resources/mavenProject2/src/main/java/example/Calculations.java", firstClass.getFileName());
+		
 		
 		assertEquals(2, firstClass.getChanges().size());
 		
@@ -69,7 +74,6 @@ public class OperiasReportTest {
 		assertTrue(change2.getRevisedCoverage().get(3));
 		assertNull(change2.getRevisedCoverage().get(4));
 		
-		
 		OperiasFile secondClass = changedClasses.get(1);
 		assertEquals("example", secondClass.getPackageName());
 		assertEquals("example.Loops", secondClass.getClassName());
@@ -84,55 +88,63 @@ public class OperiasReportTest {
 		assertTrue(secondClass.getChanges().get(1) instanceof CoverageIncreaseChange);
 		CoverageIncreaseChange change4 = (CoverageIncreaseChange) secondClass.getChanges().get(1);
 		assertEquals(8, change4.getRevisedLineNumber());
-		
+
 		OperiasFile thirdClass = changedClasses.get(2);
 		assertEquals("example", thirdClass.getPackageName());
-		assertEquals("example.NewClass", thirdClass.getClassName());
-		assertEquals("example/NewClass.java", thirdClass.getFileName());
-		
-		assertEquals(4, thirdClass.getChanges().size());
-		assertTrue(thirdClass.getChanges().get(0) instanceof CoverageDecreaseChange);
-		CoverageDecreaseChange change5 = (CoverageDecreaseChange) thirdClass.getChanges().get(0);
-		assertEquals(3, change5.getRevisedLineNumber());
-		
-		assertTrue(thirdClass.getChanges().get(1) instanceof CoverageDecreaseChange);
-		CoverageDecreaseChange change6 = (CoverageDecreaseChange) thirdClass.getChanges().get(1);
-		assertEquals(6, change6.getRevisedLineNumber());
-		
-		assertTrue(thirdClass.getChanges().get(2) instanceof CoverageDecreaseChange);
-		CoverageDecreaseChange change7 = (CoverageDecreaseChange) thirdClass.getChanges().get(2);
-		assertEquals(7, change7.getRevisedLineNumber());
-		
-		assertTrue(thirdClass.getChanges().get(3) instanceof CoverageDecreaseChange);
-		CoverageDecreaseChange change8 = (CoverageDecreaseChange) thirdClass.getChanges().get(3);
-		assertEquals(8, change8.getRevisedLineNumber());
+		assertEquals("example.Music", thirdClass.getClassName());
+		assertEquals((new File("")).getAbsolutePath() + "/src/test/resources/mavenProject2/src/main/java/example/Music.java", thirdClass.getFileName());
+	
 		
 		OperiasFile fourthClass = changedClasses.get(3);
-		assertEquals("moreExamples", fourthClass.getPackageName());
-		assertEquals("moreExamples.Switch", fourthClass.getClassName());
-		assertEquals("moreExamples/Switch.java", fourthClass.getFileName());
+		assertEquals("example", fourthClass.getPackageName());
+		assertEquals("example.NewClass", fourthClass.getClassName());
+		assertEquals((new File("")).getAbsolutePath() + "/src/test/resources/mavenProject2/src/main/java/example/NewClass.java", fourthClass.getFileName());
 		
-		assertEquals(5, fourthClass.getChanges().size());
+		assertEquals(1, fourthClass.getChanges().size());
+		assertTrue(fourthClass.getChanges().get(0) instanceof InsertSourceChange);
+
+		assertEquals(9, fourthClass.getChanges().get(0).getRevisedCoverage().size());
 		
-		assertTrue(fourthClass.getChanges().get(0) instanceof CoverageIncreaseChange);
-		CoverageIncreaseChange change9 = (CoverageIncreaseChange) fourthClass.getChanges().get(0);
-		assertEquals(3, change9.getRevisedLineNumber());
+		assertNull(fourthClass.getChanges().get(0).getRevisedCoverage().get(0));
+		assertNull(fourthClass.getChanges().get(0).getRevisedCoverage().get(1));
+		assertFalse(fourthClass.getChanges().get(0).getRevisedCoverage().get(2));
+		assertNull(fourthClass.getChanges().get(0).getRevisedCoverage().get(3));
+		assertNull(fourthClass.getChanges().get(0).getRevisedCoverage().get(4));
+		assertFalse(fourthClass.getChanges().get(0).getRevisedCoverage().get(5));
+		assertFalse(fourthClass.getChanges().get(0).getRevisedCoverage().get(6));
+		assertFalse(fourthClass.getChanges().get(0).getRevisedCoverage().get(7));
+		assertNull(fourthClass.getChanges().get(0).getRevisedCoverage().get(8));
 		
-		assertTrue(fourthClass.getChanges().get(1) instanceof CoverageDecreaseChange);
-		CoverageDecreaseChange change10 = (CoverageDecreaseChange) fourthClass.getChanges().get(1);
-		assertEquals(6, change10.getRevisedLineNumber());
+		OperiasFile fifthClass = changedClasses.get(4);
+		assertEquals("moreExamples", fifthClass.getPackageName());
+		assertEquals("moreExamples.Switch", fifthClass.getClassName());
+		assertEquals((new File("")).getAbsolutePath() + "/src/test/resources/mavenProject2/src/main/java/moreExamples/Switch.java", fifthClass.getFileName());
 		
-		assertTrue(fourthClass.getChanges().get(2) instanceof CoverageIncreaseChange);
-		CoverageIncreaseChange change11 = (CoverageIncreaseChange) fourthClass.getChanges().get(2);
-		assertEquals(7, change11.getRevisedLineNumber());
 		
-		assertTrue(fourthClass.getChanges().get(3) instanceof CoverageIncreaseChange);
-		CoverageIncreaseChange change12 = (CoverageIncreaseChange) fourthClass.getChanges().get(3);
-		assertEquals(8, change12.getRevisedLineNumber());
+		assertEquals(1, fifthClass.getChanges().size());
+		assertTrue(fifthClass.getChanges().get(0) instanceof InsertSourceChange);
+
+		assertEquals(12, fifthClass.getChanges().get(0).getRevisedCoverage().size());
 		
-		assertTrue(fourthClass.getChanges().get(4) instanceof CoverageDecreaseChange);
-		CoverageDecreaseChange change13 = (CoverageDecreaseChange) fourthClass.getChanges().get(4);
-		assertEquals(9, change13.getRevisedLineNumber());
+		assertNull(fifthClass.getChanges().get(0).getRevisedCoverage().get(0));
+		assertNull(fifthClass.getChanges().get(0).getRevisedCoverage().get(1));
+		assertTrue(fifthClass.getChanges().get(0).getRevisedCoverage().get(2));
+		assertNull(fifthClass.getChanges().get(0).getRevisedCoverage().get(3));
+		assertNull(fifthClass.getChanges().get(0).getRevisedCoverage().get(4));
+		assertFalse(fifthClass.getChanges().get(0).getRevisedCoverage().get(5));
+		assertTrue(fifthClass.getChanges().get(0).getRevisedCoverage().get(6));
+		assertTrue(fifthClass.getChanges().get(0).getRevisedCoverage().get(7));
+		assertFalse(fifthClass.getChanges().get(0).getRevisedCoverage().get(8));
+		assertNull(fifthClass.getChanges().get(0).getRevisedCoverage().get(9));
+		assertNull(fifthClass.getChanges().get(0).getRevisedCoverage().get(10));
+		assertNull(fifthClass.getChanges().get(0).getRevisedCoverage().get(11));
 		
+		
+		
+		try {
+			(new HTMLReport(report)).generateSite();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

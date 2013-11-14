@@ -1,5 +1,10 @@
 package operias.report.change;
 
+/**
+ * Contains both the coverage and source information for a piece of code
+ * @author soosterwaal
+ *
+ */
 public abstract class SourceChange extends OperiasChange {
 	
 	/**
