@@ -13,6 +13,6 @@ To use operias, clone the master branch and execute the following command:
 
 After that, go to the target directory and execute:
 
-  java -cp '<path-to-project>/target/operias-<version>-jar-with-dependencies.jar' operias.Main <revisedDirectory> <originalDirectory>
+  java -cp '\<path-to-project\>/target/operias-\<version\>-jar-with-dependencies.jar' operias.Main \<revisedDirectory\> \<originalDirectory\>
 
 After execution, the site will be available in the site folder.
