@@ -30,11 +30,6 @@ import operias.report.change.SourceChange;
  *
  */
 public class OperiasFile {
-
-	/**
-	 * File name
-	 */
-	private String fileName;
 	
 	/**
 	 * Package name
@@ -72,7 +67,6 @@ public class OperiasFile {
 	 */
 	public OperiasFile(CoberturaClass revisedClass, DiffFile sourceDiff) {
 		
-		this.fileName = sourceDiff.getFileName();
 		this.className = revisedClass.getName();
 		this.packageName = revisedClass.getPackageName();
 		this.changes = new LinkedList<OperiasChange>();
@@ -103,7 +97,6 @@ public class OperiasFile {
 	 * @param sourceDiff
 	 */
 	public OperiasFile(CoberturaClass originalClass, CoberturaClass revisedClass, DiffFile sourceDiff) {
-		this.fileName = sourceDiff.getFileName();
 		this.className = originalClass.getName();
 		this.packageName = originalClass.getPackageName();
 		this.changes = new LinkedList<OperiasChange>();
@@ -208,12 +201,6 @@ public class OperiasFile {
 		return changes;
 	}
 
-	/**
-	 * @return the fileName
-	 */
-	public String getFileName() {
-		return fileName;
-	}
 
 	/**
 	 * @return the packageName

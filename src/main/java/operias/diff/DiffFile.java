@@ -20,9 +20,14 @@ import difflib.Patch;
 public class DiffFile {
 
 	/**
-	 * File name
+	 * Original file name
 	 */
-	private String fileName;
+	private String originalFileName;
+
+	/**
+	 * Original file name
+	 */
+	private String revisedFileName;
 	
 	/**
 	 * State of the diff file
@@ -40,8 +45,9 @@ public class DiffFile {
 	 * Construct a new file for the file diff report
 	 * @param fileName
 	 */
-	public DiffFile(String fileName, SourceDiffState state) {
-		this.fileName = fileName;
+	public DiffFile(String originalFileName, String revisedFileName, SourceDiffState state) {
+		this.originalFileName = originalFileName;
+		this.revisedFileName = revisedFileName;
 		this.sourceState = state;
 		this.changes = new LinkedList<Delta>();
 	}
@@ -72,22 +78,24 @@ public class DiffFile {
 	 * @param newFile
 	 * @throws IOException 
 	 */
-	public static DiffFile compareFile(String originalFile, String newFile) throws IOException {
-		DiffFile diffFile = new DiffFile(newFile, SourceDiffState.CHANGED);
+	public static DiffFile compareFile(String originalFileName, String revisedFileName) throws IOException {
+		
+		
+		DiffFile diffFile = new DiffFile(originalFileName, revisedFileName, SourceDiffState.CHANGED);
 		
 		List<String> originalFileList = new ArrayList<String>();
 		List<String> newFileList = new ArrayList<String>();
 		
 		try {
-			 originalFileList = fileToLines(originalFile);
+			 originalFileList = fileToLines(originalFileName);
 		} catch (NullPointerException | FileNotFoundException e) {
-			diffFile = new DiffFile(newFile, SourceDiffState.NEW); 
+			diffFile = new DiffFile("", revisedFileName, SourceDiffState.NEW); 
 		}
 		
 		try {
-			newFileList = fileToLines(newFile);
+			newFileList = fileToLines(revisedFileName);
 		} catch (NullPointerException | FileNotFoundException e) {
-			diffFile = new DiffFile(originalFile, SourceDiffState.DELETED); 
+			diffFile = new DiffFile(originalFileName, "",  SourceDiffState.DELETED); 
 		}
 		
 		Patch difference = DiffUtils.diff(originalFileList, newFileList);
@@ -100,8 +108,15 @@ public class DiffFile {
 	/**
 	 * @return the fileName
 	 */
-	public String getFileName() {
-		return fileName;
+	public String getOriginalFileName() {
+		return originalFileName;
+	}
+	
+	/**
+	 * @return the fileName
+	 */
+	public String getRevisedFileName() {
+		return revisedFileName;
 	}
 
 	/**

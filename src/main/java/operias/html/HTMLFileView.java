@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 
+import operias.diff.SourceDiffState;
 import operias.report.OperiasFile;
 import operias.report.change.ChangeSourceChange;
 import operias.report.change.CoverageDecreaseChange;
@@ -29,7 +30,13 @@ public class HTMLFileView {
 	 */
 	public HTMLFileView(OperiasFile file, List<OperiasFile> changedFiles) throws IOException {
 		this.changedFiles = changedFiles;
-		BufferedReader sourceFileReader = new BufferedReader(new FileReader(file.getFileName()));
+		
+		BufferedReader sourceFileReader = null;
+		if (file.getSourceDiff().getSourceState() == SourceDiffState.DELETED){
+			sourceFileReader = new BufferedReader(new FileReader(file.getSourceDiff().getOriginalFileName()));
+		} else {
+			sourceFileReader = new BufferedReader(new FileReader(file.getSourceDiff().getRevisedFileName()));
+		}
 		
 		File classHTMLFile = new File("site/" + file.getClassName() + ".html");
 		classHTMLFile.createNewFile();

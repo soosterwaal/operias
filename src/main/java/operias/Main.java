@@ -18,6 +18,9 @@ public class Main {
 	 * The second argument is the directory of the github repository
 	 */
 	public static void main(String[] args) {
+		args = new String[2];
+		args[0] = "/Users/sebas/Documents/Eclipse Workspace/mavenProject2";
+		args[1] = "/Users/sebas/Documents/Eclipse Workspace/mavenProject1";
 		parseArguments(args);
 		
 		new Operias().constructReport().writeSite();

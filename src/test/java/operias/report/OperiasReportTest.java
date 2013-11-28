@@ -4,14 +4,12 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.LinkedList;
 
 import operias.cobertura.CoberturaReport;
 import operias.diff.DiffReport;
 import operias.html.HTMLReport;
 import operias.report.change.ChangeSourceChange;
-import operias.report.change.CoverageDecreaseChange;
 import operias.report.change.CoverageIncreaseChange;
 import operias.report.change.InsertSourceChange;
 
@@ -41,7 +39,7 @@ public class OperiasReportTest {
 		
 		assertEquals("example", firstClass.getPackageName());
 		assertEquals("example.Calculations", firstClass.getClassName());
-		assertEquals((new File("")).getAbsolutePath() + "/src/test/resources/mavenProject2/src/main/java/example/Calculations.java", firstClass.getFileName());
+		assertEquals((new File("")).getAbsolutePath() + "/src/test/resources/mavenProject2/src/main/java/example/Calculations.java", firstClass.getSourceDiff().getRevisedFileName());
 		
 		
 		assertEquals(2, firstClass.getChanges().size());
@@ -77,7 +75,7 @@ public class OperiasReportTest {
 		OperiasFile secondClass = changedClasses.get(1);
 		assertEquals("example", secondClass.getPackageName());
 		assertEquals("example.Loops", secondClass.getClassName());
-		assertEquals((new File("")).getAbsolutePath() + "/src/test/resources/mavenProject2/src/main/java/example/Loops.java", secondClass.getFileName());
+		assertEquals((new File("")).getAbsolutePath() + "/src/test/resources/mavenProject2/src/main/java/example/Loops.java", secondClass.getSourceDiff().getRevisedFileName());
 		
 		assertEquals(2, secondClass.getChanges().size());
 		
@@ -92,13 +90,13 @@ public class OperiasReportTest {
 		OperiasFile thirdClass = changedClasses.get(2);
 		assertEquals("example", thirdClass.getPackageName());
 		assertEquals("example.Music", thirdClass.getClassName());
-		assertEquals((new File("")).getAbsolutePath() + "/src/test/resources/mavenProject2/src/main/java/example/Music.java", thirdClass.getFileName());
+		assertEquals((new File("")).getAbsolutePath() + "/src/test/resources/mavenProject2/src/main/java/example/Music.java", thirdClass.getSourceDiff().getRevisedFileName());
 	
 		
 		OperiasFile fourthClass = changedClasses.get(3);
 		assertEquals("example", fourthClass.getPackageName());
 		assertEquals("example.NewClass", fourthClass.getClassName());
-		assertEquals((new File("")).getAbsolutePath() + "/src/test/resources/mavenProject2/src/main/java/example/NewClass.java", fourthClass.getFileName());
+		assertEquals((new File("")).getAbsolutePath() + "/src/test/resources/mavenProject2/src/main/java/example/NewClass.java", fourthClass.getSourceDiff().getRevisedFileName());
 		
 		assertEquals(1, fourthClass.getChanges().size());
 		assertTrue(fourthClass.getChanges().get(0) instanceof InsertSourceChange);
@@ -118,7 +116,7 @@ public class OperiasReportTest {
 		OperiasFile fifthClass = changedClasses.get(4);
 		assertEquals("moreExamples", fifthClass.getPackageName());
 		assertEquals("moreExamples.Switch", fifthClass.getClassName());
-		assertEquals((new File("")).getAbsolutePath() + "/src/test/resources/mavenProject2/src/main/java/moreExamples/Switch.java", fifthClass.getFileName());
+		assertEquals((new File("")).getAbsolutePath() + "/src/test/resources/mavenProject2/src/main/java/moreExamples/Switch.java", fifthClass.getSourceDiff().getRevisedFileName());
 		
 		
 		assertEquals(1, fifthClass.getChanges().size());

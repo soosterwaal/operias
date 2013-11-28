@@ -52,7 +52,12 @@ public class DiffReportTest {
 		assertEquals((new File("")).getAbsolutePath() + "/src/test/resources/simpleMavenProject/src", diffDir_1.getDirectoryName());
 		assertEquals(state, diffDir_1.getState());
 		
-		assertEquals((new File("")).getAbsolutePath() + "/src/test/resources/simpleMavenProject/pom.xml", diffFile.getFileName());
+		if(state == SourceDiffState.NEW) {
+			assertEquals((new File("")).getAbsolutePath() + "/src/test/resources/simpleMavenProject/pom.xml", diffFile.getRevisedFileName());
+		} else {
+			assertEquals((new File("")).getAbsolutePath() + "/src/test/resources/simpleMavenProject/pom.xml", diffFile.getOriginalFileName());
+		}
+		
 		assertEquals(state, diffFile.getSourceState());
 		
 		// Check the src folder, should contain a main and test folder
@@ -137,12 +142,12 @@ public class DiffReportTest {
 			DiffFile file = diffReport.getFile("src/main/java/simpleMavenProject/Simple.java");
 			
 			assertNotNull(file);
-			assertEquals((new File("src/test/resources/simpleMavenProject", "src/main/java/simpleMavenProject/Simple.java")).getAbsolutePath(), file.getFileName());
+			assertEquals((new File("src/test/resources/simpleMavenProject", "src/main/java/simpleMavenProject/Simple.java")).getAbsolutePath(), file.getOriginalFileName());
 
 			file = diffReport.getFile("src/main/java/simpleMavenProject/Simple2.java");
 	
 			assertNotNull(file);
-			assertEquals((new File("src/test/resources/simpleMavenProject2", "src/main/java/simpleMavenProject/Simple2.java")).getAbsolutePath(), file.getFileName());
+			assertEquals((new File("src/test/resources/simpleMavenProject2", "src/main/java/simpleMavenProject/Simple2.java")).getAbsolutePath(), file.getRevisedFileName());
 			
 			file = diffReport.getFile("src/main/java/simpleMavenProject/DOESNOTEXISTS.java");
 			
@@ -170,10 +175,10 @@ public class DiffReportTest {
 			assertEquals(SourceDiffState.SAME, diffDir.getDirectories().get(0).getDirectories().get(0).getDirectories().get(1).getState());
 			
 			assertEquals(SourceDiffState.DELETED, diffDir.getDirectories().get(0).getDirectories().get(0).getDirectories().get(0).getDirectories().get(0).getFiles().get(0).getSourceState());
-			assertEquals((new File("")).getAbsolutePath() + "/src/test/resources/simpleMavenProject/src/main/java/simpleMavenProject/Simple.java", diffDir.getDirectories().get(0).getDirectories().get(0).getDirectories().get(0).getDirectories().get(0).getFiles().get(0).getFileName());
+			assertEquals((new File("")).getAbsolutePath() + "/src/test/resources/simpleMavenProject/src/main/java/simpleMavenProject/Simple.java", diffDir.getDirectories().get(0).getDirectories().get(0).getDirectories().get(0).getDirectories().get(0).getFiles().get(0).getOriginalFileName());
 			
 			assertEquals(SourceDiffState.NEW, diffDir.getDirectories().get(0).getDirectories().get(0).getDirectories().get(0).getDirectories().get(0).getFiles().get(1).getSourceState());
-			assertEquals((new File("")).getAbsolutePath() + "/src/test/resources/simpleMavenProject2/src/main/java/simpleMavenProject/Simple2.java", diffDir.getDirectories().get(0).getDirectories().get(0).getDirectories().get(0).getDirectories().get(0).getFiles().get(1).getFileName());
+			assertEquals((new File("")).getAbsolutePath() + "/src/test/resources/simpleMavenProject2/src/main/java/simpleMavenProject/Simple2.java", diffDir.getDirectories().get(0).getDirectories().get(0).getDirectories().get(0).getDirectories().get(0).getFiles().get(1).getRevisedFileName());
 			
 			assertEquals(SourceDiffState.CHANGED, diffDir.getDirectories().get(0).getDirectories().get(1).getDirectories().get(0).getState());
 			assertEquals(SourceDiffState.CHANGED, diffDir.getDirectories().get(0).getDirectories().get(1).getDirectories().get(1).getState());

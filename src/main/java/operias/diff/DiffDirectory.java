@@ -272,7 +272,7 @@ public class DiffDirectory {
 		
 		// Search the files of this directory
 		for(DiffFile file : files) {
-			if (file.getFileName().equals(filename)) {
+			if (file.getOriginalFileName().equals(filename) || file.getRevisedFileName().equals(filename)) {
 				return file;
 			}
 		}

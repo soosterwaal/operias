@@ -28,7 +28,8 @@ public class DiffFileTest {
 		}
 		
 		assertEquals(SourceDiffState.DELETED, diffFile.getSourceState());
-		assertEquals("src/test/resources/diffFile/file1.txt", diffFile.getFileName());
+		assertEquals("src/test/resources/diffFile/file1.txt", diffFile.getOriginalFileName());
+		assertEquals("", diffFile.getRevisedFileName());
 		//1 change, the complete file
 		assertEquals(1, diffFile.getChanges().size());
 
@@ -39,7 +40,8 @@ public class DiffFileTest {
 		}
 		
 		assertEquals(SourceDiffState.DELETED, diffFile.getSourceState());
-		assertEquals("src/test/resources/diffFile/file1.txt", diffFile.getFileName());
+		assertEquals("src/test/resources/diffFile/file1.txt", diffFile.getOriginalFileName());
+		assertEquals("", diffFile.getRevisedFileName());
 		//1 change, the complete file
 		assertEquals(1, diffFile.getChanges().size());
 	}
@@ -58,7 +60,8 @@ public class DiffFileTest {
 		}
 		
 		assertEquals(SourceDiffState.NEW, diffFile.getSourceState());
-		assertEquals("src/test/resources/diffFile/file2.txt", diffFile.getFileName());
+		assertEquals("", diffFile.getOriginalFileName());
+		assertEquals("src/test/resources/diffFile/file2.txt", diffFile.getRevisedFileName());
 		//1 change, the complete file
 		assertEquals(1, diffFile.getChanges().size());
 		
@@ -70,7 +73,8 @@ public class DiffFileTest {
 		}
 		
 		assertEquals(SourceDiffState.NEW, diffFile.getSourceState());
-		assertEquals("src/test/resources/diffFile/file2.txt", diffFile.getFileName());
+		assertEquals("", diffFile.getOriginalFileName());
+		assertEquals("src/test/resources/diffFile/file2.txt", diffFile.getRevisedFileName());
 		//1 change, the complete file
 		assertEquals(1, diffFile.getChanges().size());
 	}
@@ -88,7 +92,8 @@ public class DiffFileTest {
 		}
 		
 		assertEquals(SourceDiffState.SAME, diffFile.getSourceState());
-		assertEquals("src/test/resources/diffFile/file1.txt", diffFile.getFileName());
+		assertEquals("src/test/resources/diffFile/file1.txt", diffFile.getRevisedFileName());
+		assertEquals("src/test/resources/diffFile/file1.txt", diffFile.getOriginalFileName());
 		assertEquals(0, diffFile.getChanges().size());
 	}
 	
@@ -105,7 +110,8 @@ public class DiffFileTest {
 		}
 		
 		assertEquals(SourceDiffState.CHANGED, diffFile.getSourceState());
-		assertEquals("src/test/resources/diffFile/file2.txt", diffFile.getFileName());
+		assertEquals("src/test/resources/diffFile/file2.txt", diffFile.getRevisedFileName());
+		assertEquals("src/test/resources/diffFile/file1.txt", diffFile.getOriginalFileName());
 		assertEquals(3, diffFile.getChanges().size());
 		
 		List<Delta> changes = diffFile.getChanges();
