@@ -8,17 +8,23 @@
 		<script type="text/javascript">
 			$(document).ready(function() {
 				$("#showAllChanges").click(function() {
-					$(".deletedRow, .notCovered, .isCovered, .wasCovered, .wasNotCovered, .insertedRow").show();
+					$("#revisedCoverageTable, #originalCoverageTable, #sourceDiffTable").hide();
+					$("#combinedTable").show();
 				});
 			
 				$("#showOriginal").click(function() {
-					$(".deletedRow,  .wasCovered, .wasNotCovered").show();
-					$(".insertedRow,  .isCovered, .notCovered").hide();
+					$("#revisedCoverageTable, #combinedTable, #sourceDiffTable").hide();
+					$("#originalCoverageTable").show();
 				});
 				
 				$("#showNew").click(function() {
-					$(".deletedRow,  .wasCovered, .wasNotCovered").hide();
-					$(".insertedRow,  .isCovered, .notCovered").show();
+					$("#combinedTable, #originalCoverageTable, #sourceDiffTable").hide();
+					$("#revisedCoverageTable").show();
+				});
+				
+				$("#showSourceDiff").click(function() {
+					$("#combinedTable, #originalCoverageTable, #revisedCoverageTable").hide();
+					$("#sourceDiffTable").show();
 				});
 				
 				$(".packageRow").click(function() {					

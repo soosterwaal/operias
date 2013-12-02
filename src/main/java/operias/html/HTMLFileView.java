@@ -2,14 +2,23 @@ package operias.html;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 
+import difflib.ChangeDelta;
+import difflib.DeleteDelta;
+import difflib.Delta;
+import difflib.InsertDelta;
+import operias.cobertura.CoberturaClass;
+import operias.cobertura.CoberturaLine;
+import operias.diff.DiffFile;
 import operias.diff.SourceDiffState;
 import operias.report.OperiasFile;
 import operias.report.change.ChangeSourceChange;
@@ -21,7 +30,6 @@ import operias.report.change.OperiasChange;
 
 public class HTMLFileView {
 	
-	private List<OperiasFile> changedFiles;
 	
 	/**
 	 * Create a new hTML file view page
@@ -29,14 +37,8 @@ public class HTMLFileView {
 	 * @throws IOException
 	 */
 	public HTMLFileView(OperiasFile file, List<OperiasFile> changedFiles) throws IOException {
-		this.changedFiles = changedFiles;
 		
-		BufferedReader sourceFileReader = null;
-		if (file.getSourceDiff().getSourceState() == SourceDiffState.DELETED){
-			sourceFileReader = new BufferedReader(new FileReader(file.getSourceDiff().getOriginalFileName()));
-		} else {
-			sourceFileReader = new BufferedReader(new FileReader(file.getSourceDiff().getRevisedFileName()));
-		}
+	
 		
 		File classHTMLFile = new File("site/" + file.getClassName() + ".html");
 		classHTMLFile.createNewFile();
@@ -51,9 +53,24 @@ public class HTMLFileView {
 		// Generate some info about the file
 		generateInfoBox(outputStreamHTMLFile, file);
 		
-		// Generate the actual code table
-		generateCode(outputStreamHTMLFile, file, sourceFileReader);
+		outputStreamHTMLFile.println("<div id='mainContent'><div id='tableContent'>");
+
+		// Generate the original and revised views
+		if (file.getSourceDiff().getSourceState() != SourceDiffState.NEW){
+			generateSimpleCoverageView(outputStreamHTMLFile, file.getOriginalClass(), file.getSourceDiff().getOriginalFileName(), "originalCoverageTable");
+		}
 		
+		if (file.getSourceDiff().getSourceState() != SourceDiffState.DELETED){
+			generateSimpleCoverageView(outputStreamHTMLFile, file.getRevisedClass(), file.getSourceDiff().getRevisedFileName(), "revisedCoverageTable");
+		}
+
+		// Generate source diff view
+		generateSourceDiffView(outputStreamHTMLFile, file.getSourceDiff());
+		
+		// Generate the combined code table
+		generateCombinedCodeView(outputStreamHTMLFile, file);
+		
+		outputStreamHTMLFile.println("</div></div>");
 	
 		InputStream footerStream = getClass().getResourceAsStream("/html/footer.html");
 		IOUtils.copy(footerStream, outputStreamHTMLFile);
@@ -61,6 +78,130 @@ public class HTMLFileView {
 		outputStreamHTMLFile.close();
 		footerStream.close();
 		headerStream.close();
+	}
+	
+	/**
+	 * Generate the source diff view
+	 * @param outputStreamHTMLFile
+	 * @param sourceDiff
+	 * @throws IOException 
+	 */
+	private void generateSourceDiffView(PrintStream outputStreamHTMLFile, DiffFile sourceDiff) throws IOException {
+		// Generate the source file reader for the combined view and source diff view
+		BufferedReader sourceFileReader = null;
+		if (sourceDiff.getSourceState() == SourceDiffState.DELETED){
+			sourceFileReader = new BufferedReader(new FileReader(sourceDiff.getOriginalFileName()));
+		} else {
+			sourceFileReader = new BufferedReader(new FileReader(sourceDiff.getRevisedFileName()));
+		}
+
+		int originalLineNumber = 0;
+		int revisedLineNumber = 0;
+		int changeIndex = 0;
+		
+	    JavaToHtml jth = new JavaToHtml();
+		
+		List<Delta> sourceChanges = sourceDiff.getChanges();
+		Delta currentChange = null;
+		if (sourceChanges.size() > 0) {
+			currentChange = sourceChanges.get(changeIndex);
+		}
+		
+		String line;
+		
+		outputStreamHTMLFile.println("<table id='sourceDiffTable' class='code'>");
+		
+		// Read all the lines from the source file
+		while ((line = sourceFileReader.readLine()) != null) {
+			if (currentChange != null && currentChange.getOriginal().getPosition() == originalLineNumber && 
+					currentChange.getRevised().getPosition() == revisedLineNumber) {
+				
+				if (currentChange instanceof DeleteDelta || currentChange instanceof ChangeDelta) {
+					for(int i =0; i < currentChange.getOriginal().getLines().size(); i++) {
+						outputStreamHTMLFile.println("<tr>");
+						outputStreamHTMLFile.println(" 	<td class='deletedRow'>" + (originalLineNumber + i) + "</td>");
+						outputStreamHTMLFile.println(" 	<td class='deletedRow'></td>");
+						outputStreamHTMLFile.println(" 	<td class='deletedRow'><pre>" + currentChange.getOriginal().getLines().get(i) + "</pre></td>");
+						outputStreamHTMLFile.println("</tr>");
+					}	
+					
+					originalLineNumber += currentChange.getOriginal().getLines().size();
+				}
+				
+				if (currentChange instanceof InsertDelta || currentChange instanceof ChangeDelta) {
+					int insertSize = currentChange.getRevised().getLines().size();
+					for(int i = 0; i < insertSize; i++) {
+						outputStreamHTMLFile.println("<tr>");
+						outputStreamHTMLFile.println(" 	<td class='left "+(i == (insertSize - 1) ? "bottom" : "")+" "+(i == 0 ? "top" : "")+"'></td>");
+						outputStreamHTMLFile.println(" 	<td class=' "+(i == (insertSize - 1) ? "bottom" : "")+" "+(i == 0 ? "top" : "")+"'>" + (revisedLineNumber + i) + "</td>");
+						outputStreamHTMLFile.println(" 	<td class='right "+(i == (insertSize - 1) ? "bottom" : "")+" "+(i == 0 ? "top" : "")+"'><pre>" + jth.process(line) + "</pre></td>");
+						outputStreamHTMLFile.println("</tr>");
+						
+						// Prevent reading the line AFTER the changed
+						if (i < (insertSize - 1)) {
+							line = sourceFileReader.readLine();
+						}
+					}	
+					
+					revisedLineNumber += currentChange.getRevised().getLines().size();
+				}
+				
+
+				// Get the a new change if possible
+				changeIndex++;
+				if (sourceChanges.size() > changeIndex) {
+					currentChange = sourceChanges.get(changeIndex);
+				}
+				
+			} else {
+				// Just show the line, nothing special here
+				outputStreamHTMLFile.println("<tr>");
+				outputStreamHTMLFile.println(" 	<td>" + originalLineNumber + "</td>");
+				outputStreamHTMLFile.println(" 	<td>" + revisedLineNumber + "</td>");
+				outputStreamHTMLFile.println(" 	<td><pre>" + jth.process(line) + "</pre></td>");
+				outputStreamHTMLFile.println("</tr>");
+				originalLineNumber++;
+				revisedLineNumber++;
+			}
+		}
+
+		outputStreamHTMLFile.println("</table>");
+		sourceFileReader.close();
+	}
+
+	/**
+	 * Generate and print a table containing the basic coverage information for a file
+	 * @param outputStreamHTMLFile
+	 * @param coverageInformation
+	 * @param sourceFileName
+	 * @throws IOException 
+	 */
+	private void generateSimpleCoverageView(PrintStream outputStreamHTMLFile, CoberturaClass coverageInformation, String sourceFileName, String tableName) throws IOException {
+		JavaToHtml jth = new JavaToHtml();
+		
+		BufferedReader sourceFileReader = new BufferedReader(new FileReader(sourceFileName));
+		
+		String line;
+		
+		int lineNumber = 1;
+		outputStreamHTMLFile.println("<table id='"+tableName+"' class='code'>");
+		while ((line = sourceFileReader.readLine()) != null) {
+			String tdClass = "";
+			CoberturaLine coverageLine = coverageInformation.tryGetLine(lineNumber);
+			if (coverageLine != null && coverageLine.isCovered()) {
+				tdClass = "coveredLight";
+			} else if (coverageLine != null && !coverageLine.isCovered()) {
+				tdClass = "notCoveredLight";
+			}
+			
+			outputStreamHTMLFile.println("<tr>");
+			outputStreamHTMLFile.println(" 	<td class='"+tdClass+"'>" + lineNumber + "</td>");
+			outputStreamHTMLFile.println(" 	<td class='"+tdClass+"'><pre>" + jth.process(line) + "</pre></td>");
+			outputStreamHTMLFile.println("</tr>");					
+
+			lineNumber++;
+		}
+		
 		sourceFileReader.close();
 	}
 	
@@ -71,11 +212,13 @@ public class HTMLFileView {
 	 * @param sourceFileReader
 	 * @throws IOException 
 	 */
-	private void generateCode(PrintStream outputStreamHTMLFile, OperiasFile file, BufferedReader sourceFileReader) throws IOException {
-
-		if (file.getChanges().size() == 0) {
-			System.out.println("EMPTY FILE!");
-			return;
+	private void generateCombinedCodeView(PrintStream outputStreamHTMLFile, OperiasFile file) throws IOException {
+		// Generate the source file reader for the combined view and source diff view
+		BufferedReader sourceFileReader = null;
+		if (file.getSourceDiff().getSourceState() == SourceDiffState.DELETED){
+			sourceFileReader = new BufferedReader(new FileReader(file.getSourceDiff().getOriginalFileName()));
+		} else {
+			sourceFileReader = new BufferedReader(new FileReader(file.getSourceDiff().getRevisedFileName()));
 		}
 		
 	    JavaToHtml jth = new JavaToHtml();
@@ -87,7 +230,7 @@ public class HTMLFileView {
 		int revisedLineNumber = 1;
 		String line;
 		
-		outputStreamHTMLFile.println("<div id='mainContent'><div id='tableContent'><table class='code'>");
+		outputStreamHTMLFile.println("<table id='combinedTable' class='code'>");
 		
 		// Read all the lines from the source file
 		while ((line = sourceFileReader.readLine()) != null) {
@@ -193,8 +336,10 @@ public class HTMLFileView {
 			}
 	    }
 		
-		outputStreamHTMLFile.println("</table></div></div>");
-		// TODO, change for any chances after we are done, there can be inserts afterwards
+		outputStreamHTMLFile.println("</table>");
+		// TODO, check for any chances after we are done, there can be inserts afterwards
+		
+		sourceFileReader.close();
 	}
 	
 	/**
@@ -207,16 +352,9 @@ public class HTMLFileView {
 		outputStreamHTMLFile.print("<h2><a href='index.html'>overview</a> / ");
 		String[] packagesAndClasses = file.getClassName().split("\\.");
 		
-		String completePackageName = "";
-		
 		// All package links
 		for(int i = 0; i < packagesAndClasses.length - 1; i++) {
-			completePackageName += "." + packagesAndClasses[i];
-			if (packageExists(completePackageName)) {
-				outputStreamHTMLFile.print("<a href='package"+completePackageName+".html'>"+packagesAndClasses[i]+"</a> / ");
-			} else {
-				outputStreamHTMLFile.print(""+packagesAndClasses[i]+" / ");
-			}
+			outputStreamHTMLFile.print(""+packagesAndClasses[i]+" / ");
 		}
 		outputStreamHTMLFile.print(packagesAndClasses[packagesAndClasses.length - 1]);
 		outputStreamHTMLFile.println("</h2>");
@@ -282,26 +420,16 @@ public class HTMLFileView {
 						Math.round(file.getOriginalClass().getBranchRate() * 100)+"%<br />");
 			}
 			outputStreamHTMLFile.println("<br/>");
+			
 
-			outputStreamHTMLFile.print("<a href='javascript:void(0);' id='showAllChanges'>Show all changes</a>&nbsp;&nbsp;|&nbsp;&nbsp;");
 			outputStreamHTMLFile.print("<a href='javascript:void(0);' id='showOriginal'>Show only the original file</a>&nbsp;&nbsp;|&nbsp;&nbsp;");
-			outputStreamHTMLFile.print("<a href='javascript:void(0);' id='showNew'>Show only the revised file</a>");
+			outputStreamHTMLFile.print("<a href='javascript:void(0);' id='showNew'>Show only the revised file</a>&nbsp;&nbsp;|&nbsp;&nbsp;");
+			outputStreamHTMLFile.print("<a href='javascript:void(0);' id='showSourceDiff'>Show source differences</a>&nbsp;&nbsp;|&nbsp;&nbsp;");
+			outputStreamHTMLFile.print("<a href='javascript:void(0);' id='showAllChanges'>Show the combined changes</a>");
 			
 			outputStreamHTMLFile.println("</div>");
 		}
 	}
 
-	/**
-	 * Checks whether there is a file in the given package
-	 * @param packageName
-	 * @return
-	 */
-	private boolean packageExists(String packageName) {
-		for(OperiasFile oFile : changedFiles){
-			if (oFile.getPackageName().equals(packageName)) {
-				return true;
-			}
-		}
-		return false;
-	}
+
 }

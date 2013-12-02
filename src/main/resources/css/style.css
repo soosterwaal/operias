@@ -13,8 +13,13 @@ table { border-collapse:collapse; width: 100%; font-size: 11pt; }
 .classOverview th { text-align: left; font-weight: bold; font-size:13pt;}
 .classOverview td { padding-top: 12px; padding-bottom: 9px;}
 
-.classIncreasedCoverage { color: #13BD00; }
-.classDecreasedCoverage { color: #F0002A; }
+#revisedCoverageTable, #originalCoverageTable, #sourceDiffTable {display:none;}
+
+
+.coveredLight { background-color: #B2F2AA; }
+.coveredDark { background-color: #4CB340; }
+.notCoveredLight { background-color: #F2BBC4; }
+.notCoveredDark {  background-color: #F03052; }
 
 #mainContent { margin:auto; width: 1000px; padding-top: 20px; padding-bottom: 30px; }
 #tableContent {  }
@@ -31,10 +36,10 @@ pre {font-family: Menlo,Monaco,Consolas,"Courier New",monospace; color: #101010;
 margin: 1px;
 font-size: 10pt; }
 
-.wasCovered { background-color: #ACF3A4; background-image:url('../img/arc.png');}
-.isCovered, .coverageIncrease { background-color: #ACF3A4; }
+.wasCovered { background-color: #B2F2AA; background-image:url('../img/arc.png');}
+.isCovered, .coverageIncrease { background-color: #4CB340; }
 
-.notCovered, .coverageDecrease, .wasNotCovered { background-color: #F3A4B2; }
+.notCovered, .coverageDecrease, .wasNotCovered { background-color: #F2BBC4; }
 .deletedRow, .wasNotCovered { background-image:url('../img/arc.png'); }
 
 .keyword { color: #001D91; font-weight: bold; }
