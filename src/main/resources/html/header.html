@@ -1,3 +1,4 @@
+
 <!DOCTYPE HTML>
 <html>
 	<head>
@@ -19,8 +20,33 @@
 					$(".deletedRow,  .wasCovered, .wasNotCovered").hide();
 					$(".insertedRow,  .isCovered, .notCovered").show();
 				});
+				
+				$(".packageRow").click(function() {					
+					$(".ClassIn" + $(this).attr('id')).each(function() {
+						if ($(this).is(":visible")) {
+							hideTr($(this));
+						} else {
+							showTr($(this));
+						}
+					});
+				});
 			});
 			
+			function hideTr(tr) {
+			  tr.find('td').wrapInner('<div style="display: block;" />').parent().find('td > div').slideUp(100, function () {
+				tr.hide();
+				var $set = jQuery(this);
+				$set.replaceWith($set.contents());
+			  });
+			}
+
+			function showTr(tr) {
+			  tr.show()
+			  tr.find('td').wrapInner('<div style="display: none;" />').parent().find('td > div').slideDown(100, function() {
+				var $set = jQuery(this);
+				$set.replaceWith($set.contents());
+			  });
+			}
 		</script>
 		<title>Operias</title>
 	</head>

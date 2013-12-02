@@ -51,12 +51,8 @@ public class HTMLReport {
 			}
 		}
 		
-		// We need to recollect all packages and classes which were changes
-		new HTMLPackageView(report.getChangedClasses(), "");
-		
-		for(String packageName : packageNames) {
-			new HTMLPackageView(report.getChangedClasses(), packageName);
-		}
+		// Construct index.html
+		new HTMLPackageView(report, packageNames);
 		
 	}
 	
