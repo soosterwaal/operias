@@ -36,11 +36,7 @@ pre {font-family: Menlo,Monaco,Consolas,"Courier New",monospace; color: #101010;
 margin: 1px;
 font-size: 10pt; }
 
-.wasCovered { background-color: #B2F2AA; background-image:url('../img/arc.png');}
-.isCovered, .coverageIncrease { background-color: #4CB340; }
-
-.notCovered, .coverageDecrease, .wasNotCovered { background-color: #F2BBC4; }
-.deletedRow, .wasNotCovered { background-image:url('../img/arc.png'); }
+.deletedRow  { background-image:url('../img/arc.png'); }
 
 .keyword { color: #001D91; font-weight: bold; }
 .comment { color: #9E9E9E; }

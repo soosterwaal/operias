@@ -119,13 +119,24 @@ public class HTMLFileView {
 				if (currentChange instanceof DeleteDelta || currentChange instanceof ChangeDelta) {
 					for(int i =0; i < currentChange.getOriginal().getLines().size(); i++) {
 						outputStreamHTMLFile.println("<tr>");
-						outputStreamHTMLFile.println(" 	<td class='deletedRow'>" + (originalLineNumber + i) + "</td>");
+						outputStreamHTMLFile.println(" 	<td class='deletedRow'>" + (originalLineNumber + i + 1) + "</td>");
 						outputStreamHTMLFile.println(" 	<td class='deletedRow'></td>");
 						outputStreamHTMLFile.println(" 	<td class='deletedRow'><pre>" + currentChange.getOriginal().getLines().get(i) + "</pre></td>");
 						outputStreamHTMLFile.println("</tr>");
 					}	
 					
 					originalLineNumber += currentChange.getOriginal().getLines().size();
+					
+					// Show the last received line again
+					if (currentChange instanceof DeleteDelta) {
+						outputStreamHTMLFile.println("<tr>");
+						outputStreamHTMLFile.println(" 	<td>" + (originalLineNumber + 1) + "</td>");
+						outputStreamHTMLFile.println(" 	<td>" + (revisedLineNumber + 1) + "</td>");
+						outputStreamHTMLFile.println(" 	<td><pre>" + jth.process(line) + "</pre></td>");
+						outputStreamHTMLFile.println("</tr>");
+						originalLineNumber++;
+						revisedLineNumber++;
+					}
 				}
 				
 				if (currentChange instanceof InsertDelta || currentChange instanceof ChangeDelta) {
@@ -133,7 +144,7 @@ public class HTMLFileView {
 					for(int i = 0; i < insertSize; i++) {
 						outputStreamHTMLFile.println("<tr>");
 						outputStreamHTMLFile.println(" 	<td class='left "+(i == (insertSize - 1) ? "bottom" : "")+" "+(i == 0 ? "top" : "")+"'></td>");
-						outputStreamHTMLFile.println(" 	<td class=' "+(i == (insertSize - 1) ? "bottom" : "")+" "+(i == 0 ? "top" : "")+"'>" + (revisedLineNumber + i) + "</td>");
+						outputStreamHTMLFile.println(" 	<td class=' "+(i == (insertSize - 1) ? "bottom" : "")+" "+(i == 0 ? "top" : "")+"'>" + (revisedLineNumber + i + 1) + "</td>");
 						outputStreamHTMLFile.println(" 	<td class='right "+(i == (insertSize - 1) ? "bottom" : "")+" "+(i == 0 ? "top" : "")+"'><pre>" + jth.process(line) + "</pre></td>");
 						outputStreamHTMLFile.println("</tr>");
 						
@@ -156,8 +167,8 @@ public class HTMLFileView {
 			} else {
 				// Just show the line, nothing special here
 				outputStreamHTMLFile.println("<tr>");
-				outputStreamHTMLFile.println(" 	<td>" + originalLineNumber + "</td>");
-				outputStreamHTMLFile.println(" 	<td>" + revisedLineNumber + "</td>");
+				outputStreamHTMLFile.println(" 	<td>" + (originalLineNumber + 1) + "</td>");
+				outputStreamHTMLFile.println(" 	<td>" + (revisedLineNumber + 1) + "</td>");
 				outputStreamHTMLFile.println(" 	<td><pre>" + jth.process(line) + "</pre></td>");
 				outputStreamHTMLFile.println("</tr>");
 				originalLineNumber++;
@@ -215,10 +226,13 @@ public class HTMLFileView {
 	private void generateCombinedCodeView(PrintStream outputStreamHTMLFile, OperiasFile file) throws IOException {
 		// Generate the source file reader for the combined view and source diff view
 		BufferedReader sourceFileReader = null;
+		CoberturaClass coverageInformation = null;
 		if (file.getSourceDiff().getSourceState() == SourceDiffState.DELETED){
 			sourceFileReader = new BufferedReader(new FileReader(file.getSourceDiff().getOriginalFileName()));
+			coverageInformation = file.getOriginalClass();
 		} else {
 			sourceFileReader = new BufferedReader(new FileReader(file.getSourceDiff().getRevisedFileName()));
+			coverageInformation = file.getRevisedClass();
 		}
 		
 	    JavaToHtml jth = new JavaToHtml();
@@ -241,26 +255,26 @@ public class HTMLFileView {
 			
 				if (currentChange instanceof CoverageIncreaseChange) {
 					outputStreamHTMLFile.println("<tr>");
-					outputStreamHTMLFile.println(" 	<td class='coverageIncrease'>" + originalLineNumber + "</td>");
-					outputStreamHTMLFile.println(" 	<td class='coverageIncrease'>" + revisedLineNumber + "</td>");
-					outputStreamHTMLFile.println(" 	<td class='coverageIncrease'><pre>" + jth.process(line) + "</pre></td>");
+					outputStreamHTMLFile.println(" 	<td class='coveredDark'>" + originalLineNumber + "</td>");
+					outputStreamHTMLFile.println(" 	<td class='coveredDark'>" + revisedLineNumber + "</td>");
+					outputStreamHTMLFile.println(" 	<td class='coveredDark'><pre>" + jth.process(line) + "</pre></td>");
 					outputStreamHTMLFile.println("</tr>");					
 				} else if (currentChange instanceof CoverageDecreaseChange) {
 					outputStreamHTMLFile.println("<tr>");
-					outputStreamHTMLFile.println(" 	<td class='coverageDecrease'>" + originalLineNumber + "</td>");
-					outputStreamHTMLFile.println(" 	<td class='coverageDecrease'>" + revisedLineNumber + "</td>");
-					outputStreamHTMLFile.println(" 	<td class='coverageDecrease'><pre>" + jth.process(line) + "</pre></td>");
+					outputStreamHTMLFile.println(" 	<td class='notCoveredDark'>" + originalLineNumber + "</td>");
+					outputStreamHTMLFile.println(" 	<td class='notCoveredDark'>" + revisedLineNumber + "</td>");
+					outputStreamHTMLFile.println(" 	<td class='notCoveredDark'><pre>" + jth.process(line) + "</pre></td>");
 					outputStreamHTMLFile.println("</tr>");	
 				} 
 				
 				if (currentChange instanceof DeleteSourceChange || currentChange instanceof ChangeSourceChange) {				
 					// Print rest of the lines
 					for(int i = 0; i < currentChange.getOriginalCoverage().size(); i++) {
-						String coverageClass = "wasNotCovered";
+						String coverageClass = "deletedRow notCoveredLight";
 						if (currentChange.getOriginalCoverage().get(i) == null) {
 							coverageClass = "deletedRow";
 						} else if (currentChange.getOriginalCoverage().get(i)) {
-							coverageClass = "wasCovered";
+							coverageClass = "deletedRow coveredLight";
 						}
 						
 						outputStreamHTMLFile.println("<tr>");
@@ -272,7 +286,7 @@ public class HTMLFileView {
 					
 					if (currentChange instanceof DeleteSourceChange) {
 						outputStreamHTMLFile.println("<tr>");
-						outputStreamHTMLFile.println(" 	<td>" + originalLineNumber + "</td>");
+						outputStreamHTMLFile.println(" 	<td>" + (originalLineNumber + currentChange.getOriginalCoverage().size()) + "</td>");
 						outputStreamHTMLFile.println(" 	<td>" + revisedLineNumber + "</td>");
 						outputStreamHTMLFile.println(" 	<td><pre>" + jth.process(line) + "</pre></td>");
 						outputStreamHTMLFile.println("</tr>");
@@ -283,35 +297,26 @@ public class HTMLFileView {
 				} 
 				if (currentChange instanceof InsertSourceChange || currentChange instanceof ChangeSourceChange) {
 					int insertSize = currentChange.getRevisedCoverage().size();
-					String coverageClass = "notCovered";
-					if (currentChange.getRevisedCoverage().get(0) == null) {
-						coverageClass = "insertedRow";
-					} else if (currentChange.getRevisedCoverage().get(0)) {
-						coverageClass = "isCovered";
-					}
-					
-					// Print first line
-					outputStreamHTMLFile.println("<tr>");
-					outputStreamHTMLFile.println(" 	<td class='"+coverageClass+" left top "+(1 == insertSize ? "bottom" : "")+"'></td>");
-					outputStreamHTMLFile.println(" 	<td class='"+coverageClass+" top "+(1 == insertSize ? "bottom" : "")+"'>" + revisedLineNumber + "</td>");
-					outputStreamHTMLFile.println(" 	<td class='"+coverageClass+" right top "+(1 == insertSize ? "bottom" : "")+"'><pre>"  + jth.process(line) + "</pre></td>");
-					outputStreamHTMLFile.println("</tr>");
+		
 					// Print rest of the lines
-					for(int i = 1; i < insertSize; i++) {
-						coverageClass = "notCovered";
+					for(int i = 0; i < insertSize; i++) {
+						String coverageClass = "notCoveredDark";
 						if (currentChange.getRevisedCoverage().get(i) == null) {
 							coverageClass = "insertedRow";
 						} else if (currentChange.getRevisedCoverage().get(i)) {
-							coverageClass = "isCovered";
+							coverageClass = "coveredDark";
 						}
-						line = sourceFileReader.readLine();
 						outputStreamHTMLFile.println("<tr>");
-						outputStreamHTMLFile.println(" 	<td class='"+coverageClass+" left "+(i == (insertSize - 1) ? "bottom" : "")+"'></td>");
-						outputStreamHTMLFile.println(" 	<td class='"+coverageClass+" "+(i == (insertSize - 1) ? "bottom" : "")+"'>" + (revisedLineNumber + i) + "</td>");
-						outputStreamHTMLFile.println(" 	<td class='"+coverageClass+" right "+(i == (insertSize - 1) ? "bottom" : "")+"'><pre>" + jth.process(line) + "</pre></td>");
+						outputStreamHTMLFile.println(" 	<td class='"+coverageClass+" left "+(i == (insertSize - 1) ? "bottom" : "")+" "+(i == 0 ? "top" : "")+"'></td>");
+						outputStreamHTMLFile.println(" 	<td class='"+coverageClass+" "+(i == (insertSize - 1) ? "bottom" : "")+" "+(i == 0 ? "top" : "")+"'>" + (revisedLineNumber + i) + "</td>");
+						outputStreamHTMLFile.println(" 	<td class='"+coverageClass+" right "+(i == (insertSize - 1) ? "bottom" : "")+" "+(i == 0 ? "top" : "")+"'><pre>" + jth.process(line) + "</pre></td>");
 						outputStreamHTMLFile.println("</tr>");
+						
+						
+						if (i < (insertSize - 1)) {
+							line = sourceFileReader.readLine();	
+						}
 					}
-					
 				} 
 				
 				// Set the new line numbers
@@ -324,12 +329,27 @@ public class HTMLFileView {
 					currentChange = file.getChanges().get(changeIndex);
 				}
 			} else {
-				// No change on this line, just show the line!
+				// No change on this line, show the line with coverage information if possible
+				
+				String tdClass = "";
+				CoberturaLine coverageLine = null;
+				if (file.getSourceDiff().getSourceState() == SourceDiffState.DELETED){
+					coverageLine = coverageInformation.tryGetLine(originalLineNumber);
+				} else {
+					coverageLine = coverageInformation.tryGetLine(revisedLineNumber);
+				}
+				
+				if (coverageLine != null && coverageLine.isCovered()) {
+					tdClass = "coveredLight";
+				} else if (coverageLine != null && !coverageLine.isCovered()) {
+					tdClass = "notCoveredLight";
+				}
+				
 				
 				outputStreamHTMLFile.println("<tr>");
-				outputStreamHTMLFile.println(" 	<td>" + originalLineNumber + "</td>");
-				outputStreamHTMLFile.println(" 	<td>" + revisedLineNumber + "</td>");
-				outputStreamHTMLFile.println(" 	<td><pre>" + jth.process(line) + "</pre></td>");
+				outputStreamHTMLFile.println(" 	<td class='"+tdClass+"'>" + originalLineNumber + "</td>");
+				outputStreamHTMLFile.println(" 	<td class='"+tdClass+"'>" + revisedLineNumber + "</td>");
+				outputStreamHTMLFile.println(" 	<td class='"+tdClass+"'><pre>" + jth.process(line) + "</pre></td>");
 				outputStreamHTMLFile.println("</tr>");
 				originalLineNumber++;
 				revisedLineNumber++;
