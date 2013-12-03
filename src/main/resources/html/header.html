@@ -1,3 +1,4 @@
+
 <!DOCTYPE HTML>
 <html>
 	<head>
@@ -7,20 +8,51 @@
 		<script type="text/javascript">
 			$(document).ready(function() {
 				$("#showAllChanges").click(function() {
-					$(".deletedRow, .notCovered, .isCovered, .wasCovered, .wasNotCovered, .insertedRow").show();
+					$("#revisedCoverageTable, #originalCoverageTable, #sourceDiffTable").hide();
+					$("#combinedTable").show();
 				});
 			
 				$("#showOriginal").click(function() {
-					$(".deletedRow,  .wasCovered, .wasNotCovered").show();
-					$(".insertedRow,  .isCovered, .notCovered").hide();
+					$("#revisedCoverageTable, #combinedTable, #sourceDiffTable").hide();
+					$("#originalCoverageTable").show();
 				});
 				
 				$("#showNew").click(function() {
-					$(".deletedRow,  .wasCovered, .wasNotCovered").hide();
-					$(".insertedRow,  .isCovered, .notCovered").show();
+					$("#combinedTable, #originalCoverageTable, #sourceDiffTable").hide();
+					$("#revisedCoverageTable").show();
+				});
+				
+				$("#showSourceDiff").click(function() {
+					$("#combinedTable, #originalCoverageTable, #revisedCoverageTable").hide();
+					$("#sourceDiffTable").show();
+				});
+				
+				$(".packageRow").click(function() {					
+					$(".ClassIn" + $(this).attr('id')).each(function() {
+						if ($(this).is(":visible")) {
+							hideTr($(this));
+						} else {
+							showTr($(this));
+						}
+					});
 				});
 			});
 			
+			function hideTr(tr) {
+			  tr.find('td').wrapInner('<div style="display: block;" />').parent().find('td > div').slideUp(100, function () {
+				tr.hide();
+				var $set = jQuery(this);
+				$set.replaceWith($set.contents());
+			  });
+			}
+
+			function showTr(tr) {
+			  tr.show()
+			  tr.find('td').wrapInner('<div style="display: none;" />').parent().find('td > div').slideDown(100, function() {
+				var $set = jQuery(this);
+				$set.replaceWith($set.contents());
+			  });
+			}
 		</script>
 		<title>Operias</title>
 	</head>

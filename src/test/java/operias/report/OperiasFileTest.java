@@ -58,7 +58,7 @@ public class OperiasFileTest {
 		revisedClass.addLine(line2_2);
 		revisedClass.addLine(line3);
 		
-		DiffFile sourceDiff = new DiffFile("simple/Simple.java", SourceDiffState.SAME);
+		DiffFile sourceDiff = new DiffFile("simple/Simple.java", "simple/Simple.java", SourceDiffState.SAME);
 		
 		OperiasFile oFile = new OperiasFile(originalClass, revisedClass, sourceDiff);
 		
@@ -91,7 +91,7 @@ public class OperiasFileTest {
 		revisedClass.addLine(line2_2);
 		revisedClass.addLine(line3);
 		
-		DiffFile sourceDiff = new DiffFile("simple/Simple.java", SourceDiffState.SAME);
+		DiffFile sourceDiff = new DiffFile("simple/Simple.java", "simple/Simple.java",SourceDiffState.SAME);
 		
 		OperiasFile oFile = new OperiasFile(originalClass, revisedClass, sourceDiff);
 		
@@ -125,7 +125,7 @@ public class OperiasFileTest {
 		revisedClass.addLine(line2_2);
 		revisedClass.addLine(line3);
 		
-		DiffFile sourceDiff = new DiffFile("simple/Simple.java", SourceDiffState.SAME);
+		DiffFile sourceDiff = new DiffFile("simple/Simple.java","simple/Simple.java", SourceDiffState.SAME);
 		
 		OperiasFile oFile = new OperiasFile(originalClass, revisedClass, sourceDiff);
 		
@@ -157,7 +157,7 @@ public class OperiasFileTest {
 		revisedClass.addLine(line2_2);
 		revisedClass.addLine(line3);
 		
-		DiffFile sourceDiff = new DiffFile("simple/Simple.java", SourceDiffState.SAME);
+		DiffFile sourceDiff = new DiffFile("simple/Simple.java", "simple/Simple.java", SourceDiffState.SAME);
 		
 		OperiasFile oFile = new OperiasFile(originalClass, revisedClass, sourceDiff);
 		
@@ -189,7 +189,7 @@ public class OperiasFileTest {
 		revisedClass.addLine(line3);
 		revisedClass.addLine(line4);
 
-		DiffFile sourceDiff = new DiffFile("simple/Simple.java", SourceDiffState.SAME);
+		DiffFile sourceDiff = new DiffFile("simple/Simple.java", "simple/Simple.java", SourceDiffState.SAME);
 		
 		OperiasFile oFile = new OperiasFile(originalClass, revisedClass, sourceDiff);
 		
@@ -214,7 +214,7 @@ public class OperiasFileTest {
 		originalClass.addLine(line1);
 		revisedClass.addLine(line2);
 
-		DiffFile sourceDiff = new DiffFile("simple/Simple.java", SourceDiffState.SAME);
+		DiffFile sourceDiff = new DiffFile("simple/Simple.java", "simple/Simple.java", SourceDiffState.SAME);
 		
 		System.setSecurityManager(new NoExitSecurityManager());
 		boolean exceptionThrown = false;
@@ -243,7 +243,7 @@ public class OperiasFileTest {
 		originalClass.addLine(line2);
 		revisedClass.addLine(line1);
 
-		DiffFile sourceDiff = new DiffFile("simple/Simple.java", SourceDiffState.SAME);
+		DiffFile sourceDiff = new DiffFile("simple/Simple.java", "simple/Simple.java", SourceDiffState.SAME);
 		
 		System.setSecurityManager(new NoExitSecurityManager());
 		boolean exceptionThrown = false;
@@ -276,7 +276,7 @@ public class OperiasFileTest {
 		LinkedList<Delta> changes = new LinkedList<Delta>();
 		changes.add(delta);
 
-		DiffFile sourceDiff = new DiffFile("simple/Simple.java", SourceDiffState.SAME);
+		DiffFile sourceDiff = new DiffFile("simple/Simple.java", "simple/Simple.java", SourceDiffState.SAME);
 		sourceDiff.setChanges(changes);
 		
 		CoberturaLine line1 = new CoberturaLine(1, 1, false, false);
@@ -327,7 +327,7 @@ public class OperiasFileTest {
 		LinkedList<Delta> changes = new LinkedList<Delta>();
 		changes.add(delta);
 
-		DiffFile sourceDiff = new DiffFile("simple/Simple.java", SourceDiffState.SAME);
+		DiffFile sourceDiff = new DiffFile("simple/Simple.java", "simple/Simple.java", SourceDiffState.SAME);
 		sourceDiff.setChanges(changes);
 		
 		CoberturaLine line1 = new CoberturaLine(1, 1, false, false);
@@ -384,7 +384,7 @@ public class OperiasFileTest {
 		LinkedList<Delta> changes = new LinkedList<Delta>();
 		changes.add(delta);
 		
-		DiffFile dFile = new DiffFile("simple/simple.java", SourceDiffState.SAME);
+		DiffFile dFile = new DiffFile("simple/simple.java", "simple/Simple.java", SourceDiffState.SAME);
 		dFile.setChanges(changes);
 		
 		CoberturaLine line1 = new CoberturaLine(2, 2, false, false);
@@ -421,7 +421,7 @@ public class OperiasFileTest {
 		System.setSecurityManager(new NoExitSecurityManager());
 		boolean exceptionThrown = false;
 		revisedClass = new CoberturaClass("Simple2" , "simple2/Simple2.java", "Simple2", 1, 1);
-		DiffFile sourceDiff = new DiffFile("simple/Simple.java", SourceDiffState.SAME);
+		DiffFile sourceDiff = new DiffFile("simple/Simple.java", "simple/Simple.java", SourceDiffState.SAME);
 		try {
 			new OperiasFile(originalClass, revisedClass, sourceDiff);
 			
@@ -460,7 +460,7 @@ public class OperiasFileTest {
 		List<Delta> changes = new LinkedList<Delta>();
 		changes.add(insertDelta);
 		
-		DiffFile diffFile = new DiffFile("test", SourceDiffState.CHANGED);
+		DiffFile diffFile = new DiffFile("test", "simple/Simple.java", SourceDiffState.CHANGED);
 		diffFile.setChanges(changes);
 		
 		OperiasFile oFile = new OperiasFile(revisedClass, diffFile);

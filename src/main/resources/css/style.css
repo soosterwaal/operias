@@ -11,10 +11,15 @@ table { border-collapse:collapse; width: 100%; font-size: 11pt; }
 
 .classOverview tr { border-bottom: 1px solid #22008A; }
 .classOverview th { text-align: left; font-weight: bold; font-size:13pt;}
-.classOverview td { padding-top: 17px; }
+.classOverview td { padding-top: 12px; padding-bottom: 9px;}
 
-.classIncreasedCoverage { color: #13BD00; }
-.classDecreasedCoverage { color: #F0002A; }
+#revisedCoverageTable, #originalCoverageTable, #sourceDiffTable {display:none;}
+
+
+.coveredLight { background-color: #B2F2AA; }
+.coveredDark { background-color: #4CB340; }
+.notCoveredLight { background-color: #F2BBC4; }
+.notCoveredDark {  background-color: #F03052; }
 
 #mainContent { margin:auto; width: 1000px; padding-top: 20px; padding-bottom: 30px; }
 #tableContent {  }
@@ -31,11 +36,7 @@ pre {font-family: Menlo,Monaco,Consolas,"Courier New",monospace; color: #101010;
 margin: 1px;
 font-size: 10pt; }
 
-.wasCovered { background-color: #ACF3A4; background-image:url('../img/arc.png');}
-.isCovered, .coverageIncrease { background-color: #ACF3A4; }
-
-.notCovered, .coverageDecrease, .wasNotCovered { background-color: #F3A4B2; }
-.deletedRow, .wasNotCovered { background-image:url('../img/arc.png'); }
+.deletedRow  { background-image:url('../img/arc.png'); }
 
 .keyword { color: #001D91; font-weight: bold; }
 .comment { color: #9E9E9E; }
@@ -51,3 +52,16 @@ font-size: 10pt; }
 
 a, a:visited { color: #22008A; text-decoration: none; }
 a:hover {text-decoration: underline; }
+
+.packageRow {cursor: pointer;}
+.packageRow td:first-child { font-weight: bold; } 
+.classRow { display:none; }
+.classRow td:first-child { padding-left: 40px; }
+
+
+.coverageChangeBar { width: 175px; height: 20px; }
+
+.originalCoverage { background-color: #B2F2AA; height: 100%; display: inline-block; float:left;}
+.increasedCoverage { background-color: #4CB340; height: 100%; display: inline-block; float:left;}
+.decreasedCoverage { background-color: #F03052; height: 100%; display: inline-block; float:left;}
+.originalNotCoverage { background-color: #F2BBC4; height: 100%; display: inline-block; float:left;}

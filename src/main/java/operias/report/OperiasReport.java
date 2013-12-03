@@ -28,6 +28,8 @@ public class OperiasReport {
 	 */
 	private CoberturaReport originalReport;
 	
+
+
 	/**
 	 * New report of cobertura
 	 */
@@ -126,6 +128,20 @@ public class OperiasReport {
 	 */
 	public List<OperiasFile> getChangedClasses() {
 		return changedClasses;
+	}
+	
+	/**
+	 * @return the originalReport
+	 */
+	public CoberturaReport getOriginalCoverageReport() {
+		return originalReport;
+	}
+
+	/**
+	 * @return the revisedReport
+	 */
+	public CoberturaReport getRevisedCoverageReport() {
+		return revisedReport;
 	}
 
 }
