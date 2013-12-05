@@ -18,9 +18,6 @@ public class Main {
 	 * The second argument is the directory of the github repository
 	 */
 	public static void main(String[] args) {
-		args = new String[2];
-		args[0] = "/Users/sebas/Documents/Eclipse Workspace/mavenProject2";
-		args[1] = "/Users/sebas/Documents/Eclipse Workspace/mavenProject1";
 		parseArguments(args);
 		
 		new Operias().constructReport().writeSite();
@@ -38,8 +35,8 @@ public class Main {
 				
 		// Set the arguments
 		try {
-			Configuration.setRevisedDirectory(args[0]);
-			Configuration.setOriginalDirectory(args[1]);
+			Configuration.setRevisedDirectory(args[1]);
+			Configuration.setOriginalDirectory(args[0]);
 		} catch (InvalidParameterException e) {
 			System.exit(OperiasStatus.INVALID_ARGUMENTS.ordinal());
 		}
