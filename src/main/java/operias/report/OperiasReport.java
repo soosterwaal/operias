@@ -7,8 +7,10 @@ import operias.OperiasStatus;
 import operias.cobertura.CoberturaClass;
 import operias.cobertura.CoberturaPackage;
 import operias.cobertura.CoberturaReport;
+import operias.diff.DiffDirectory;
 import operias.diff.DiffFile;
 import operias.diff.DiffReport;
+import operias.diff.SourceDiffState;
 
 /**
  * Operias Report class.
@@ -28,8 +30,6 @@ public class OperiasReport {
 	 */
 	private CoberturaReport originalReport;
 	
-
-
 	/**
 	 * New report of cobertura
 	 */
@@ -46,6 +46,11 @@ public class OperiasReport {
 	private List<OperiasFile> changedClasses;
 	
 	/**
+	 * List of changes test suites
+	 */
+	private List<DiffFile> changedTests;
+	
+	/**
 	 * Construct a new operias report
 	 * @param reportRepo
 	 * @param reportSource
@@ -56,6 +61,7 @@ public class OperiasReport {
 		this.revisedReport = revisedReport;
 		this.sourceDiffReport = sourceDiffReport;
 		this.changedClasses = new LinkedList<OperiasFile>();
+		this.changedTests = new LinkedList<DiffFile>();
 		
 		ParseReport();
 	}
@@ -120,6 +126,30 @@ public class OperiasReport {
 					}
 				}
 			}
+		}
+		
+		
+		// Finnaly, retrieve all changes test classes
+		DiffDirectory testDirectory = sourceDiffReport.getDirectory("src/test/java");
+		
+		// And loop through all files to collect the changed ones
+		collectChangedTests(testDirectory);
+	
+	}
+	
+	/**
+	 * Collect all the changed files in a given directory
+	 * @param directory
+	 */
+	private void collectChangedTests(DiffDirectory directory) {
+		for(DiffFile file : directory.getFiles()) {
+			if (file.getSourceState() != SourceDiffState.SAME) {
+				this.changedTests.add(file);
+			}
+		}
+		
+		for(DiffDirectory subDirectory : directory.getDirectories()) {
+			collectChangedTests(subDirectory);
 		}
 	}
 

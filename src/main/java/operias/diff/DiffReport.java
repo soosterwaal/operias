@@ -18,7 +18,7 @@ public class DiffReport {
 	/**
 	 * New source directory
 	 */
-	private String newDirectory;
+	private String revisedDirectory;
 	
 	/**
 	 * Changes in the directory
@@ -28,14 +28,14 @@ public class DiffReport {
 	/**
 	 * Construct a new file diff report based on the given directories
 	 * @param originalDirectory	Original source directory
-	 * @param newDirectory		New source directory
+	 * @param revisedDirectory		New source directory
 	 * @throws IOException 
 	 */
-	public DiffReport(String originalDirectory, String newDirectory) throws IOException {
+	public DiffReport(String originalDirectory, String revisedDirectory) throws IOException {
 		this.originalDirectory = originalDirectory;
-		this.newDirectory = newDirectory;
+		this.revisedDirectory = revisedDirectory;
 		
-		changedFiles = DiffDirectory.compareDirectory(originalDirectory, newDirectory);
+		changedFiles = DiffDirectory.compareDirectory(originalDirectory, revisedDirectory);
 	}
 
 	/**
@@ -48,8 +48,8 @@ public class DiffReport {
 	/**
 	 * @return the newDirectory
 	 */
-	public String getNewDirectory() {
-		return newDirectory;
+	public String getRevisedDirectory() {
+		return revisedDirectory;
 	}
 
 	
@@ -58,6 +58,26 @@ public class DiffReport {
 	 */
 	public DiffDirectory getChangedFiles() {
 		return changedFiles;
+	}
+	
+	/**
+	 * Get a directory, the original and revised directory will be used as prefixes
+	 * @param directoryName
+	 * @return
+	 */
+	public DiffDirectory getDirectory(String directoryName) {
+		
+		String searchDirName = (new File(originalDirectory, directoryName)).getAbsolutePath();
+		
+		DiffDirectory searchDirectory = changedFiles.getDirectory(searchDirName);
+		
+		if (searchDirectory == null) {
+			searchDirName = (new File(revisedDirectory, directoryName)).getAbsolutePath();
+			
+			searchDirectory = changedFiles.getDirectory(searchDirName);
+		}
+		
+		return searchDirectory;
 	}
 	
 	/**
@@ -74,7 +94,7 @@ public class DiffReport {
 		DiffFile searchedFile = changedFiles.getFile(searchFileName);
 		
 		if (searchedFile == null) {
-			searchFileName = (new File(newDirectory, filename)).getAbsolutePath();
+			searchFileName = (new File(revisedDirectory, filename)).getAbsolutePath();
 			
 			searchedFile = changedFiles.getFile(searchFileName);
 		}
