@@ -10,6 +10,7 @@ import operias.OperiasStatus;
 import operias.cobertura.CoberturaClass;
 import operias.cobertura.CoberturaLine;
 import operias.diff.DiffFile;
+import operias.diff.SourceDiffState;
 import operias.report.change.ChangeSourceChange;
 import operias.report.change.CoverageDecreaseChange;
 import operias.report.change.CoverageIncreaseChange;
@@ -62,32 +63,51 @@ public class OperiasFile {
 	private DiffFile sourceDiff;
 	
 	/**
-	 * Construct a new operias file diff for the given class, which should be a new class
+	 * Construct a new operias file diff for the given class, which should be a new or deleted class
 	 * @param cClass
 	 */
-	public OperiasFile(CoberturaClass revisedClass, DiffFile sourceDiff) {
+	public OperiasFile(CoberturaClass cClass, DiffFile sourceDiff) {
 		
-		this.className = revisedClass.getName();
-		this.packageName = revisedClass.getPackageName();
+		this.className = cClass.getName();
+		this.packageName = cClass.getPackageName();
 		this.changes = new LinkedList<OperiasChange>();
 		this.originalClass = null;
-		this.revisedClass = revisedClass;
+		this.revisedClass = null;
 		this.sourceDiff = sourceDiff;
 		
-		InsertSourceChange insertChange = new InsertSourceChange(1, 1, (InsertDelta) sourceDiff.getChanges().get(0));
-		
-		for(int i = 0; i < sourceDiff.getChanges().get(0).getRevised().getLines().size(); i++) {
-			// Add offset
-			CoberturaLine line = revisedClass.tryGetLine(i + 1);
+		if (sourceDiff.getSourceState() == SourceDiffState.NEW) {
+			this.revisedClass = cClass;
+			InsertSourceChange insertChange = new InsertSourceChange(1, 1, (InsertDelta) sourceDiff.getChanges().get(0));
 			
-			if (line != null) {
-				insertChange.addRevisedCoverageLine(line.isCovered());
-			} else {
-				insertChange.addRevisedCoverageLine(null);
+			for(int i = 0; i < sourceDiff.getChanges().get(0).getRevised().getLines().size(); i++) {
+				// Add offset
+				CoberturaLine line = revisedClass.tryGetLine(i + 1);
+				
+				if (line != null) {
+					insertChange.addRevisedCoverageLine(line.isCovered());
+				} else {
+					insertChange.addRevisedCoverageLine(null);
+				}
 			}
+			changes.add(insertChange);
+		} else {
+			this.originalClass = cClass;
+			DeleteSourceChange deleteChange = new DeleteSourceChange(1, 1, (DeleteDelta) sourceDiff.getChanges().get(0));
+			
+			for(int i = 0; i < sourceDiff.getChanges().get(0).getRevised().getLines().size(); i++) {
+				// Add offset
+				CoberturaLine line = originalClass.tryGetLine(i + 1);
+				
+				if (line != null) {
+					deleteChange.addOriginalCoverageLine(line.isCovered());
+				} else {
+					deleteChange.addOriginalCoverageLine(null);
+				}
+			}
+			changes.add(deleteChange);
+			
 		}
 		
-		changes.add(insertChange);
 	}
 	
 	/**

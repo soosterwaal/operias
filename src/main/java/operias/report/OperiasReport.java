@@ -95,6 +95,15 @@ public class OperiasReport {
 					}
 					
 				}
+			} else {
+				// All classes must be marked as deleted
+				for(CoberturaClass oClass : oPackage.getClasses()) {
+					DiffFile fileDiff = sourceDiffReport.getFile("src/main/java/" + oClass.getFileName());
+					OperiasFile newOFile = new OperiasFile(oClass, fileDiff);
+					if (newOFile.getChanges().size() > 0) {
+						changedClasses.add(newOFile);
+					}
+				}
 			}
 		}
 		
