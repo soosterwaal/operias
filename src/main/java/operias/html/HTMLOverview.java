@@ -12,11 +12,12 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 
 import operias.cobertura.CoberturaReport;
+import operias.diff.DiffFile;
 import operias.diff.SourceDiffState;
 import operias.report.OperiasFile;
 import operias.report.OperiasReport;
 
-public class HTMLPackageView {
+public class HTMLOverview {
 
 	/**
 	 * List containing the changed files
@@ -28,7 +29,7 @@ public class HTMLPackageView {
 	 */
 	private List<String> packageNames;
 	
-	public HTMLPackageView(OperiasReport report, List<String> packageNames) throws IOException {
+	public HTMLOverview(OperiasReport report, List<String> packageNames) throws IOException {
 		this.report = report;
 		this.packageNames = packageNames;
 		
@@ -74,48 +75,64 @@ public class HTMLPackageView {
 					// Class belongs to package
 					OperiasFile changedClass = changedClasses.get(j);
 					
-
 					revisedLineCoverage = (changedClass.getSourceDiff().getSourceState() != SourceDiffState.DELETED) ? changedClass.getRevisedClass().getLineRate() : 0.0;
 					revisedBranchCoverage = (changedClass.getSourceDiff().getSourceState() != SourceDiffState.DELETED) ? changedClass.getRevisedClass().getBranchRate() : 0.0;
 
 					originalLineCoverage = (changedClass.getSourceDiff().getSourceState() != SourceDiffState.NEW) ? changedClass.getOriginalClass().getLineRate() : revisedLineCoverage;
 					originalBranchCoverage = (changedClass.getSourceDiff().getSourceState() != SourceDiffState.NEW) ? changedClass.getOriginalClass().getBranchRate() : revisedBranchCoverage;
 									
-					String sourceChange = "Changed";
 					String coverageChange = "";
 					
-					if (changedClass.getSourceDiff().getSourceState() == SourceDiffState.DELETED) sourceChange = "Deleted";
-					if (changedClass.getSourceDiff().getSourceState() == SourceDiffState.NEW) sourceChange = "New";
-					if (changedClass.getSourceDiff().getSourceState() == SourceDiffState.SAME) sourceChange = "Same";
-					
 					if (changedClass.getOriginalClass() != null && changedClass.getRevisedClass() != null) {
-						coverageChange = "Same";
+						coverageChange = "SAME";
 						
 						if (originalBranchCoverage != revisedBranchCoverage || revisedLineCoverage != originalLineCoverage) {
-							coverageChange = "Changed";
+							coverageChange = "CHANGED";
 						} 
 					}
 					
-					String fileName = "";
-					if (changedClass.getOriginalClass() == null) {
-						fileName = changedClass.getRevisedClass().getFileName();
-					} else {
-						fileName = changedClass.getOriginalClass().getFileName();
-					}
-					
 					outputStreamHTMLFile.println("<tr class='classRow ClassInPackage"+i+"'>");
-					outputStreamHTMLFile.println("<td><a href='"+changedClass.getClassName()+".html'>"+fileName+"</a></td>");
+					outputStreamHTMLFile.println("<td><a href='"+changedClass.getClassName()+".html'>"+changedClass.getClassName()+"</a></td>");
 					outputStreamHTMLFile.println("<td>" + getCoverageBarHTML(originalLineCoverage, revisedLineCoverage) + "</td>");
 					outputStreamHTMLFile.println("<td>" + getCoverageBarHTML(originalBranchCoverage, revisedBranchCoverage) + "</td>");
-					outputStreamHTMLFile.println("<td>"+sourceChange+"</td>");
+					outputStreamHTMLFile.println("<td>"+changedClass.getSourceDiff().getSourceState()+"</td>");
 					outputStreamHTMLFile.println("<td>"+coverageChange+"</td>");
 					outputStreamHTMLFile.println("</tr>");
 				
 				}
 			}
 		}
+
+		outputStreamHTMLFile.println("</tbody></table>");
 		
-		outputStreamHTMLFile.println("</tbody></table></div>");
+		
+		// Show list of changed test classes
+		if (report.getChangedTests().size() > 0) {
+			outputStreamHTMLFile.println("<h2>Test Classes</h2><table class='classOverview'>");
+			outputStreamHTMLFile.println("<thead><tr><th>Name</th><th>Status</th><tr></thead><tbody>");
+	
+			for(DiffFile changedTest : report.getChangedTests()) {
+				String fileName = "";
+				
+				if (changedTest.getSourceState() == SourceDiffState.NEW){
+					fileName = changedTest.getRevisedFileName().replace(new File(report.getSourceDiffReport().getRevisedDirectory()).getAbsolutePath() + "/src/test/java/", "");
+				} else {
+					fileName = changedTest.getOriginalFileName().replace(new File(report.getSourceDiffReport().getOriginalDirectory()).getAbsolutePath() + "/src/test/java/", "");
+				}
+				
+				outputStreamHTMLFile.println("<tr >");
+				outputStreamHTMLFile.println("<td><a href='"+fileName.replace('/', '.')+".html'>"+fileName+"</a></td>");
+				outputStreamHTMLFile.println("<td>"+changedTest.getSourceState()+"</td>");
+				outputStreamHTMLFile.println("</tr >");
+				
+				new HTMLTestView(fileName.replace('/', '.'), changedTest);
+				
+			}
+			
+			outputStreamHTMLFile.println("</tbody></table>");
+		}
+		
+		outputStreamHTMLFile.println("</div>");
 		
 		InputStream footerStream = getClass().getResourceAsStream("/html/footer.html");
 		IOUtils.copy(footerStream, outputStreamHTMLFile);

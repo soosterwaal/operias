@@ -173,5 +173,20 @@ public class OperiasReport {
 	public CoberturaReport getRevisedCoverageReport() {
 		return revisedReport;
 	}
+	
+	/**
+	 * 
+	 * @return the changed tests
+	 */
+	public List<DiffFile> getChangedTests() {
+		return changedTests;
+	}
+
+	/**
+	 * @return the sourceDiffReport
+	 */
+	public DiffReport getSourceDiffReport() {
+		return sourceDiffReport;
+	}
 
 }

@@ -45,14 +45,14 @@ public class HTMLReport {
 		
 		// Create all pages for the viewing of the files
 		for(OperiasFile oFile : this.report.getChangedClasses()) {
-			new HTMLFileView(oFile, report.getChangedClasses());
+			new HTMLClassView(oFile, report.getChangedClasses());
 			if (packageNames.indexOf(oFile.getPackageName()) < 0) {
 				packageNames.add(oFile.getPackageName());
 			}
 		}
 		
 		// Construct index.html
-		new HTMLPackageView(report, packageNames);
+		new HTMLOverview(report, packageNames);
 		
 	}
 	

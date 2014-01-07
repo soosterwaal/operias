@@ -6,7 +6,7 @@ table { border-collapse:collapse; width: 100%; font-size: 11pt; }
 .code td { height: 20px; }
 .code tr { border-top: 1px solid #f1f1f1 }
 
-.code td:last-child {  border-left: 1px solid #22008A; padding-left: 10px; }
+.code td:last-child {  border-left: 1px solid #22008A; padding-left: 10px;  width:100%; }
 .code td:first-child { border-right: 1px solid #22008A; }
 
 .classOverview tr { border-bottom: 1px solid #22008A; }
