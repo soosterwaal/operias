@@ -7,6 +7,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
@@ -29,9 +30,15 @@ public class HTMLOverview {
 	 */
 	private List<String> packageNames;
 	
+	/**
+	 * List of already displayed packages
+	 */
+	private List<String> displayedPackages;
+	
 	public HTMLOverview(OperiasReport report, List<String> packageNames) throws IOException {
 		this.report = report;
 		this.packageNames = packageNames;
+		this.displayedPackages = new LinkedList<String>();
 		
 		Collections.sort(this.packageNames);
 		
@@ -49,59 +56,9 @@ public class HTMLOverview {
 		outputStreamHTMLFile.println("<h2>Packages</h2><table class='classOverview'>");
 		outputStreamHTMLFile.println("<thead><tr><th>Name</th><th>Line coverage</th><th>Branch coverage</th><th>Source Status</th><th>Coverage Status</th><tr></thead><tbody>");
 
-		List<OperiasFile> changedClasses = report.getChangedClasses();
 		
-		for (int i = 0; i < this.packageNames.size(); i++) {
-			CoberturaReport originalReport = report.getOriginalCoverageReport();
-			CoberturaReport revisedReport = report.getRevisedCoverageReport();
-			
-			double revisedLineCoverage = revisedReport.getPackage(this.packageNames.get(i)) != null ? revisedReport.getPackage(this.packageNames.get(i)).getLineRate(): 0.0;
-			double revisedBranchCoverage = revisedReport.getPackage(this.packageNames.get(i)) != null ? revisedReport.getPackage(this.packageNames.get(i)).getBranchRate() : 0.0;
-			
-			double originalLineCoverage = originalReport.getPackage(this.packageNames.get(i)) != null ? originalReport.getPackage(this.packageNames.get(i)).getLineRate() : revisedLineCoverage;
-			double originalBranchCoverage = originalReport.getPackage(this.packageNames.get(i)) != null ? originalReport.getPackage(this.packageNames.get(i)).getBranchRate() : revisedBranchCoverage;
-					
-			outputStreamHTMLFile.println("<tr class='packageRow' id='Package"+i+"'>");
-			outputStreamHTMLFile.println("<td>"+this.packageNames.get(i)+"</td>");
-			outputStreamHTMLFile.println("<td>" + getCoverageBarHTML(originalLineCoverage, revisedLineCoverage) + "</td>");
-			outputStreamHTMLFile.println("<td>" + getCoverageBarHTML(originalBranchCoverage, revisedBranchCoverage) + "</td>");
-			outputStreamHTMLFile.println("<td></td>");
-			outputStreamHTMLFile.println("<td></td>");
-			outputStreamHTMLFile.println("</tr>");
-			
-			// Show all classes in the package
-			for (int j = 0; j < changedClasses.size(); j++) {
-				if (changedClasses.get(j).getPackageName().equals(this.packageNames.get(i))) {
-					// Class belongs to package
-					OperiasFile changedClass = changedClasses.get(j);
-					
-					revisedLineCoverage = (changedClass.getSourceDiff().getSourceState() != SourceDiffState.DELETED) ? changedClass.getRevisedClass().getLineRate() : 0.0;
-					revisedBranchCoverage = (changedClass.getSourceDiff().getSourceState() != SourceDiffState.DELETED) ? changedClass.getRevisedClass().getBranchRate() : 0.0;
-
-					originalLineCoverage = (changedClass.getSourceDiff().getSourceState() != SourceDiffState.NEW) ? changedClass.getOriginalClass().getLineRate() : revisedLineCoverage;
-					originalBranchCoverage = (changedClass.getSourceDiff().getSourceState() != SourceDiffState.NEW) ? changedClass.getOriginalClass().getBranchRate() : revisedBranchCoverage;
-									
-					String coverageChange = "";
-					
-					if (changedClass.getOriginalClass() != null && changedClass.getRevisedClass() != null) {
-						coverageChange = "SAME";
-						
-						if (originalBranchCoverage != revisedBranchCoverage || revisedLineCoverage != originalLineCoverage) {
-							coverageChange = "CHANGED";
-						} 
-					}
-					
-					outputStreamHTMLFile.println("<tr class='classRow ClassInPackage"+i+"'>");
-					outputStreamHTMLFile.println("<td><a href='"+changedClass.getClassName()+".html'>"+changedClass.getClassName()+"</a></td>");
-					outputStreamHTMLFile.println("<td>" + getCoverageBarHTML(originalLineCoverage, revisedLineCoverage) + "</td>");
-					outputStreamHTMLFile.println("<td>" + getCoverageBarHTML(originalBranchCoverage, revisedBranchCoverage) + "</td>");
-					outputStreamHTMLFile.println("<td>"+changedClass.getSourceDiff().getSourceState()+"</td>");
-					outputStreamHTMLFile.println("<td>"+coverageChange+"</td>");
-					outputStreamHTMLFile.println("</tr>");
-				
-				}
-			}
-		}
+		generatePackageOverviewHTML(0, report.getChangedClasses(),outputStreamHTMLFile);
+		
 
 		outputStreamHTMLFile.println("</tbody></table>");
 		
@@ -142,6 +99,91 @@ public class HTMLOverview {
 		headerStream.close();
 	}
 
+	private void generatePackageOverviewHTML(int packageID, List<OperiasFile> changedClasses, PrintStream outputStreamHTMLFile) {
+
+		if (packageID >= packageNames.size()) {
+			// DONE
+			return;
+		}
+		
+		if (displayedPackages.indexOf(packageNames.get(packageID)) >= 0) {
+			// Package already shown somehwere as subpackage, so skip
+			generatePackageOverviewHTML(packageID + 1, changedClasses, outputStreamHTMLFile);
+			return;
+		}
+		
+		generateHTML(packageID, changedClasses, outputStreamHTMLFile);
+		
+		
+		// Show next package
+		generatePackageOverviewHTML(packageID + 1, changedClasses, outputStreamHTMLFile);
+
+	}
+	
+	private void generateHTML(int packageID, List<OperiasFile> changedClasses, PrintStream outputStreamHTMLFile) {
+		
+		String thisPackageName = this.packageNames.get(packageID);
+		CoberturaReport originalReport = report.getOriginalCoverageReport();
+		CoberturaReport revisedReport = report.getRevisedCoverageReport();
+		
+		double revisedLineCoverage = revisedReport.getPackage(this.packageNames.get(packageID)) != null ? revisedReport.getPackage(this.packageNames.get(packageID)).getLineRate(): 0.0;
+		double revisedBranchCoverage = revisedReport.getPackage(this.packageNames.get(packageID)) != null ? revisedReport.getPackage(this.packageNames.get(packageID)).getBranchRate() : 0.0;
+		
+		double originalLineCoverage = originalReport.getPackage(this.packageNames.get(packageID)) != null ? originalReport.getPackage(this.packageNames.get(packageID)).getLineRate() : revisedLineCoverage;
+		double originalBranchCoverage = originalReport.getPackage(this.packageNames.get(packageID)) != null ? originalReport.getPackage(this.packageNames.get(packageID)).getBranchRate() : revisedBranchCoverage;
+				
+		outputStreamHTMLFile.println("<tr class='packageRow' id='Package"+packageID+"'>");
+		outputStreamHTMLFile.println("<td>"+this.packageNames.get(packageID)+"</td>");
+		outputStreamHTMLFile.println("<td>" + getCoverageBarHTML(originalLineCoverage, revisedLineCoverage) + "</td>");
+		outputStreamHTMLFile.println("<td>" + getCoverageBarHTML(originalBranchCoverage, revisedBranchCoverage) + "</td>");
+		outputStreamHTMLFile.println("<td></td>");
+		outputStreamHTMLFile.println("<td></td>");
+		outputStreamHTMLFile.println("</tr>");
+		
+		displayedPackages.add(thisPackageName);
+		
+		// Get all DIRECT subpackages
+		for(int j = 0; j < packageNames.size(); j++) {
+			if (packageNames.get(j).replace(thisPackageName, "").split(".").length == 2) {
+				//Found a DIRECT subpackage
+				generateHTML(j, changedClasses, outputStreamHTMLFile);
+			}
+		}
+		
+		// Show all classes in the package
+		for (int j = 0; j < changedClasses.size(); j++) {
+			if (changedClasses.get(j).getPackageName().equals(this.packageNames.get(packageID))) {
+				// Class belongs to package
+				OperiasFile changedClass = changedClasses.get(j);
+				
+				revisedLineCoverage = (changedClass.getSourceDiff().getSourceState() != SourceDiffState.DELETED) ? changedClass.getRevisedClass().getLineRate() : 0.0;
+				revisedBranchCoverage = (changedClass.getSourceDiff().getSourceState() != SourceDiffState.DELETED) ? changedClass.getRevisedClass().getBranchRate() : 0.0;
+
+				originalLineCoverage = (changedClass.getSourceDiff().getSourceState() != SourceDiffState.NEW) ? changedClass.getOriginalClass().getLineRate() : revisedLineCoverage;
+				originalBranchCoverage = (changedClass.getSourceDiff().getSourceState() != SourceDiffState.NEW) ? changedClass.getOriginalClass().getBranchRate() : revisedBranchCoverage;
+								
+				String coverageChange = "";
+				
+				if (changedClass.getOriginalClass() != null && changedClass.getRevisedClass() != null) {
+					coverageChange = "SAME";
+					
+					if (originalBranchCoverage != revisedBranchCoverage || revisedLineCoverage != originalLineCoverage) {
+						coverageChange = "CHANGED";
+					} 
+				}
+				
+				outputStreamHTMLFile.println("<tr class='classRow ClassInPackage"+packageID+"'>");
+				outputStreamHTMLFile.println("<td><a href='"+changedClass.getClassName()+".html'>"+changedClass.getClassName()+"</a></td>");
+				outputStreamHTMLFile.println("<td>" + getCoverageBarHTML(originalLineCoverage, revisedLineCoverage) + "</td>");
+				outputStreamHTMLFile.println("<td>" + getCoverageBarHTML(originalBranchCoverage, revisedBranchCoverage) + "</td>");
+				outputStreamHTMLFile.println("<td>"+changedClass.getSourceDiff().getSourceState()+"</td>");
+				outputStreamHTMLFile.println("<td>"+coverageChange+"</td>");
+				outputStreamHTMLFile.println("</tr>");
+			
+			}
+		}
+	}
+	
 	/**
 	 * Get the coverage bar html based on the original and revised coverage number
 	 * @param originalCoverage
