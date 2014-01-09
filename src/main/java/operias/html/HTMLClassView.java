@@ -2,12 +2,10 @@ package operias.html;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
@@ -28,7 +26,7 @@ import operias.report.change.DeleteSourceChange;
 import operias.report.change.InsertSourceChange;
 import operias.report.change.OperiasChange;
 
-public class HTMLFileView {
+public class HTMLClassView extends HTMLCodeView {
 	
 	
 	/**
@@ -36,9 +34,7 @@ public class HTMLFileView {
 	 * @param file
 	 * @throws IOException
 	 */
-	public HTMLFileView(OperiasFile file, List<OperiasFile> changedFiles) throws IOException {
-		
-	
+	public HTMLClassView(OperiasFile file, List<OperiasFile> changedFiles) throws IOException {
 		
 		File classHTMLFile = new File("site/" + file.getClassName() + ".html");
 		classHTMLFile.createNewFile();
@@ -65,7 +61,7 @@ public class HTMLFileView {
 		}
 
 		// Generate source diff view
-		generateSourceDiffView(outputStreamHTMLFile, file.getSourceDiff());
+		generateSourceDiffView(outputStreamHTMLFile, file.getSourceDiff(), false);
 		
 		// Generate the combined code table
 		generateCombinedCodeView(outputStreamHTMLFile, file);
@@ -80,105 +76,7 @@ public class HTMLFileView {
 		headerStream.close();
 	}
 	
-	/**
-	 * Generate the source diff view
-	 * @param outputStreamHTMLFile
-	 * @param sourceDiff
-	 * @throws IOException 
-	 */
-	private void generateSourceDiffView(PrintStream outputStreamHTMLFile, DiffFile sourceDiff) throws IOException {
-		// Generate the source file reader for the combined view and source diff view
-		BufferedReader sourceFileReader = null;
-		if (sourceDiff.getSourceState() == SourceDiffState.DELETED){
-			sourceFileReader = new BufferedReader(new FileReader(sourceDiff.getOriginalFileName()));
-		} else {
-			sourceFileReader = new BufferedReader(new FileReader(sourceDiff.getRevisedFileName()));
-		}
-
-		int originalLineNumber = 0;
-		int revisedLineNumber = 0;
-		int changeIndex = 0;
-		
-	    JavaToHtml jth = new JavaToHtml();
-		
-		List<Delta> sourceChanges = sourceDiff.getChanges();
-		Delta currentChange = null;
-		if (sourceChanges.size() > 0) {
-			currentChange = sourceChanges.get(changeIndex);
-		}
-		
-		String line;
-		
-		outputStreamHTMLFile.println("<table id='sourceDiffTable' class='code'>");
-		
-		// Read all the lines from the source file
-		while ((line = sourceFileReader.readLine()) != null) {
-			if (currentChange != null && currentChange.getOriginal().getPosition() == originalLineNumber && 
-					currentChange.getRevised().getPosition() == revisedLineNumber) {
-				
-				if (currentChange instanceof DeleteDelta || currentChange instanceof ChangeDelta) {
-					for(int i =0; i < currentChange.getOriginal().getLines().size(); i++) {
-						outputStreamHTMLFile.println("<tr>");
-						outputStreamHTMLFile.println(" 	<td class='deletedRow'>" + (originalLineNumber + i + 1) + "</td>");
-						outputStreamHTMLFile.println(" 	<td class='deletedRow'></td>");
-						outputStreamHTMLFile.println(" 	<td class='deletedRow'><pre>" + currentChange.getOriginal().getLines().get(i) + "</pre></td>");
-						outputStreamHTMLFile.println("</tr>");
-					}	
-					
-					originalLineNumber += currentChange.getOriginal().getLines().size();
-					
-					// Show the last received line again
-					if (currentChange instanceof DeleteDelta) {
-						outputStreamHTMLFile.println("<tr>");
-						outputStreamHTMLFile.println(" 	<td>" + (originalLineNumber + 1) + "</td>");
-						outputStreamHTMLFile.println(" 	<td>" + (revisedLineNumber + 1) + "</td>");
-						outputStreamHTMLFile.println(" 	<td><pre>" + jth.process(line) + "</pre></td>");
-						outputStreamHTMLFile.println("</tr>");
-						originalLineNumber++;
-						revisedLineNumber++;
-					}
-				}
-				
-				if (currentChange instanceof InsertDelta || currentChange instanceof ChangeDelta) {
-					int insertSize = currentChange.getRevised().getLines().size();
-					for(int i = 0; i < insertSize; i++) {
-						outputStreamHTMLFile.println("<tr>");
-						outputStreamHTMLFile.println(" 	<td class='left "+(i == (insertSize - 1) ? "bottom" : "")+" "+(i == 0 ? "top" : "")+"'></td>");
-						outputStreamHTMLFile.println(" 	<td class=' "+(i == (insertSize - 1) ? "bottom" : "")+" "+(i == 0 ? "top" : "")+"'>" + (revisedLineNumber + i + 1) + "</td>");
-						outputStreamHTMLFile.println(" 	<td class='right "+(i == (insertSize - 1) ? "bottom" : "")+" "+(i == 0 ? "top" : "")+"'><pre>" + jth.process(line) + "</pre></td>");
-						outputStreamHTMLFile.println("</tr>");
-						
-						// Prevent reading the line AFTER the changed
-						if (i < (insertSize - 1)) {
-							line = sourceFileReader.readLine();
-						}
-					}	
-					
-					revisedLineNumber += currentChange.getRevised().getLines().size();
-				}
-				
-
-				// Get the a new change if possible
-				changeIndex++;
-				if (sourceChanges.size() > changeIndex) {
-					currentChange = sourceChanges.get(changeIndex);
-				}
-				
-			} else {
-				// Just show the line, nothing special here
-				outputStreamHTMLFile.println("<tr>");
-				outputStreamHTMLFile.println(" 	<td>" + (originalLineNumber + 1) + "</td>");
-				outputStreamHTMLFile.println(" 	<td>" + (revisedLineNumber + 1) + "</td>");
-				outputStreamHTMLFile.println(" 	<td><pre>" + jth.process(line) + "</pre></td>");
-				outputStreamHTMLFile.println("</tr>");
-				originalLineNumber++;
-				revisedLineNumber++;
-			}
-		}
-
-		outputStreamHTMLFile.println("</table>");
-		sourceFileReader.close();
-	}
+	
 
 	/**
 	 * Generate and print a table containing the basic coverage information for a file
@@ -442,8 +340,8 @@ public class HTMLFileView {
 			outputStreamHTMLFile.println("<br/>");
 			
 
-			outputStreamHTMLFile.print("<a href='javascript:void(0);' id='showOriginal'>Show only the original file</a>&nbsp;&nbsp;|&nbsp;&nbsp;");
-			outputStreamHTMLFile.print("<a href='javascript:void(0);' id='showNew'>Show only the revised file</a>&nbsp;&nbsp;|&nbsp;&nbsp;");
+			outputStreamHTMLFile.print("<a href='javascript:void(0);' id='showOriginal'>Show the original coverage</a>&nbsp;&nbsp;|&nbsp;&nbsp;");
+			outputStreamHTMLFile.print("<a href='javascript:void(0);' id='showNew'>Show the revised coverage</a>&nbsp;&nbsp;|&nbsp;&nbsp;");
 			outputStreamHTMLFile.print("<a href='javascript:void(0);' id='showSourceDiff'>Show source differences</a>&nbsp;&nbsp;|&nbsp;&nbsp;");
 			outputStreamHTMLFile.print("<a href='javascript:void(0);' id='showAllChanges'>Show the combined changes</a>");
 			

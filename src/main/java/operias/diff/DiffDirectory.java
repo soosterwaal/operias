@@ -15,9 +15,14 @@ import java.util.List;
 public class DiffDirectory {
 
 	/**
-	 * Directory name
+	 * Original directory name
 	 */
-	private String directoryName;
+	private String originalDirectoryName;
+	
+	/**
+	 * Revised directory name
+	 */
+	private String revisedDirectoryName;
 	
 	/**
 	 * List of changed files within the directory
@@ -36,10 +41,11 @@ public class DiffDirectory {
 	
 	/**
 	 * Construct a new direcotyr for in the diff report
-	 * @param directoryName
+	 * @param originalDirectoryName
 	 */
-	public DiffDirectory(String directoryName, SourceDiffState state) {
-		this.directoryName = directoryName;
+	public DiffDirectory(String originalDirectoryName, String revisedDirectoryName, SourceDiffState state) {
+		this.originalDirectoryName = originalDirectoryName;
+		this.revisedDirectoryName = revisedDirectoryName;
 		this.state = state;
 		this.files = new ArrayList<DiffFile>();
 		this.directories = new ArrayList<DiffDirectory>();
@@ -48,8 +54,12 @@ public class DiffDirectory {
 	/**
 	 * @return the directoryName
 	 */
-	public String getDirectoryName() {
-		return directoryName;
+	public String getOriginalDirectoryName() {
+		return originalDirectoryName;
+	}
+	
+	public String getRevisedDirectoryName() {
+		return revisedDirectoryName;
 	}
 
 	/**
@@ -92,23 +102,23 @@ public class DiffDirectory {
 	/**
 	 * 
 	 * @param originalDirectory
-	 * @param newDirectory
+	 * @param revisedDirectory
 	 * @throws IOException 
 	 */
-	public static DiffDirectory compareDirectory(String originalDirectory, String newDirectory) throws IOException {
+	public static DiffDirectory compareDirectory(String originalDirectory, String revisedDirectory) throws IOException {
 		
 		// Short cuts 
 		if (originalDirectory == null) {
-			return fillDirectoryDiff(newDirectory, SourceDiffState.NEW);
-		} else if (newDirectory == null) {
+			return fillDirectoryDiff(revisedDirectory, SourceDiffState.NEW);
+		} else if (revisedDirectory == null) {
 			return fillDirectoryDiff(originalDirectory, SourceDiffState.DELETED);
 		} 
 		
 		// Both directories should exists, if not, throw exceptions
-		DiffDirectory diffDirectory = new DiffDirectory(originalDirectory, SourceDiffState.SAME);
+		DiffDirectory diffDirectory = new DiffDirectory(originalDirectory, revisedDirectory, SourceDiffState.SAME);
 		
 		File originalDirectoryFile = new File(originalDirectory);
-		File newDirectoryFile = new File(newDirectory);
+		File newDirectoryFile = new File(revisedDirectory);
 		
 		if (!originalDirectoryFile.isDirectory()) {
 			throw new InvalidParameterException("'" +originalDirectory + "' is not a valid directory");
@@ -157,7 +167,7 @@ public class DiffDirectory {
 		
 		//Secondly check the new directory for any new files or directories
 		for(String fileName : filesWithinNewDirectory) {
-			File newFile = new File(newDirectory, fileName);
+			File newFile = new File(revisedDirectory, fileName);
 
 			if (newFile.isHidden()) {
 				continue;
@@ -215,7 +225,13 @@ public class DiffDirectory {
 		
 		List<File> filesWithinDirectory = Arrays.asList(files);
 		
-		DiffDirectory diffDirectory = new DiffDirectory(directory, state);
+		// Create the instance
+		DiffDirectory diffDirectory = new DiffDirectory(directory, "", state);
+		
+		// Switch the directory name is the state is NEW
+		if (state.equals(SourceDiffState.NEW)) {
+			diffDirectory = new DiffDirectory("", directory, state);
+		}
 		
 		for(File file : filesWithinDirectory) {
 			
@@ -261,6 +277,27 @@ public class DiffDirectory {
 	 */
 	public List<DiffDirectory> getDirectories() {
 		return directories;
+	}
+	
+	/**
+	 * Get a directory by its name
+	 * @param directoryName
+	 * @return
+	 */
+	public DiffDirectory getDirectory(String directoryName) {
+		for(DiffDirectory directory : directories) {
+			if (directory.getOriginalDirectoryName().equals(directoryName) || directory.getRevisedDirectoryName().equals(directoryName)) {
+				return directory;
+			} else if (directoryName.startsWith(directory.getOriginalDirectoryName()) || directoryName.startsWith(directory.getRevisedDirectoryName())) {
+				DiffDirectory tempDir = directory.getDirectory(directoryName);
+				
+				if (tempDir != null) {
+					return tempDir;
+				}
+			}
+		}
+		
+		return null;
 	}
 	
 	/**
