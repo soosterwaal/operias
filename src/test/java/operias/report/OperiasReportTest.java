@@ -33,19 +33,24 @@ public class OperiasReportTest {
 		LinkedList<OperiasFile> changedClasses = (LinkedList<OperiasFile>)report.getChangedClasses();
 		
 		
-		assertEquals(5, changedClasses.size());
+		assertEquals(6, changedClasses.size());
 		
+
 		OperiasFile firstClass = changedClasses.getFirst();
 		
-		assertEquals("example", firstClass.getPackageName());
-		assertEquals("example.Calculations", firstClass.getClassName());
-		assertEquals((new File("")).getAbsolutePath() + "/src/test/resources/mavenProject2/src/main/java/example/Calculations.java", firstClass.getSourceDiff().getRevisedFileName());
+		assertEquals("deletablePackage", firstClass.getPackageName());
+		
+		OperiasFile secondClass = changedClasses.get(1);
+		
+		assertEquals("example", secondClass.getPackageName());
+		assertEquals("example.Calculations", secondClass.getClassName());
+		assertEquals((new File("")).getAbsolutePath() + "/src/test/resources/mavenProject2/src/main/java/example/Calculations.java", secondClass.getSourceDiff().getRevisedFileName());
 		
 		
-		assertEquals(2, firstClass.getChanges().size());
+		assertEquals(2, secondClass.getChanges().size());
 		
-		assertTrue(firstClass.getChanges().getFirst() instanceof ChangeSourceChange);
-		ChangeSourceChange change1 = (ChangeSourceChange)firstClass.getChanges().getFirst();
+		assertTrue(secondClass.getChanges().getFirst() instanceof ChangeSourceChange);
+		ChangeSourceChange change1 = (ChangeSourceChange)secondClass.getChanges().getFirst();
 		
 		assertEquals(8, change1.getOriginalLineNumber());
 		assertEquals(8, change1.getRevisedLineNumber());
@@ -58,8 +63,8 @@ public class OperiasReportTest {
 		assertFalse(change1.getRevisedCoverage().get(3));
 		assertNull(change1.getRevisedCoverage().get(4));
 
-		assertTrue(firstClass.getChanges().get(1) instanceof ChangeSourceChange);
-		ChangeSourceChange change2 = (ChangeSourceChange)firstClass.getChanges().get(1);
+		assertTrue(secondClass.getChanges().get(1) instanceof ChangeSourceChange);
+		ChangeSourceChange change2 = (ChangeSourceChange)secondClass.getChanges().get(1);
 		
 		assertEquals(12, change2.getOriginalLineNumber());
 		assertEquals(16, change2.getRevisedLineNumber());
@@ -72,70 +77,70 @@ public class OperiasReportTest {
 		assertTrue(change2.getRevisedCoverage().get(3));
 		assertNull(change2.getRevisedCoverage().get(4));
 		
-		OperiasFile secondClass = changedClasses.get(1);
-		assertEquals("example", secondClass.getPackageName());
-		assertEquals("example.Loops", secondClass.getClassName());
-		assertEquals((new File("")).getAbsolutePath() + "/src/test/resources/mavenProject2/src/main/java/example/Loops.java", secondClass.getSourceDiff().getRevisedFileName());
-		
-		assertEquals(2, secondClass.getChanges().size());
-		
-		assertTrue(secondClass.getChanges().get(0) instanceof CoverageIncreaseChange);
-		CoverageIncreaseChange change3 = (CoverageIncreaseChange) secondClass.getChanges().get(0);
-		assertEquals(7, change3.getRevisedLineNumber());
-		
-		assertTrue(secondClass.getChanges().get(1) instanceof CoverageIncreaseChange);
-		CoverageIncreaseChange change4 = (CoverageIncreaseChange) secondClass.getChanges().get(1);
-		assertEquals(8, change4.getRevisedLineNumber());
-
 		OperiasFile thirdClass = changedClasses.get(2);
 		assertEquals("example", thirdClass.getPackageName());
-		assertEquals("example.Music", thirdClass.getClassName());
-		assertEquals((new File("")).getAbsolutePath() + "/src/test/resources/mavenProject2/src/main/java/example/Music.java", thirdClass.getSourceDiff().getRevisedFileName());
-	
+		assertEquals("example.Loops", thirdClass.getClassName());
+		assertEquals((new File("")).getAbsolutePath() + "/src/test/resources/mavenProject2/src/main/java/example/Loops.java", thirdClass.getSourceDiff().getRevisedFileName());
 		
+		assertEquals(2, thirdClass.getChanges().size());
+		
+		assertTrue(thirdClass.getChanges().get(0) instanceof CoverageIncreaseChange);
+		CoverageIncreaseChange change3 = (CoverageIncreaseChange) thirdClass.getChanges().get(0);
+		assertEquals(7, change3.getRevisedLineNumber());
+		
+		assertTrue(thirdClass.getChanges().get(1) instanceof CoverageIncreaseChange);
+		CoverageIncreaseChange change4 = (CoverageIncreaseChange) thirdClass.getChanges().get(1);
+		assertEquals(8, change4.getRevisedLineNumber());
+
 		OperiasFile fourthClass = changedClasses.get(3);
 		assertEquals("example", fourthClass.getPackageName());
-		assertEquals("example.NewClass", fourthClass.getClassName());
-		assertEquals((new File("")).getAbsolutePath() + "/src/test/resources/mavenProject2/src/main/java/example/NewClass.java", fourthClass.getSourceDiff().getRevisedFileName());
-		
-		assertEquals(1, fourthClass.getChanges().size());
-		assertTrue(fourthClass.getChanges().get(0) instanceof InsertSourceChange);
-
-		assertEquals(9, fourthClass.getChanges().get(0).getRevisedCoverage().size());
-		
-		assertNull(fourthClass.getChanges().get(0).getRevisedCoverage().get(0));
-		assertNull(fourthClass.getChanges().get(0).getRevisedCoverage().get(1));
-		assertFalse(fourthClass.getChanges().get(0).getRevisedCoverage().get(2));
-		assertNull(fourthClass.getChanges().get(0).getRevisedCoverage().get(3));
-		assertNull(fourthClass.getChanges().get(0).getRevisedCoverage().get(4));
-		assertFalse(fourthClass.getChanges().get(0).getRevisedCoverage().get(5));
-		assertFalse(fourthClass.getChanges().get(0).getRevisedCoverage().get(6));
-		assertFalse(fourthClass.getChanges().get(0).getRevisedCoverage().get(7));
-		assertNull(fourthClass.getChanges().get(0).getRevisedCoverage().get(8));
+		assertEquals("example.Music", fourthClass.getClassName());
+		assertEquals((new File("")).getAbsolutePath() + "/src/test/resources/mavenProject2/src/main/java/example/Music.java", fourthClass.getSourceDiff().getRevisedFileName());
+	
 		
 		OperiasFile fifthClass = changedClasses.get(4);
-		assertEquals("moreExamples", fifthClass.getPackageName());
-		assertEquals("moreExamples.Switch", fifthClass.getClassName());
-		assertEquals((new File("")).getAbsolutePath() + "/src/test/resources/mavenProject2/src/main/java/moreExamples/Switch.java", fifthClass.getSourceDiff().getRevisedFileName());
-		
+		assertEquals("example", fifthClass.getPackageName());
+		assertEquals("example.NewClass", fifthClass.getClassName());
+		assertEquals((new File("")).getAbsolutePath() + "/src/test/resources/mavenProject2/src/main/java/example/NewClass.java", fifthClass.getSourceDiff().getRevisedFileName());
 		
 		assertEquals(1, fifthClass.getChanges().size());
 		assertTrue(fifthClass.getChanges().get(0) instanceof InsertSourceChange);
 
-		assertEquals(12, fifthClass.getChanges().get(0).getRevisedCoverage().size());
+		assertEquals(9, fifthClass.getChanges().get(0).getRevisedCoverage().size());
 		
 		assertNull(fifthClass.getChanges().get(0).getRevisedCoverage().get(0));
 		assertNull(fifthClass.getChanges().get(0).getRevisedCoverage().get(1));
-		assertTrue(fifthClass.getChanges().get(0).getRevisedCoverage().get(2));
+		assertFalse(fifthClass.getChanges().get(0).getRevisedCoverage().get(2));
 		assertNull(fifthClass.getChanges().get(0).getRevisedCoverage().get(3));
 		assertNull(fifthClass.getChanges().get(0).getRevisedCoverage().get(4));
 		assertFalse(fifthClass.getChanges().get(0).getRevisedCoverage().get(5));
-		assertTrue(fifthClass.getChanges().get(0).getRevisedCoverage().get(6));
-		assertTrue(fifthClass.getChanges().get(0).getRevisedCoverage().get(7));
-		assertFalse(fifthClass.getChanges().get(0).getRevisedCoverage().get(8));
-		assertNull(fifthClass.getChanges().get(0).getRevisedCoverage().get(9));
-		assertNull(fifthClass.getChanges().get(0).getRevisedCoverage().get(10));
-		assertNull(fifthClass.getChanges().get(0).getRevisedCoverage().get(11));
+		assertFalse(fifthClass.getChanges().get(0).getRevisedCoverage().get(6));
+		assertFalse(fifthClass.getChanges().get(0).getRevisedCoverage().get(7));
+		assertNull(fifthClass.getChanges().get(0).getRevisedCoverage().get(8));
+		
+		OperiasFile sixthClass = changedClasses.get(5);
+		assertEquals("moreExamples", sixthClass.getPackageName());
+		assertEquals("moreExamples.Switch", sixthClass.getClassName());
+		assertEquals((new File("")).getAbsolutePath() + "/src/test/resources/mavenProject2/src/main/java/moreExamples/Switch.java", sixthClass.getSourceDiff().getRevisedFileName());
+		
+		
+		assertEquals(1, sixthClass.getChanges().size());
+		assertTrue(sixthClass.getChanges().get(0) instanceof InsertSourceChange);
+
+		assertEquals(12, sixthClass.getChanges().get(0).getRevisedCoverage().size());
+		
+		assertNull(sixthClass.getChanges().get(0).getRevisedCoverage().get(0));
+		assertNull(sixthClass.getChanges().get(0).getRevisedCoverage().get(1));
+		assertTrue(sixthClass.getChanges().get(0).getRevisedCoverage().get(2));
+		assertNull(sixthClass.getChanges().get(0).getRevisedCoverage().get(3));
+		assertNull(sixthClass.getChanges().get(0).getRevisedCoverage().get(4));
+		assertFalse(sixthClass.getChanges().get(0).getRevisedCoverage().get(5));
+		assertTrue(sixthClass.getChanges().get(0).getRevisedCoverage().get(6));
+		assertTrue(sixthClass.getChanges().get(0).getRevisedCoverage().get(7));
+		assertFalse(sixthClass.getChanges().get(0).getRevisedCoverage().get(8));
+		assertNull(sixthClass.getChanges().get(0).getRevisedCoverage().get(9));
+		assertNull(sixthClass.getChanges().get(0).getRevisedCoverage().get(10));
+		assertNull(sixthClass.getChanges().get(0).getRevisedCoverage().get(11));
 		
 		
 		
