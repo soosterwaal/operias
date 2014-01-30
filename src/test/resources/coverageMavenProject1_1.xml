@@ -1,12 +1,28 @@
 <?xml version="1.0"?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
 
-<coverage line-rate="0.7857142857142857" branch-rate="0.5" lines-covered="11" lines-valid="14" branches-covered="3" branches-valid="6" complexity="1.8" version="2.0.3" timestamp="1391072062071">
+<coverage line-rate="0.7857142857142857" branch-rate="0.5" lines-covered="11" lines-valid="14" branches-covered="3" branches-valid="6" complexity="1.8" version="2.0.3" timestamp="1383820117999">
 	<sources>
 		<source>--source</source>
 		<source>/Users/sebas/Documents/Eclipse Workspace/mavenProject1/src/main/java</source>
 	</sources>
 	<packages>
+		<package name="deletablePackage" line-rate="0.0" branch-rate="1.0" complexity="0.0">
+			<classes>
+				<class name="deletablePackage.DeletableClass" filename="deletablePackage/DeletableClass.java" line-rate="0.0" branch-rate="1.0" complexity="0.0">
+					<methods>
+						<method name="&lt;init&gt;" signature="()V" line-rate="0.0" branch-rate="1.0">
+							<lines>
+								<line number="3" hits="0" branch="false"/>
+							</lines>
+						</method>
+					</methods>
+					<lines>
+						<line number="3" hits="0" branch="false"/>
+					</lines>
+				</class>
+			</classes>
+		</package>
 		<package name="example" line-rate="0.8461538461538461" branch-rate="0.5" complexity="1.8">
 			<classes>
 				<class name="example.Calculations" filename="example/Calculations.java" line-rate="0.75" branch-rate="1.0" complexity="1.0">
@@ -97,22 +113,6 @@
 						<line number="11" hits="1" branch="false"/>
 						<line number="12" hits="1" branch="false"/>
 						<line number="13" hits="1" branch="false"/>
-					</lines>
-				</class>
-			</classes>
-		</package>
-		<package name="example.deletablePackage" line-rate="0.0" branch-rate="1.0" complexity="0.0">
-			<classes>
-				<class name="example.deletablePackage.DeletableClass" filename="example/deletablePackage/DeletableClass.java" line-rate="0.0" branch-rate="1.0" complexity="0.0">
-					<methods>
-						<method name="&lt;init&gt;" signature="()V" line-rate="0.0" branch-rate="1.0">
-							<lines>
-								<line number="3" hits="0" branch="false"/>
-							</lines>
-						</method>
-					</methods>
-					<lines>
-						<line number="3" hits="0" branch="false"/>
 					</lines>
 				</class>
 			</classes>

@@ -21,7 +21,8 @@ table { border-collapse:collapse; width: 100%; font-size: 11pt; }
 .notCoveredLight { background-color: #F2BBC4; }
 .notCoveredDark {  background-color: #F03052; }
 
-#mainContent { margin:auto; width: 1000px; padding-top: 20px; padding-bottom: 30px; }
+#legend { margin:auto; width: 1000px; padding-top: 20px;  }
+#mainContent { margin:auto; width: 1000px; padding-top: 10px; padding-bottom: 30px; }
 #tableContent {  }
 
 #title {height: 115px;  width: 1000px;  margin:auto; }
@@ -56,7 +57,6 @@ a:hover {text-decoration: underline; }
 .packageRow {cursor: pointer;}
 .packageRow td:first-child { font-weight: bold; } 
 .classRow { display:none; }
-.classRow td:first-child { padding-left: 40px; }
 
 
 .coverageChangeBar { width: 175px; height: 20px; }
@@ -65,3 +65,34 @@ a:hover {text-decoration: underline; }
 .increasedCoverage { background-color: #4CB340; height: 100%; display: inline-block; float:left;}
 .decreasedCoverage { background-color: #F03052; height: 100%; display: inline-block; float:left;}
 .originalNotCoverage { background-color: #F2BBC4; height: 100%; display: inline-block; float:left;}
+
+#legend > div { width: 175px; height: 20px;  display:inline-block;  margin-right: 10px;}
+#legend > span { display: inline-block; width: 80%; }
+#lightGreenLegend { background-color: #B2F2AA; }
+#darkGreenLegend { background-color: #4CB340; }
+#lightRedLegend { background-color: #F2BBC4; }
+#darkRedLegend { background-color: #F03052; }
+#addedSource { border: 3px solid #22008A; width: 169px !important; height: 14px !important; }
+#deletedSource { background-image:url('../img/arc.png'); }
+
+.level0 td:first-child { padding-left: 0px; }
+.level1 td:first-child { padding-left: 40px; }
+.level2 td:first-child { padding-left: 80px; }
+.level3 td:first-child { padding-left: 120px; }
+.level4 td:first-child { padding-left: 160px; }
+.level5 td:first-child { padding-left: 200px; }
+.level6 td:first-child { padding-left: 240px; }
+.level7 td:first-child { padding-left: 280px; }
+.level8 td:first-child { padding-left: 320px; }
+
+.classRowLevel0 td:first-child { padding-left: 40px; }
+.classRowLevel1 td:first-child { padding-left: 80px; }
+.classRowLevel2 td:first-child { padding-left: 120px; }
+.classRowLevel3 td:first-child { padding-left: 160px; }
+.classRowLevel4 td:first-child { padding-left: 200px; }
+.classRowLevel5 td:first-child { padding-left: 240px; }
+.classRowLevel6 td:first-child { padding-left: 280px; }
+.classRowLevel7 td:first-child { padding-left: 320px; }
+.classRowLevel8 td:first-child { padding-left: 360px; }
+
+.classRowLevel0, .classRowLevel1, .classRowLevel2, .classRowLevel3, .classRowLevel4, .classRowLevel5, .classRowLevel6, .classRowLevel7, .classRowLevel8 { display:none; } 

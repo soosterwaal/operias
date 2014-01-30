@@ -43,6 +43,9 @@ public class HTMLClassView extends HTMLCodeView {
 		InputStream headerStream = getClass().getResourceAsStream("/html/header.html");
 		IOUtils.copy(headerStream, outputStreamHTMLFile);
 		
+		InputStream legendStream = getClass().getResourceAsStream("/html/classviewlegend.html");
+		IOUtils.copy(legendStream, outputStreamHTMLFile);
+		
 		// Generate a simple breadcrumb
 		generateBreadCrumb(outputStreamHTMLFile, file);
 		
