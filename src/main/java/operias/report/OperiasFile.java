@@ -256,4 +256,8 @@ public class OperiasFile {
 	public DiffFile getSourceDiff() {
 		return sourceDiff;
 	}
+	
+	public String toString() {
+		return className;
+	}
 }

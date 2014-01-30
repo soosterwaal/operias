@@ -460,7 +460,7 @@ public class OperiasFileTest {
 		List<Delta> changes = new LinkedList<Delta>();
 		changes.add(insertDelta);
 		
-		DiffFile diffFile = new DiffFile("test", "simple/Simple.java", SourceDiffState.CHANGED);
+		DiffFile diffFile = new DiffFile("test", "simple/Simple.java", SourceDiffState.NEW);
 		diffFile.setChanges(changes);
 		
 		OperiasFile oFile = new OperiasFile(revisedClass, diffFile);

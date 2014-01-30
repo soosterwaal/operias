@@ -35,6 +35,12 @@ public class HTMLOverview {
 	 */
 	private List<String> displayedPackages;
 	
+	/**
+	 * 
+	 * @param report
+	 * @param packageNames
+	 * @throws IOException
+	 */
 	public HTMLOverview(OperiasReport report, List<String> packageNames) throws IOException {
 		this.report = report;
 		this.packageNames = packageNames;
@@ -48,6 +54,9 @@ public class HTMLOverview {
 		PrintStream outputStreamHTMLFile = new PrintStream(indexHTMLFile);
 		InputStream headerStream = getClass().getResourceAsStream("/html/header.html");
 		IOUtils.copy(headerStream, outputStreamHTMLFile);
+		
+		InputStream legendStream = getClass().getResourceAsStream("/html/overviewlegend.html");
+		IOUtils.copy(legendStream, outputStreamHTMLFile);
 
 		outputStreamHTMLFile.println("<div id='mainContent'>");
 		
@@ -99,6 +108,12 @@ public class HTMLOverview {
 		headerStream.close();
 	}
 
+	/**
+	 * Display all the packages and its inner classes
+	 * @param packageID
+	 * @param changedClasses
+	 * @param outputStreamHTMLFile
+	 */
 	private void generatePackageOverviewHTML(int packageID, List<OperiasFile> changedClasses, PrintStream outputStreamHTMLFile) {
 
 		if (packageID >= packageNames.size()) {
@@ -112,7 +127,8 @@ public class HTMLOverview {
 			return;
 		}
 		
-		generateHTML(packageID, changedClasses, outputStreamHTMLFile);
+		// Generate the HTML for this pacakge
+		generateHTML(packageID, changedClasses, outputStreamHTMLFile, 0);
 		
 		
 		// Show next package
@@ -120,7 +136,14 @@ public class HTMLOverview {
 
 	}
 	
-	private void generateHTML(int packageID, List<OperiasFile> changedClasses, PrintStream outputStreamHTMLFile) {
+	/**
+	 * Generate HTML for a specific package
+	 * @param packageID
+	 * @param changedClasses
+	 * @param outputStreamHTMLFile
+	 * @param packageLevel The Level of the package, 0 if its a top level package
+	 */
+	private void generateHTML(int packageID, List<OperiasFile> changedClasses, PrintStream outputStreamHTMLFile, int packageLevel) {
 		
 		String thisPackageName = this.packageNames.get(packageID);
 		CoberturaReport originalReport = report.getOriginalCoverageReport();
@@ -132,7 +155,7 @@ public class HTMLOverview {
 		double originalLineCoverage = originalReport.getPackage(this.packageNames.get(packageID)) != null ? originalReport.getPackage(this.packageNames.get(packageID)).getLineRate() : revisedLineCoverage;
 		double originalBranchCoverage = originalReport.getPackage(this.packageNames.get(packageID)) != null ? originalReport.getPackage(this.packageNames.get(packageID)).getBranchRate() : revisedBranchCoverage;
 				
-		outputStreamHTMLFile.println("<tr class='packageRow' id='Package"+packageID+"'>");
+		outputStreamHTMLFile.println("<tr class='packageRow level"+packageLevel+"' id='Package"+packageID+"'>");
 		outputStreamHTMLFile.println("<td>"+this.packageNames.get(packageID)+"</td>");
 		outputStreamHTMLFile.println("<td>" + getCoverageBarHTML(originalLineCoverage, revisedLineCoverage) + "</td>");
 		outputStreamHTMLFile.println("<td>" + getCoverageBarHTML(originalBranchCoverage, revisedBranchCoverage) + "</td>");
@@ -144,9 +167,9 @@ public class HTMLOverview {
 		
 		// Get all DIRECT subpackages
 		for(int j = 0; j < packageNames.size(); j++) {
-			if (packageNames.get(j).replace(thisPackageName, "").split(".").length == 2) {
+			if (packageNames.get(j).replace(thisPackageName, "").startsWith(".")) {
 				//Found a DIRECT subpackage
-				generateHTML(j, changedClasses, outputStreamHTMLFile);
+				generateHTML(j, changedClasses, outputStreamHTMLFile, packageLevel + 1);
 			}
 		}
 		
@@ -171,9 +194,11 @@ public class HTMLOverview {
 						coverageChange = "CHANGED";
 					} 
 				}
-				
-				outputStreamHTMLFile.println("<tr class='classRow ClassInPackage"+packageID+"'>");
-				outputStreamHTMLFile.println("<td><a href='"+changedClass.getClassName()+".html'>"+changedClass.getClassName()+"</a></td>");
+				 
+				String[] splittedClassName = changedClass.getClassName().split("\\.");
+				String className = splittedClassName[splittedClassName.length - 1];
+				outputStreamHTMLFile.println("<tr class='classRowLevel"+packageLevel+" ClassInPackage"+packageID+" '>");
+				outputStreamHTMLFile.println("<td><a href='"+changedClass.getClassName()+".html'>"+className+"</a></td>");
 				outputStreamHTMLFile.println("<td>" + getCoverageBarHTML(originalLineCoverage, revisedLineCoverage) + "</td>");
 				outputStreamHTMLFile.println("<td>" + getCoverageBarHTML(originalBranchCoverage, revisedBranchCoverage) + "</td>");
 				outputStreamHTMLFile.println("<td>"+changedClass.getSourceDiff().getSourceState()+"</td>");

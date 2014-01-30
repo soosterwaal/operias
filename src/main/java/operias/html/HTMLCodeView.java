@@ -3,8 +3,11 @@ package operias.html;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.List;
+
+import org.apache.commons.io.IOUtils;
 
 import operias.diff.DiffFile;
 import operias.diff.SourceDiffState;
@@ -24,6 +27,8 @@ public abstract class HTMLCodeView {
 	 */
 	private void generateSourceDiffViewDeletedFile(PrintStream outputStreamHTMLFile, DiffFile sourceDiff, boolean showOnLoad) throws IOException {
 	
+
+		
 		BufferedReader sourceFileReader = new BufferedReader(new FileReader(sourceDiff.getOriginalFileName()));;
 		
 		int originalLineNumber = 1;
