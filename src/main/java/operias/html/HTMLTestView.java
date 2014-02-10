@@ -38,6 +38,14 @@ public class HTMLTestView extends HTMLCodeView {
 		outputStreamHTMLFile.println("<div id='mainContent'><div id='tableContent'>");
 
 
+		InputStream legendStream = getClass().getResourceAsStream("/html/codeviewlegend.html");
+		IOUtils.copy(legendStream, outputStreamHTMLFile);
+		
+		outputStreamHTMLFile.println("<div id='breadcrumb'>");
+		outputStreamHTMLFile.print("<h2>Code");
+		outputStreamHTMLFile.println("</h2>");
+		outputStreamHTMLFile.println("</div>");
+		
 		// Generate source diff view
 		generateSourceDiffView(outputStreamHTMLFile, file, true);
 		

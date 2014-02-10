@@ -92,4 +92,18 @@ public class CoberturaPackage {
 		
 		return null;
 	}
+	
+	/**
+	 * Get the number of relevant line for this package
+	 * @return
+	 */
+	public int getRelevantLinesCount() {
+		int count = 0;
+		
+		for(CoberturaClass cClass : classes) {
+			count += cClass.getLines().size();
+		}
+		
+		return count;
+	}
 }

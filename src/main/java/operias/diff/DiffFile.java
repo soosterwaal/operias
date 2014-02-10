@@ -40,16 +40,37 @@ public class DiffFile {
 	 */
 	private List<Delta> changes;
 	
+	/**
+	 * The amount of lines in the file
+	 */
+	private int originalLineCount;
+	
+	/**
+	 * The amount of lines in the file
+	 */
+	private int revisedLineCount;
 
 	/**
 	 * Construct a new file for the file diff report
 	 * @param fileName
 	 */
-	public DiffFile(String originalFileName, String revisedFileName, SourceDiffState state) {
-		this.originalFileName = originalFileName;
-		this.revisedFileName = revisedFileName;
-		this.sourceState = state;
+	public DiffFile(String originalFileName, String revisedFileName, int originalLineCount, int revisedLineCount) {
+		
+		this.originalFileName = originalFileName == null ? "" : originalFileName;
+		this.revisedFileName = revisedFileName == null ? "" : revisedFileName;
+		
+		if (originalLineCount == 0) {
+			this.sourceState = SourceDiffState.NEW;
+			this.originalFileName = "";
+		} else if (revisedLineCount == 0) {
+			this.sourceState = SourceDiffState.DELETED;
+			this.revisedFileName = "";
+		} else {
+			this.sourceState = SourceDiffState.CHANGED;
+		}
 		this.changes = new LinkedList<Delta>();
+		this.originalLineCount = originalLineCount;
+		this.revisedLineCount = revisedLineCount;
 	}
 	
 	/**
@@ -58,16 +79,19 @@ public class DiffFile {
 	 * @return List of string in the file
 	 * @throws IOException 
 	 */
-	private static List<String> fileToLines(String filename) throws IOException {
+	private static List<String> fileToLines(String filename) {
         List<String> lines = new LinkedList<String>();
         String line = "";
         
-        BufferedReader in = new BufferedReader(new FileReader(filename));
-        while ((line = in.readLine()) != null) {
-                lines.add(line);
+        try {
+	        BufferedReader in = new BufferedReader(new FileReader(filename));
+	        while ((line = in.readLine()) != null) {
+	                lines.add(line);
+	        }
+	        
+	        in.close();
+        } catch(Exception e) {
         }
-        
-        in.close();
         
         return lines;
 	}
@@ -80,23 +104,10 @@ public class DiffFile {
 	 */
 	public static DiffFile compareFile(String originalFileName, String revisedFileName) throws IOException {
 		
+		List<String> originalFileList = fileToLines(originalFileName);
+		List<String> newFileList = fileToLines(revisedFileName);
 		
-		DiffFile diffFile = new DiffFile(originalFileName, revisedFileName, SourceDiffState.CHANGED);
-		
-		List<String> originalFileList = new ArrayList<String>();
-		List<String> newFileList = new ArrayList<String>();
-		
-		try {
-			 originalFileList = fileToLines(originalFileName);
-		} catch (NullPointerException | FileNotFoundException e) {
-			diffFile = new DiffFile("", revisedFileName, SourceDiffState.NEW); 
-		}
-		
-		try {
-			newFileList = fileToLines(revisedFileName);
-		} catch (NullPointerException | FileNotFoundException e) {
-			diffFile = new DiffFile(originalFileName, "",  SourceDiffState.DELETED); 
-		}
+		DiffFile diffFile = new DiffFile(originalFileName, revisedFileName, originalFileList.size(), newFileList.size());
 		
 		Patch difference = DiffUtils.diff(originalFileList, newFileList);
 		
@@ -161,5 +172,20 @@ public class DiffFile {
 		
 		return null;
 	}
+
+	/**
+	 * @return the originalLineCount
+	 */
+	public int getOriginalLineCount() {
+		return originalLineCount;
+	}
+
+	/**
+	 * @return the revisedLineCount
+	 */
+	public int getRevisedLineCount() {
+		return revisedLineCount;
+	}
+
 	
 }

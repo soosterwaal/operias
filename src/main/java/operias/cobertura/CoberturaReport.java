@@ -133,8 +133,6 @@ public class CoberturaReport {
 		}
 	}
 	
-	
-
 
 	/**
 	 * @return the lineRate
@@ -157,7 +155,6 @@ public class CoberturaReport {
 		return packages;
 	}
 	
-	
 	/**
 	 * Get the package with the given name, null otherwise
 	 * @param packageName
@@ -172,4 +169,6 @@ public class CoberturaReport {
 		
 		return null;
 	}
+	
+	
 }

@@ -273,10 +273,6 @@ public class HTMLClassView extends HTMLCodeView {
 		outputStreamHTMLFile.print("<h2><a href='index.html'>overview</a> / ");
 		String[] packagesAndClasses = file.getClassName().split("\\.");
 		
-		// All package links
-		for(int i = 0; i < packagesAndClasses.length - 1; i++) {
-			outputStreamHTMLFile.print(""+packagesAndClasses[i]+" / ");
-		}
 		outputStreamHTMLFile.print(packagesAndClasses[packagesAndClasses.length - 1]);
 		outputStreamHTMLFile.println("</h2>");
 		outputStreamHTMLFile.println("</div>");
@@ -296,7 +292,7 @@ public class HTMLClassView extends HTMLCodeView {
 			outputStreamHTMLFile.println("  <strong>Line coverage</strong> is "+
 				Math.round(file.getRevisedClass().getLineRate() * 100)+"% <br />");
 			
-			outputStreamHTMLFile.println("  <strong>Branch coverage</strong> is "+
+			outputStreamHTMLFile.println("  <strong>Condition coverage</strong> is "+
 					Math.round(file.getRevisedClass().getBranchRate() * 100)+"% <br />");
 			outputStreamHTMLFile.println("</div>");
 			

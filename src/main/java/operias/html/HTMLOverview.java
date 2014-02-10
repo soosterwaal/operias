@@ -63,9 +63,8 @@ public class HTMLOverview {
 		// ARROW DOWN : &#8595;
 		// ARROW UP : &#8593;
 		outputStreamHTMLFile.println("<h2>Packages</h2><table class='classOverview'>");
-		outputStreamHTMLFile.println("<thead><tr><th>Name</th><th>Line coverage</th><th>Branch coverage</th><th>Source Status</th><th>Coverage Status</th><tr></thead><tbody>");
+		outputStreamHTMLFile.println("<thead><tr><th>Name</th><th>Line coverage</th><th>Condition coverage</th><th>Source Status</th><tr></thead><tbody>");
 
-		
 		generatePackageOverviewHTML(0, report.getChangedClasses(),outputStreamHTMLFile);
 		
 
@@ -75,7 +74,7 @@ public class HTMLOverview {
 		// Show list of changed test classes
 		if (report.getChangedTests().size() > 0) {
 			outputStreamHTMLFile.println("<h2>Test Classes</h2><table class='classOverview'>");
-			outputStreamHTMLFile.println("<thead><tr><th>Name</th><th>Status</th><tr></thead><tbody>");
+			outputStreamHTMLFile.println("<thead><tr><th>Name</th><th>Amount of lines changed</th><tr></thead><tbody>");
 	
 			for(DiffFile changedTest : report.getChangedTests()) {
 				String fileName = "";
@@ -88,7 +87,15 @@ public class HTMLOverview {
 				
 				outputStreamHTMLFile.println("<tr >");
 				outputStreamHTMLFile.println("<td><a href='"+fileName.replace('/', '.')+".html'>"+fileName+"</a></td>");
-				outputStreamHTMLFile.println("<td>"+changedTest.getSourceState()+"</td>");
+				if (changedTest.getSourceState() == SourceDiffState.NEW) {
+					outputStreamHTMLFile.println("<td>+"+changedTest.getRevisedLineCount()+" (100%)</td>");
+				} else if (changedTest.getSourceState() == SourceDiffState.DELETED) {
+					outputStreamHTMLFile.println("<td>-"+changedTest.getOriginalLineCount()+" (100%)</td>");
+				} else {
+					int changedLineCount = changedTest.getRevisedLineCount() - changedTest.getOriginalLineCount();
+					double changedLineCountPercentage = Math.round((double)changedLineCount / (double) changedTest.getOriginalLineCount() * (double)10000) / (double)100;
+					outputStreamHTMLFile.println("<td>"+(changedLineCount > 0 ? "+" : "") +changedLineCount+"("+changedLineCountPercentage+"%)</td>");
+				}
 				outputStreamHTMLFile.println("</tr >");
 				
 				new HTMLTestView(fileName.replace('/', '.'), changedTest);
@@ -154,13 +161,29 @@ public class HTMLOverview {
 		
 		double originalLineCoverage = originalReport.getPackage(this.packageNames.get(packageID)) != null ? originalReport.getPackage(this.packageNames.get(packageID)).getLineRate() : revisedLineCoverage;
 		double originalBranchCoverage = originalReport.getPackage(this.packageNames.get(packageID)) != null ? originalReport.getPackage(this.packageNames.get(packageID)).getBranchRate() : revisedBranchCoverage;
-				
+			
+		double lineCoverageChange = Math.round((revisedLineCoverage - originalLineCoverage) * (double)10000) / (double)100;
+		double branchCoverageChange = Math.round((revisedBranchCoverage - originalBranchCoverage) * (double)10000) / (double)100;
+		
+		int relevantLinesSizeChange = 0;	
+		double relevantLinesSizeChangePercentage = 0;
+		
+		int originalRelevantsLines = originalReport.getPackage(this.packageNames.get(packageID)) != null ? originalReport.getPackage(this.packageNames.get(packageID)).getRelevantLinesCount() : 0;
+		int revisedRelevantsLines = revisedReport.getPackage(this.packageNames.get(packageID)) != null ? revisedReport.getPackage(this.packageNames.get(packageID)).getRelevantLinesCount(): 0;
+		
+		relevantLinesSizeChange = revisedRelevantsLines - originalRelevantsLines;
+		if (originalRelevantsLines == 0) {
+			relevantLinesSizeChangePercentage = 100;
+		} else {
+			relevantLinesSizeChangePercentage = Math.round((double)relevantLinesSizeChange / (double)originalRelevantsLines * (double)10000) / (double)100;	
+		}
 		outputStreamHTMLFile.println("<tr class='packageRow level"+packageLevel+"' id='Package"+packageID+"'>");
 		outputStreamHTMLFile.println("<td>"+this.packageNames.get(packageID)+"</td>");
-		outputStreamHTMLFile.println("<td>" + getCoverageBarHTML(originalLineCoverage, revisedLineCoverage) + "</td>");
-		outputStreamHTMLFile.println("<td>" + getCoverageBarHTML(originalBranchCoverage, revisedBranchCoverage) + "</td>");
-		outputStreamHTMLFile.println("<td></td>");
-		outputStreamHTMLFile.println("<td></td>");
+		outputStreamHTMLFile.println("<td>" + getCoverageBarHTML(originalLineCoverage, revisedLineCoverage));
+		outputStreamHTMLFile.println("<span class='"+((lineCoverageChange > 0) ? "inceasedText" : (lineCoverageChange < 0) ? "decreasedText" : "")+"'>"+((lineCoverageChange > 0) ? "+" : "") + lineCoverageChange+"%</span>"+ "</td>");
+		outputStreamHTMLFile.println("<td>" + getCoverageBarHTML(originalBranchCoverage, revisedBranchCoverage) );
+		outputStreamHTMLFile.println("<span class='"+((branchCoverageChange > 0) ? "inceasedText" : (branchCoverageChange < 0) ? "decreasedText" : "")+"'>"+((branchCoverageChange > 0) ? "+" : "")+branchCoverageChange+"%</span>"+ "</td>");
+		outputStreamHTMLFile.println("<td>"+(relevantLinesSizeChange > 0 ? "+" : "") + relevantLinesSizeChange+" ("+relevantLinesSizeChangePercentage+"%)</td>");
 		outputStreamHTMLFile.println("</tr>");
 		
 		displayedPackages.add(thisPackageName);
@@ -184,25 +207,30 @@ public class HTMLOverview {
 
 				originalLineCoverage = (changedClass.getSourceDiff().getSourceState() != SourceDiffState.NEW) ? changedClass.getOriginalClass().getLineRate() : revisedLineCoverage;
 				originalBranchCoverage = (changedClass.getSourceDiff().getSourceState() != SourceDiffState.NEW) ? changedClass.getOriginalClass().getBranchRate() : revisedBranchCoverage;
-								
-				String coverageChange = "";
 				
-				if (changedClass.getOriginalClass() != null && changedClass.getRevisedClass() != null) {
-					coverageChange = "SAME";
-					
-					if (originalBranchCoverage != revisedBranchCoverage || revisedLineCoverage != originalLineCoverage) {
-						coverageChange = "CHANGED";
-					} 
+				if (changedClass.getSourceDiff().getSourceState() == SourceDiffState.DELETED) {
+					relevantLinesSizeChange = changedClass.getOriginalClass().getLines().size();
+					relevantLinesSizeChangePercentage = -100;
+				} else if (changedClass.getSourceDiff().getSourceState() == SourceDiffState.NEW) {
+					relevantLinesSizeChange = changedClass.getRevisedClass().getLines().size();
+					relevantLinesSizeChangePercentage = 100;
+				} else {
+					relevantLinesSizeChange = changedClass.getRevisedClass().getLines().size() - changedClass.getOriginalClass().getLines().size();
+					relevantLinesSizeChangePercentage = Math.round((double)relevantLinesSizeChange / (double)changedClass.getOriginalClass().getLines().size() * (double)10000) / (double)100;
 				}
-				 
+				
+				lineCoverageChange = Math.round((revisedLineCoverage - originalLineCoverage) * (double)10000) / (double)100;
+				branchCoverageChange = Math.round((revisedBranchCoverage - originalBranchCoverage) * (double)10000) / (double)100;
+					
 				String[] splittedClassName = changedClass.getClassName().split("\\.");
 				String className = splittedClassName[splittedClassName.length - 1];
 				outputStreamHTMLFile.println("<tr class='classRowLevel"+packageLevel+" ClassInPackage"+packageID+" '>");
 				outputStreamHTMLFile.println("<td><a href='"+changedClass.getClassName()+".html'>"+className+"</a></td>");
-				outputStreamHTMLFile.println("<td>" + getCoverageBarHTML(originalLineCoverage, revisedLineCoverage) + "</td>");
-				outputStreamHTMLFile.println("<td>" + getCoverageBarHTML(originalBranchCoverage, revisedBranchCoverage) + "</td>");
-				outputStreamHTMLFile.println("<td>"+changedClass.getSourceDiff().getSourceState()+"</td>");
-				outputStreamHTMLFile.println("<td>"+coverageChange+"</td>");
+				outputStreamHTMLFile.println("<td>" + getCoverageBarHTML(originalLineCoverage, revisedLineCoverage));
+				outputStreamHTMLFile.println("<span class='"+((lineCoverageChange > 0) ? "inceasedText" : (lineCoverageChange < 0) ? "decreasedText" : "")+"'>"+((lineCoverageChange > 0) ? "+" : "") + lineCoverageChange+"%</span>"+ "</td>");
+				outputStreamHTMLFile.println("<td>" + getCoverageBarHTML(originalBranchCoverage, revisedBranchCoverage) );
+				outputStreamHTMLFile.println("<span class='"+((branchCoverageChange > 0) ? "inceasedText" : (branchCoverageChange < 0) ? "decreasedText" : "")+"'>"+((branchCoverageChange > 0) ? "+" : "")+branchCoverageChange+"%</span>"+ "</td>");
+				outputStreamHTMLFile.println("<td>"+(relevantLinesSizeChange > 0 ? "+" : "") + relevantLinesSizeChange+" ("+relevantLinesSizeChangePercentage+"%)</td>");
 				outputStreamHTMLFile.println("</tr>");
 			
 			}
@@ -230,14 +258,14 @@ public class HTMLOverview {
 		
 		if (diff > 0) {
 			double originalWidth = Math.round(originalCoverage * 100);
-			double increasedWidth = Math.round(diff * 100);
+			double increasedWidth = Math.ceil(diff * 100);
 			
 			barHTML += "<div class='originalCoverage' style='width:" + originalWidth +"%'> </div>";
 			barHTML += "<div class='increasedCoverage' style='width:"+increasedWidth+"%''> </div>";
 			barHTML += "<div class='originalNotCoverage' style='width:"+(100 - originalWidth - increasedWidth)+"%'> </div>";
 		} else {
 			double originalWidth = 100 - Math.round(originalCoverage * 100);
-			double decreasedWidth = Math.round(Math.abs(diff) * 100);
+			double decreasedWidth = Math.ceil(Math.abs(diff) * 100);
 			barHTML += "<div class='originalCoverage' style='width:"+(100 - originalWidth - decreasedWidth)+"%'> </div>";
 			barHTML += "<div class='decreasedCoverage'  style='width:"+decreasedWidth+"%'> </div>";
 			barHTML += "<div class='originalNotCoverage' style='width:"+originalWidth+"%'> </div>";

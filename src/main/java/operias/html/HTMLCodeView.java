@@ -27,8 +27,6 @@ public abstract class HTMLCodeView {
 	 */
 	private void generateSourceDiffViewDeletedFile(PrintStream outputStreamHTMLFile, DiffFile sourceDiff, boolean showOnLoad) throws IOException {
 	
-
-		
 		BufferedReader sourceFileReader = new BufferedReader(new FileReader(sourceDiff.getOriginalFileName()));;
 		
 		int originalLineNumber = 1;

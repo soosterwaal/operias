@@ -59,7 +59,7 @@ a:hover {text-decoration: underline; }
 .classRow { display:none; }
 
 
-.coverageChangeBar { width: 175px; height: 20px; }
+.coverageChangeBar { width: 175px; height: 20px; display: inline-block; margin-right: 10px;}
 
 .originalCoverage { background-color: #B2F2AA; height: 100%; display: inline-block; float:left;}
 .increasedCoverage { background-color: #4CB340; height: 100%; display: inline-block; float:left;}
@@ -74,6 +74,9 @@ a:hover {text-decoration: underline; }
 #darkRedLegend { background-color: #F03052; }
 #addedSource { border: 3px solid #22008A; width: 169px !important; height: 14px !important; }
 #deletedSource { background-image:url('../img/arc.png'); }
+
+.inceasedText { color:#4CB340;}
+.decreasedText { color: #F03052; }
 
 .level0 td:first-child { padding-left: 0px; }
 .level1 td:first-child { padding-left: 40px; }

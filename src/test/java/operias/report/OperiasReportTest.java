@@ -31,11 +31,8 @@ public class OperiasReportTest {
 		OperiasReport report = new OperiasReport(originalCoverage, revisedCoverage, diffReport);
 		
 		LinkedList<OperiasFile> changedClasses = (LinkedList<OperiasFile>)report.getChangedClasses();
-		
-		
+			
 		assertEquals(6, changedClasses.size());
-		
-
 		
 		OperiasFile firstClass = changedClasses.get(0);
 		
