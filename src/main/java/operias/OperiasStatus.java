@@ -77,5 +77,10 @@ public enum OperiasStatus {
 	/**
 	 * Error when joining the threads
 	 */
-	ERROR_THREAD_JOINING;
+	ERROR_THREAD_JOINING, 
+	
+	/**
+	 * Checking out a commit from git was not possible
+	 */
+	INVALID_GIT_COMMIT;
 }

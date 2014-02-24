@@ -7,11 +7,13 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 
+import difflib.StringUtills;
 import operias.cobertura.CoberturaReport;
 import operias.diff.DiffFile;
 import operias.diff.SourceDiffState;
@@ -33,8 +35,19 @@ public class HTMLOverview {
 	/**
 	 * List of already displayed packages
 	 */
-	private List<String> displayedPackages;
+	private List<Integer> displayedPackages;
 	
+	 static class PackageComparator implements Comparator<String>
+	 {
+	     public int compare(String p1, String p2)
+	     {
+	    	 int lengthP1 = p1.length() - p1.replace(".", "").length();
+	    	 int lengthP2 = p2.length() - p2.replace(".", "").length();
+	    	 
+	    	 return lengthP1 - lengthP2;
+	     }
+	 }
+	 
 	/**
 	 * 
 	 * @param report
@@ -44,7 +57,10 @@ public class HTMLOverview {
 	public HTMLOverview(OperiasReport report, List<String> packageNames) throws IOException {
 		this.report = report;
 		this.packageNames = packageNames;
-		this.displayedPackages = new LinkedList<String>();
+		
+		Collections.sort(this.packageNames, new PackageComparator());
+		
+		this.displayedPackages = new LinkedList<Integer>();
 		
 		Collections.sort(this.packageNames);
 		
@@ -128,7 +144,7 @@ public class HTMLOverview {
 			return;
 		}
 		
-		if (displayedPackages.indexOf(packageNames.get(packageID)) >= 0) {
+		if (displayedPackages.indexOf(packageID) >= 0) {
 			// Package already shown somehwere as subpackage, so skip
 			generatePackageOverviewHTML(packageID + 1, changedClasses, outputStreamHTMLFile);
 			return;
@@ -186,11 +202,11 @@ public class HTMLOverview {
 		outputStreamHTMLFile.println("<td>"+(relevantLinesSizeChange > 0 ? "+" : "") + relevantLinesSizeChange+" ("+relevantLinesSizeChangePercentage+"%)</td>");
 		outputStreamHTMLFile.println("</tr>");
 		
-		displayedPackages.add(thisPackageName);
+		displayedPackages.add(packageID);
 		
 		// Get all DIRECT subpackages
 		for(int j = 0; j < packageNames.size(); j++) {
-			if (packageNames.get(j).replace(thisPackageName, "").startsWith(".")) {
+			if (packageNames.get(j).replace(thisPackageName, "").startsWith(".") && !(displayedPackages.indexOf(j) >= 0)) {
 				//Found a DIRECT subpackage
 				generateHTML(j, changedClasses, outputStreamHTMLFile, packageLevel + 1);
 			}

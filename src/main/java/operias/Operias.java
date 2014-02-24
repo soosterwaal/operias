@@ -28,9 +28,9 @@ public class Operias {
 	public Operias constructReport() {
 
 		// Construct the cobertura reports
-		Thread reportRevisedThread = new Thread() { public void run() { reportRevised = constructCoberturaReport(Configuration.getRevisedDirectory());}};
-		Thread reportOriginalThread = new Thread() { public void run() { reportOriginal = constructCoberturaReport(Configuration.getOriginalDirectory());}};
-		Thread reportFileDiffThread = new Thread() { public void run() {
+		Thread reportRevisedThread = new Thread("RevisedCoverageThread") { public void run() { reportRevised = constructCoberturaReport(Configuration.getRevisedDirectory());}};
+		Thread reportOriginalThread = new Thread("OriginalCoverageThread") { public void run() { reportOriginal = constructCoberturaReport(Configuration.getOriginalDirectory());}};
+		Thread reportFileDiffThread = new Thread("DiffReportThread") { public void run() {
 			try {
 				reportFileDiff = new DiffReport(Configuration.getOriginalDirectory(), Configuration.getRevisedDirectory());
 			} catch (IOException e) {

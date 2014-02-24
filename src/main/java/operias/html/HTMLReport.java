@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import operias.report.OperiasFile;
@@ -63,7 +64,7 @@ public class HTMLReport {
 	private void generateInitialStructure() throws IOException {
 		File siteDir = new File("site");
 		if (siteDir.exists()) {
-			deleteFolder(siteDir);
+			FileUtils.deleteDirectory(siteDir);
 		}
 		siteDir.mkdir();
 		
@@ -82,26 +83,6 @@ public class HTMLReport {
 		cssOutStream.close();
 		cssStream.close();
 	}
-	
-	/**
-	 * Remove the given folder
-	 * @param folder
-	 */
-	private void deleteFolder(File folder) {
-	    File[] files = folder.listFiles();
-	    if(files!=null) { //some JVMs return null for empty dirs
-	        for(File f: files) {
-	            if(f.isDirectory()) {
-	                deleteFolder(f);
-	            } else {
-	                f.delete();
-	            }
-	        }
-	    }
-	    folder.delete();
-	}
-	
-	
 	
 	
 }

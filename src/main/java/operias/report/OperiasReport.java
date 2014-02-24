@@ -80,17 +80,26 @@ public class OperiasReport {
 				for(CoberturaClass oClass : oPackage.getClasses()) {
 					
 					DiffFile fileDiff = sourceDiffReport.getFile("src/main/java/" + oClass.getFileName());
-					
 					CoberturaClass rClass = rPackage.getClass(oClass.getName());
 					
-					// if nClass == null, the class was deleted, but the diffstate says its stayed the same, so we have an error that cannot occur!
-					if (rClass == null) {
-						System.exit(OperiasStatus.ERROR_COBERTURA_CLASS_REPORT_NOT_FOUND.ordinal());
-					} else {
+					if (rClass != null) {
 						// We got the class, so we can compare the classes for any differences
 						OperiasFile newOFile = new OperiasFile(oClass, rClass, fileDiff);
 						if (newOFile.getChanges().size() > 0) {
 							changedClasses.add(newOFile);
+						}
+					} else {
+						// Class was deleted!
+						if (fileDiff.getSourceState() == SourceDiffState.DELETED) {
+							
+							OperiasFile newOFile = new OperiasFile(oClass, fileDiff);
+							if (newOFile.getChanges().size() > 0) {
+								changedClasses.add(newOFile);
+							}
+						} else {
+							// @TODO: think about how to fix this? Using the current structure, a file can only be marked
+							// delete if the diff report says its deleted.
+							System.out.println("Found a innerclass which was deleted: " + oClass.getName());
 						}
 					}
 					
@@ -128,9 +137,13 @@ public class OperiasReport {
 					if (oClass == null) {
 						// Class was new
 						DiffFile fileDiff = sourceDiffReport.getFile("src/main/java/" + rClass.getFileName());
-						OperiasFile newOFile = new OperiasFile(rClass, fileDiff);
-						if (newOFile.getChanges().size() > 0) {
-							changedClasses.add(newOFile);
+						if (fileDiff.getSourceState() == SourceDiffState.NEW) {
+							OperiasFile newOFile = new OperiasFile(rClass, fileDiff);
+							if (newOFile.getChanges().size() > 0) {
+								changedClasses.add(newOFile);
+							}
+						} else {
+							System.out.println("Found a innerclass which was added: " + rClass.getName());
 						}
 					}
 				}
