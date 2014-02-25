@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -13,7 +11,7 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 
-import difflib.StringUtills;
+import operias.Configuration;
 import operias.cobertura.CoberturaReport;
 import operias.diff.DiffFile;
 import operias.diff.SourceDiffState;
@@ -64,7 +62,7 @@ public class HTMLOverview {
 		
 		Collections.sort(this.packageNames);
 		
-		File indexHTMLFile = new File("site/index.html");
+		File indexHTMLFile = new File(Configuration.getDestinationDirectory() + "/index.html");
 		indexHTMLFile.createNewFile();
 		
 		PrintStream outputStreamHTMLFile = new PrintStream(indexHTMLFile);

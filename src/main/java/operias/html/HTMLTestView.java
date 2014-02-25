@@ -1,21 +1,14 @@
 package operias.html;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 
-import difflib.ChangeDelta;
-import difflib.DeleteDelta;
-import difflib.Delta;
-import difflib.InsertDelta;
+import operias.Configuration;
 import operias.diff.DiffFile;
-import operias.diff.SourceDiffState;
 
 public class HTMLTestView extends HTMLCodeView {
 	
@@ -27,7 +20,7 @@ public class HTMLTestView extends HTMLCodeView {
 	 */
 	public HTMLTestView(String fileName, DiffFile file) throws IOException {
 		
-		File classHTMLFile = new File("site/" + fileName + ".html");
+		File classHTMLFile = new File(Configuration.getDestinationDirectory() + "/" + fileName + ".html");
 		classHTMLFile.createNewFile();
 		
 		PrintStream outputStreamHTMLFile = new PrintStream(classHTMLFile);

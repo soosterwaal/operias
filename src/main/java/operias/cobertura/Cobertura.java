@@ -44,14 +44,20 @@ public class Cobertura {
 	public CoberturaReport executeCobertura() {
 		boolean succeeded;
 		try {
+			System.out.println("[Info] [" + Thread.currentThread().getName() + "] Start execution of Cobertura");
 			succeeded = executeCoberturaTask();		
 			if (succeeded) {
+
+				System.out.println("[Info] [" + Thread.currentThread().getName() + "] Parsing Cobertura report");
 				CoberturaReport coberturaReport = constructReport();
+				System.out.println("[Info] [" + Thread.currentThread().getName() + "] Cleaning up after Cobertura");
 				cleanUp();
+				System.out.println("[Info] [" + Thread.currentThread().getName() + "] Cobertura report finished");
 				return coberturaReport;
 			}
 			
 		} catch (IOException | InterruptedException e) {
+			System.out.println("[Error] [" + Thread.currentThread().getName() + "] Error during the execution sequence of Cobertura");
 			System.exit(OperiasStatus.ERROR_COBERTURA_TASK_CREATION.ordinal());
 		}
 		
@@ -74,12 +80,15 @@ public class Cobertura {
 			firstString = (new File(directory)).getCanonicalPath();
 			secondString = (new File("")).getCanonicalPath();
 		} catch (Exception e) {
+			System.out.println("[Error] [" + Thread.currentThread().getName() + "] Error creating cobertura task");
 			System.exit(OperiasStatus.ERROR_COBERTURA_TASK_CREATION.ordinal());
 		}
 		
 		if (firstString.equals(secondString)) {
+			System.out.println("[Error] [" + Thread.currentThread().getName() + "] Cannot execute cobertura on operias, infinite loop!");
 			System.exit(OperiasStatus.ERROR_COBERTURA_TASK_OPERIAS_EXECUTION.ordinal());
 		}
+		
 		
 		ProcessBuilder builder = new ProcessBuilder("mvn","clean", "cobertura:cobertura", "-Dcobertura.report.format=xml", "-f", pomXML.getAbsolutePath());
 
@@ -88,9 +97,15 @@ public class Cobertura {
 		process.waitFor();
 		int exitValue = process.exitValue();
 		process.destroy();
-		
+
 		executionSucceeded = exitValue == 0;
 		
+		if (executionSucceeded) {
+
+			System.out.println("[Info] [" + Thread.currentThread().getName() + "] Succesfully executed cobertura");
+		} else {
+			System.out.println("[Error] [" + Thread.currentThread().getName() + "] Error executing cobertura, exit value: " + exitValue);
+		}
 		return executionSucceeded;	
 	}
 	
@@ -103,6 +118,7 @@ public class Cobertura {
 		File coverageXML = new File(outputDirectory, "target/site/cobertura/coverage.xml");
 		
 		if (!coverageXML.exists()) {
+			System.out.println("[Error] [" + Thread.currentThread().getName() + "] Coverage file was not found!");
 			System.exit(OperiasStatus.COVERAGE_XML_NOT_FOUND.ordinal());
 		}
 		

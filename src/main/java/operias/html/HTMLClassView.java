@@ -10,13 +10,9 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 
-import difflib.ChangeDelta;
-import difflib.DeleteDelta;
-import difflib.Delta;
-import difflib.InsertDelta;
+import operias.Configuration;
 import operias.cobertura.CoberturaClass;
 import operias.cobertura.CoberturaLine;
-import operias.diff.DiffFile;
 import operias.diff.SourceDiffState;
 import operias.report.OperiasFile;
 import operias.report.change.ChangeSourceChange;
@@ -36,7 +32,7 @@ public class HTMLClassView extends HTMLCodeView {
 	 */
 	public HTMLClassView(OperiasFile file, List<OperiasFile> changedFiles) throws IOException {
 		
-		File classHTMLFile = new File("site/" + file.getClassName() + ".html");
+		File classHTMLFile = new File(Configuration.getDestinationDirectory() + "/" + file.getClassName() + ".html");
 		classHTMLFile.createNewFile();
 		
 		PrintStream outputStreamHTMLFile = new PrintStream(classHTMLFile);

@@ -27,18 +27,22 @@ public class Operias {
 	 */
 	public Operias constructReport() {
 
+		System.out.println("[Info] Setting up threads");
 		// Construct the cobertura reports
-		Thread reportRevisedThread = new Thread("RevisedCoverageThread") { public void run() { reportRevised = constructCoberturaReport(Configuration.getRevisedDirectory());}};
-		Thread reportOriginalThread = new Thread("OriginalCoverageThread") { public void run() { reportOriginal = constructCoberturaReport(Configuration.getOriginalDirectory());}};
-		Thread reportFileDiffThread = new Thread("DiffReportThread") { public void run() {
+		Thread reportRevisedThread = new Thread("RevisedCoverage") { public void run() { reportRevised = constructCoberturaReport(Configuration.getRevisedDirectory());}};
+		Thread reportOriginalThread = new Thread("OriginalCoverage") { public void run() { reportOriginal = constructCoberturaReport(Configuration.getOriginalDirectory());}};
+		Thread reportFileDiffThread = new Thread("DiffReport") { public void run() {
 			try {
 				reportFileDiff = new DiffReport(Configuration.getOriginalDirectory(), Configuration.getRevisedDirectory());
 			} catch (IOException e) {
+				System.out.println("[Info] [" + Thread.currentThread().getName() + "] Error while comparing directory \"" +Configuration.getRevisedDirectory() + "\" to \"" + Configuration.getOriginalDirectory()+ "\"");
+			
 				System.exit(OperiasStatus.ERROR_FILE_DIFF_REPORT_GENERATION.ordinal());
 			}
 		}};
 		
-		
+
+		System.out.println("[Info] Starting threads");
 		reportRevisedThread.start();
 		reportOriginalThread.start();
 		reportFileDiffThread.start();
@@ -50,6 +54,7 @@ public class Operias {
 		} catch (InterruptedException e1) {
 			System.exit(OperiasStatus.ERROR_THREAD_JOINING.ordinal());
 		}
+		System.out.println("[Info] Start to combine reports");
 		
 		report = new OperiasReport(reportOriginal, reportRevised, reportFileDiff);
 		
@@ -82,6 +87,8 @@ public class Operias {
 	 * @return Operias instance
 	 */
 	public Operias writeSite() {
+		
+		System.out.println("[Info] Start writing data to html site");
 		try {
 			(new HTMLReport(report)).generateSite();
 		} catch (IOException e) {

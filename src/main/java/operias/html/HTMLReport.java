@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
+import operias.Configuration;
 import operias.report.OperiasFile;
 import operias.report.OperiasReport;
 
@@ -62,23 +63,23 @@ public class HTMLReport {
 	 * @throws IOException
 	 */
 	private void generateInitialStructure() throws IOException {
-		File siteDir = new File("site");
+		File siteDir = new File(Configuration.getDestinationDirectory());
 		if (siteDir.exists()) {
 			FileUtils.deleteDirectory(siteDir);
 		}
 		siteDir.mkdir();
 		
-		(new File("site/img")).mkdir();
-		(new File("site/css")).mkdir();
+		(new File(Configuration.getDestinationDirectory() + "/img")).mkdir();
+		(new File(Configuration.getDestinationDirectory() + "/css")).mkdir();
 		
 		InputStream arcImageStream = getClass().getResourceAsStream("/img/arc.png");
-		OutputStream arcImageOutStream = new PrintStream(new File("site/img/arc.png"));
+		OutputStream arcImageOutStream = new PrintStream(new File(Configuration.getDestinationDirectory() + "/img/arc.png"));
 		IOUtils.copy(arcImageStream, arcImageOutStream);
 		arcImageOutStream.close();
 		arcImageStream.close();
 		
 		InputStream cssStream = getClass().getResourceAsStream("/css/style.css");
-		OutputStream cssOutStream = new PrintStream(new File("site/css/style.css"));
+		OutputStream cssOutStream = new PrintStream(new File(Configuration.getDestinationDirectory() + "/css/style.css"));
 		IOUtils.copy(cssStream, cssOutStream);
 		cssOutStream.close();
 		cssStream.close();
