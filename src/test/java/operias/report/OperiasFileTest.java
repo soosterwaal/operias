@@ -9,7 +9,6 @@ import java.util.List;
 import operias.OperiasStatus;
 import operias.cobertura.*;
 import operias.diff.DiffFile;
-import operias.diff.SourceDiffState;
 import operias.report.change.ChangeSourceChange;
 import operias.report.change.CoverageDecreaseChange;
 import operias.report.change.CoverageIncreaseChange;

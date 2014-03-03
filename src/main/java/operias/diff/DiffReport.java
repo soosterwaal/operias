@@ -35,7 +35,11 @@ public class DiffReport {
 		this.originalDirectory = originalDirectory;
 		this.revisedDirectory = revisedDirectory;
 		
+
+		System.out.println("[Info] [" + Thread.currentThread().getName() + "] Comparing directory \"" +revisedDirectory + "\" to \"" + originalDirectory+ "\"");
 		changedFiles = DiffDirectory.compareDirectory(originalDirectory, revisedDirectory);
+		System.out.println("[Info] [" + Thread.currentThread().getName() + "] Done comparing directories");
+		
 	}
 
 	/**

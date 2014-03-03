@@ -82,5 +82,25 @@ public enum OperiasStatus {
 	/**
 	 * Checking out a commit from git was not possible
 	 */
-	INVALID_GIT_COMMIT;
+	INVALID_GIT_COMMIT, 
+	
+	/**
+	 * Either the revised folder or the original folder is missing
+	 */
+	MISSING_ARGUMENTS, 
+	
+	/**
+	 * No revised directory was found
+	 */
+	NO_REVISED_DIRECTORY, 
+	
+	/**
+	 * No original directory was found
+	 */
+	NO_ORIGINAL_DIRECTORY, 
+	
+	/**
+	 * Error during the cloning process
+	 */
+	ERROR_CLONE_GIT;
 }
