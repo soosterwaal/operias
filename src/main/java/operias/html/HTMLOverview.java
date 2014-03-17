@@ -271,14 +271,14 @@ public class HTMLOverview {
 		String barHTML = "<div class='coverageChangeBar' title='"+title+"'>";
 		
 		if (diff > 0) {
-			double originalWidth = Math.round(originalCoverage * 100);
+			double originalWidth = Math.floor(originalCoverage * 100);
 			double increasedWidth = Math.ceil(diff * 100);
 			
 			barHTML += "<div class='originalCoverage' style='width:" + originalWidth +"%'> </div>";
 			barHTML += "<div class='increasedCoverage' style='width:"+increasedWidth+"%''> </div>";
 			barHTML += "<div class='originalNotCoverage' style='width:"+(100 - originalWidth - increasedWidth)+"%'> </div>";
 		} else {
-			double originalWidth = 100 - Math.round(originalCoverage * 100);
+			double originalWidth = 100 - Math.floor(originalCoverage * 100);
 			double decreasedWidth = Math.ceil(Math.abs(diff) * 100);
 			barHTML += "<div class='originalCoverage' style='width:"+(100 - originalWidth - decreasedWidth)+"%'> </div>";
 			barHTML += "<div class='decreasedCoverage'  style='width:"+decreasedWidth+"%'> </div>";
