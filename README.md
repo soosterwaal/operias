@@ -1,5 +1,7 @@
 operias
-=======
+===
+
+====
 
 Operias is an open source tool to produce diff reports between two version of a software project. For now, it will only use on maven projects. In the latest version you can also use it to compare you code to a random commit from git.
 
