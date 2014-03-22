@@ -64,17 +64,27 @@ public class Main {
 				} else if (args[i].equals("-od") || args[i].equals("--original-directory")) {
 					Configuration.setOriginalDirectory(args[i + 1]);
 					i += 2;
-				} else if (args[i].equals("-rpd") || args[i].equals("--repository-directory")) {
-					Configuration.setGitDirectory(args[i + 1]);
-					i += 2;
 				} else if (args[i].equals("-ru") || args[i].equals("--repository-url")) {
-					Configuration.setRepositoryURL(args[i + 1]);
+					Configuration.setOriginalRepositoryURL(args[i + 1]);
+					Configuration.setRevisedRepositoryURL(args[i + 1]);
+					i += 2;
+				} else if (args[i].equals("-oru") || args[i].equals("--original-repository-url")) {
+					Configuration.setOriginalRepositoryURL(args[i + 1]);
+					i += 2;
+				} else if (args[i].equals("-rru") || args[i].equals("--revised-repository-url")) {
+					Configuration.setRevisedRepositoryURL(args[i + 1]);
 					i += 2;
 				} else if (args[i].equals("-oc") || args[i].equals("--original-commit-id")) {
 					Configuration.setOriginalCommitID(args[i + 1]);
 					i += 2;
 				} else if (args[i].equals("-rc") || args[i].equals("--revised-commit-id")) {
 					Configuration.setRevisedCommitID(args[i + 1]);
+					i += 2;
+				} else if (args[i].equals("-obn") || args[i].equals("--original-branch-name")) {
+					Configuration.setOriginalBranchName(args[i + 1]);
+					i += 2;
+				} else if (args[i].equals("-rbn") || args[i].equals("--revised-branch-name")) {
+					Configuration.setRevisedBranchName(args[i + 1]);
 					i += 2;
 				} else if (args[i].equals("-td") || args[i].equals("--temp-directory")) {
 					Configuration.setTemporaryDirectory(args[i + 1]);
@@ -102,7 +112,12 @@ public class Main {
 			System.setOut(new PrintStream(out));
 		}
 
-		setUpGitDirectories();
+		try {
+			setUpDirectoriesThroughGit();
+		} catch (Exception e) {
+			System.out.println("[Error] Error setting up directory through git");
+			System.exit(OperiasStatus.INVALID_ARGUMENTS.ordinal());
+		}
 		
 		// Check if the directories were set
 		if (Configuration.getOriginalDirectory() == null || Configuration.getRevisedDirectory() == null) {
@@ -113,68 +128,40 @@ public class Main {
 	
 	/**
 	 * Set up the original and/or revised directories according to the provided arguments
+	 * @throws Exception 
 	 */
-	private static void setUpGitDirectories() {
+	private static void setUpDirectoriesThroughGit() throws Exception {
 
-		if (Configuration.getRepositoryURL() != null) {
-			try {
-				Configuration.setGitDirectory(Git.clone(Configuration.getRepositoryURL()));
-			} catch (Exception e) {
-				System.out.println("[Error] Unable to clone \"" + Configuration.getRepositoryURL() + "\"");
-				System.exit(OperiasStatus.ERROR_CLONE_GIT.ordinal());
+		if (Configuration.getOriginalDirectory() == null) {
+			// No original directory found, check for git
+			if (Configuration.getOriginalRepositoryURL() != null) {
+
+				Configuration.setOriginalDirectory(Git.clone(Configuration.getOriginalRepositoryURL()));
+			
+				if (Configuration.getOriginalBranchName() != null) {
+					Git.checkout(Configuration.getOriginalDirectory(), Configuration.getOriginalBranchName());
+				}
+				
+				if (Configuration.getOriginalCommitID() != null) {
+					Git.checkout(Configuration.getOriginalDirectory(), Configuration.getOriginalCommitID());
+				}
 			}
 		}
 		
-		// initialy set the derived directory to the git directory
-		String derivedDirectory = Configuration.getGitDirectory();
-		
-		String originalCommitID = Configuration.getOriginalCommitID();
-		if (originalCommitID != null) {
-			// Got an original commit id, now either use the git directory, or else the revised directory
-		
-			// If not found, use the revised direcoty
-			if (derivedDirectory == null) {
-				derivedDirectory = Configuration.getRevisedDirectory();
-			} 
+		if (Configuration.getRevisedDirectory() == null) {
+			// No original directory found, check for git
+			if (Configuration.getRevisedRepositoryURL() != null) {
 
-			// If still not found, we cannot execute operias!
-			if (derivedDirectory == null) {
-				System.out.println("[Error] Unable to find a directory to checkout commit \""  + originalCommitID +"\"");
-				System.exit(OperiasStatus.NO_REVISED_DIRECTORY.ordinal());
-			}
+				Configuration.setRevisedDirectory(Git.clone(Configuration.getRevisedRepositoryURL()));
 			
-			// Checkout!
-			try {
-				Configuration.setOriginalDirectory(Git.checkoutCommit(derivedDirectory, originalCommitID));
-			} catch (Exception e) {
-				System.out.println("[Error] Unable to checkout commit \"" + originalCommitID + "\"");
-				System.exit(OperiasStatus.INVALID_GIT_COMMIT.ordinal());
+				if (Configuration.getRevisedBranchName() != null) {
+					Git.checkout(Configuration.getRevisedDirectory(), Configuration.getRevisedBranchName());
+				}
+				
+				if (Configuration.getRevisedCommitID() != null) {
+					Git.checkout(Configuration.getRevisedDirectory(), Configuration.getRevisedCommitID());
+				}
 			}
 		}
-		
-		String revisedCommitID = Configuration.getRevisedCommitID();
-		if (revisedCommitID != null) {
-			// Got an original commit id, now either use the git directory, or else the revised directory
-		
-			// If not found, use the original direcoty
-			if (derivedDirectory == null) {
-				derivedDirectory = Configuration.getOriginalDirectory();
-			} 
-
-			// If still not found, we cannot execute operias!
-			if (derivedDirectory == null) {
-				System.out.println("[Error] Unable to find a directory to checkout commit \""  + revisedCommitID +"\"");
-				System.exit(OperiasStatus.NO_ORIGINAL_DIRECTORY.ordinal());
-			}
-			
-			// Checkout!
-			try {
-				Configuration.setRevisedDirectory(Git.checkoutCommit(derivedDirectory, revisedCommitID));
-			} catch (Exception e) {
-				System.out.println("[Error] Unable to checkout commit \"" + revisedCommitID + "\"");
-				System.exit(OperiasStatus.INVALID_GIT_COMMIT.ordinal());
-			}
-		}	
 	}
-	
 }
