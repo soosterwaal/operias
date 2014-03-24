@@ -44,27 +44,18 @@ public class Git {
 	 * Check out to a given commit
 	 * 
 	 * EG 9d3821f6411ad85a683b8d38e4d42411229f2eec
-	 * @return The temporary directory
+	 * @return True if succeeded, false otherwise
 	 * @throws Exception 
 	 */
-	public static String checkoutCommit(String baseDirectory, String commit) throws Exception {
-		File tempDirectory = new File(Configuration.getTemporaryDirectory() + "/" + commit + Calendar.getInstance().getTime().getTime() + "");
+	public static boolean checkout(String repositoryDirectory, String commitOrBranch) throws Exception {
 		
-		// Copy git directory contents
-		try {
-			FileUtils.copyDirectory(new File(baseDirectory), tempDirectory);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-
-		System.out.println("[Info] Checking out commit \"" +commit+ "\"");
-		ProcessBuilder builder = new ProcessBuilder("git","--git-dir", tempDirectory.getAbsolutePath() + "/.git/", "--work-tree", tempDirectory.getAbsolutePath() , "checkout", "-f", "-b",  "operias-temp-branch", commit);
+		System.out.println("[Info] Checking out: \"" +commitOrBranch+ "\"");
+		ProcessBuilder builder = new ProcessBuilder("git","--git-dir", repositoryDirectory + "/.git/", "--work-tree", repositoryDirectory , "checkout", "-f", commitOrBranch);
 
 		Process process = null;
 		
 		process = builder.start();
 		process.waitFor();
-		
 		
 		int exitValue = process.exitValue();
 		
@@ -72,7 +63,7 @@ public class Git {
 		
 		if (exitValue == 0) {
 			System.out.println("[Info] Checkout succesfull! ");
-			return tempDirectory.getAbsolutePath();
+			return true;
 		} else {
 			throw new Exception(exitValue + "");
 		}

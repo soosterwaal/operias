@@ -34,7 +34,7 @@ public class Configuration {
 	private static String gitDirectory = null;	
 	
 	/**
-	 * The original commit identifier, need to checkout to this commit to get the revised directory
+	 * The original commit identifier, need to checkout to this commit to get the original directory
 	 */
 	private static String originalCommitID = null;
 	
@@ -42,6 +42,16 @@ public class Configuration {
 	 * The revised commit identifier, need to checkout to this commit to get the revised directory
 	 */
 	private static String revisedCommitID = null;
+
+	/**
+	 * The original branch name, need to checkout to this branch to get the original directory
+	 */
+	private static String originalBranchName = null;
+	
+	/**
+	 * The revised branch name, need to checkout to this branch to get the revised directory
+	 */
+	private static String revisedBranchName = null;
 	
 	/**
 	 * The destination directory for the generated website
@@ -49,9 +59,14 @@ public class Configuration {
 	private static String destinationDirectory = (new File("site")).getAbsolutePath();
 	
 	/**
-	 * The repository url
+	 * The original repository url
 	 */
-	private static String repositoryURL = null;
+	private static String originalRepositoryURL = null;
+	
+	/**
+	 * The revised repository url
+	 */
+	private static String revisedRepositoryURL = null;
 	
 	/**
 	 * A temporary directory in which the git cloned/checkout directory will be stored in
@@ -190,19 +205,9 @@ public class Configuration {
 		Configuration.revisedCommitID = revisedCommitID;
 	}
 
-	/**
-	 * @return the repositoryURL
-	 */
-	public static String getRepositoryURL() {
-		return repositoryURL;
-	}
+	
 
-	/**
-	 * @param repositoryURL the repositoryURL to set
-	 */
-	public static void setRepositoryURL(String repositoryURL) {
-		Configuration.repositoryURL = repositoryURL;
-	}
+	
 
 	/**
 	 * @return the temporaryDirectory
@@ -216,5 +221,61 @@ public class Configuration {
 	 */
 	public static void setTemporaryDirectory(String temporaryDirectory) {
 		Configuration.temporaryDirectory = temporaryDirectory;
+	}
+
+	/**
+	 * @return the originalBranchName
+	 */
+	public static String getOriginalBranchName() {
+		return originalBranchName;
+	}
+
+	/**
+	 * @param originalBranchName the originalBranchName to set
+	 */
+	public static void setOriginalBranchName(String originalBranchName) {
+		Configuration.originalBranchName = originalBranchName;
+	}
+
+	/**
+	 * @return the revisedBranchName
+	 */
+	public static String getRevisedBranchName() {
+		return revisedBranchName;
+	}
+
+	/**
+	 * @param revisedBranchName the revisedBranchName to set
+	 */
+	public static void setRevisedBranchName(String revisedBranchName) {
+		Configuration.revisedBranchName = revisedBranchName;
+	}
+
+	/**
+	 * @return the originalRepositoryURL
+	 */
+	public static String getOriginalRepositoryURL() {
+		return originalRepositoryURL;
+	}
+
+	/**
+	 * @param originalRepositoryURL the originalRepositoryURL to set
+	 */
+	public static void setOriginalRepositoryURL(String originalRepositoryURL) {
+		Configuration.originalRepositoryURL = originalRepositoryURL;
+	}
+
+	/**
+	 * @return the revisedRepositoryURL
+	 */
+	public static String getRevisedRepositoryURL() {
+		return revisedRepositoryURL;
+	}
+
+	/**
+	 * @param revisedRepositoryURL the revisedRepositoryURL to set
+	 */
+	public static void setRevisedRepositoryURL(String revisedRepositoryURL) {
+		Configuration.revisedRepositoryURL = revisedRepositoryURL;
 	}
 }
