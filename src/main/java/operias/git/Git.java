@@ -50,7 +50,7 @@ public class Git {
 	public static boolean checkout(String repositoryDirectory, String commitOrBranch) throws Exception {
 		
 		System.out.println("[Info] Checking out: \"" +commitOrBranch+ "\"");
-		ProcessBuilder builder = new ProcessBuilder("git","--git-dir", repositoryDirectory + "/.git/", "--work-tree", repositoryDirectory , "checkout", "-f", "-b",  "operias-temp-branch", commitOrBranch);
+		ProcessBuilder builder = new ProcessBuilder("git","--git-dir", repositoryDirectory + "/.git/", "--work-tree", repositoryDirectory , "checkout", "-f", commitOrBranch);
 
 		Process process = null;
 		
