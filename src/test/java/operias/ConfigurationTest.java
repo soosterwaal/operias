@@ -55,6 +55,28 @@ public class ConfigurationTest {
 		
 	}
 	
+	@Test
+	public void testFailSettingUpDirectoriesThroughGit() {
+		Configuration.setTemporaryDirectory(new File("").getAbsolutePath() + "/target/gittests");
+		Configuration.setRevisedRepositoryURL("https://github.com/soosterwaal/operias.git");
+		Configuration.setOriginalRepositoryURL("https://github.com/soosterwaal/operias.git");
+		
+		Configuration.setOriginalBranchName("master");
+		
+		Configuration.setOriginalCommitID("6143a8cf29eb7d56a0b65cee562d07c29250b71e");
+		Configuration.setRevisedCommitID("342e0d9ce8a625879a9c8c4cbe208320662b85");	
+
+        System.setSecurityManager(new NoExitSecurityManager());
+        boolean exeptionThrown = false;
+        try {
+        	Configuration.setUpDirectoriesThroughGit();
+        } catch(Exception e) {
+        	exeptionThrown = true;
+        }
+        
+        assertTrue(exeptionThrown);
+        System.setSecurityManager(null);	
+	}
 	
 	/**
 	 * Set up git directories through repo url + branch/commit

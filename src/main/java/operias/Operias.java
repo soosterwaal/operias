@@ -31,6 +31,11 @@ public class Operias {
 	 */
 	public Operias constructReport() {
 
+		if (Configuration.getOriginalDirectory() == null || Configuration.getRevisedDirectory() == null) {
+			Main.printLine("[Error] Missing either the original or the revised directory");
+			System.exit(OperiasStatus.MISSING_ARGUMENTS.ordinal());
+		}
+		
 		Main.printLine("[Info] Setting up threads");
 		// Construct the cobertura reports
 		Thread reportRevisedThread = new Thread("RevisedCoverage") { public void run() { reportRevised = constructCoberturaReport(Configuration.getRevisedDirectory());}};

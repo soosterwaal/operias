@@ -251,14 +251,19 @@ public class Configuration {
 	 * Set up the original and/or revised directories according to the provided arguments
 	 * @throws Exception 
 	 */
-	public static void setUpDirectoriesThroughGit() throws Exception {
+	public static void setUpDirectoriesThroughGit()  {
+		try {
+			if (Configuration.getOriginalDirectory() == null) {
+				Configuration.setOriginalDirectory(setUpDirectoriesThroughGit(Configuration.getOriginalRepositoryURL(), Configuration.getOriginalBranchName(), Configuration.getOriginalCommitID()));
+			}
+			
+			if (Configuration.getRevisedDirectory() == null) {
+				Configuration.setRevisedDirectory(setUpDirectoriesThroughGit(Configuration.getRevisedRepositoryURL(), Configuration.getRevisedBranchName(), Configuration.getRevisedCommitID()));
+			}
+		} catch(Exception e) {
 
-		if (Configuration.getOriginalDirectory() == null) {
-			Configuration.setOriginalDirectory(setUpDirectoriesThroughGit(Configuration.getOriginalRepositoryURL(), Configuration.getOriginalBranchName(), Configuration.getOriginalCommitID()));
-		}
-		
-		if (Configuration.getRevisedDirectory() == null) {
-			Configuration.setRevisedDirectory(setUpDirectoriesThroughGit(Configuration.getRevisedRepositoryURL(), Configuration.getRevisedBranchName(), Configuration.getRevisedCommitID()));
+			Main.printLine("[Error] Error setting up directory through git");
+			System.exit(OperiasStatus.INVALID_ARGUMENTS.ordinal());
 		}
 	}
 	

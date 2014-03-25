@@ -28,17 +28,11 @@ public class Main {
 		
 		Configuration.parseArguments(args);
 
-		try {
-			Configuration.setUpDirectoriesThroughGit();
-		} catch (Exception e) {
-			Main.printLine("[Error] Error setting up directory through git");
-			System.exit(OperiasStatus.INVALID_ARGUMENTS.ordinal());
-		}
 		
 		// Check if the directories were set
 		if (Configuration.getOriginalDirectory() == null || Configuration.getRevisedDirectory() == null) {
-			Main.printLine("[Error] Missing either the original or the revised directory");
-			System.exit(OperiasStatus.MISSING_ARGUMENTS.ordinal());
+			// if not, try to set up directories through git
+			Configuration.setUpDirectoriesThroughGit();
 		}
 		
 		new Operias().constructReport().writeHTMLReport().writeXMLReport();
