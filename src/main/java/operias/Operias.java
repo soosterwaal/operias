@@ -31,7 +31,7 @@ public class Operias {
 	 */
 	public Operias constructReport() {
 
-		System.out.println("[Info] Setting up threads");
+		Main.printLine("[Info] Setting up threads");
 		// Construct the cobertura reports
 		Thread reportRevisedThread = new Thread("RevisedCoverage") { public void run() { reportRevised = constructCoberturaReport(Configuration.getRevisedDirectory());}};
 		Thread reportOriginalThread = new Thread("OriginalCoverage") { public void run() { reportOriginal = constructCoberturaReport(Configuration.getOriginalDirectory());}};
@@ -39,14 +39,14 @@ public class Operias {
 			try {
 				reportFileDiff = new DiffReport(Configuration.getOriginalDirectory(), Configuration.getRevisedDirectory());
 			} catch (IOException e) {
-				System.out.println("[Info] [" + Thread.currentThread().getName() + "] Error while comparing directory \"" +Configuration.getRevisedDirectory() + "\" to \"" + Configuration.getOriginalDirectory()+ "\"");
+				Main.printLine("[Info] [" + Thread.currentThread().getName() + "] Error while comparing directory \"" +Configuration.getRevisedDirectory() + "\" to \"" + Configuration.getOriginalDirectory()+ "\"");
 			
 				System.exit(OperiasStatus.ERROR_FILE_DIFF_REPORT_GENERATION.ordinal());
 			}
 		}};
 		
 
-		System.out.println("[Info] Starting threads");
+		Main.printLine("[Info] Starting threads");
 		reportRevisedThread.start();
 		reportOriginalThread.start();
 		reportFileDiffThread.start();
@@ -58,7 +58,7 @@ public class Operias {
 		} catch (InterruptedException e1) {
 			System.exit(OperiasStatus.ERROR_THREAD_JOINING.ordinal());
 		}
-		System.out.println("[Info] Start to combine reports");
+		Main.printLine("[Info] Start to combine reports");
 		
 		report = new OperiasReport(reportOriginal, reportRevised, reportFileDiff);
 		
@@ -92,7 +92,7 @@ public class Operias {
 	 */
 	public Operias writeHTMLReport() {
 		
-		System.out.println("[Info] Start writing data to html report");
+		Main.printLine("[Info] Start writing data to html report");
 		try {
 			(new HTMLReport(report)).generateReport();
 		} catch (IOException e) {
@@ -107,7 +107,7 @@ public class Operias {
 	 */
 	public Operias writeXMLReport() {
 		
-		System.out.println("[Info] Start writing data to xml report");
+		Main.printLine("[Info] Start writing data to xml report");
 		
 		try {
 			(new XMLReport(report)).generateReport();

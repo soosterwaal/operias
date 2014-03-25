@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Calendar;
 
 import operias.Configuration;
+import operias.Main;
 
 
 public class Git {
@@ -18,7 +19,7 @@ public class Git {
 	public static String clone(String URL) throws Exception {
 		File tempDirectory = new File(Configuration.getTemporaryDirectory() + "/" + Calendar.getInstance().getTime().getTime() + "");
 		
-		System.out.println("[Info] Cloning from \"" +URL+ "\"");
+		Main.printLine("[Info] Cloning from \"" +URL+ "\"");
 		ProcessBuilder builder = new ProcessBuilder("git","clone", URL, tempDirectory.getAbsolutePath());
 
 		Process process = null;
@@ -31,7 +32,7 @@ public class Git {
 		process.destroy();
 		
 		if (exitValue == 0) {
-			System.out.println("[Info] Cloning succesfull!");
+			Main.printLine("[Info] Cloning succesfull!");
 			return tempDirectory.getAbsolutePath();
 		} else {
 			throw new Exception(exitValue + "");
@@ -47,7 +48,7 @@ public class Git {
 	 */
 	public static boolean checkout(String repositoryDirectory, String commitOrBranch) throws Exception {
 		
-		System.out.println("[Info] Checking out: \"" +commitOrBranch+ "\"");
+		Main.printLine("[Info] Checking out: \"" +commitOrBranch+ "\"");
 		ProcessBuilder builder = new ProcessBuilder("git","--git-dir", repositoryDirectory + "/.git/", "--work-tree", repositoryDirectory , "checkout", "-f", commitOrBranch);
 
 		Process process = null;
@@ -60,7 +61,7 @@ public class Git {
 		process.destroy();
 		
 		if (exitValue == 0) {
-			System.out.println("[Info] Checkout succesfull! ");
+			Main.printLine("[Info] Checkout succesfull! ");
 			return true;
 		} else {
 			throw new Exception(exitValue + "");

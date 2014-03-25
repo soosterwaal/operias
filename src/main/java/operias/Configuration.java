@@ -28,10 +28,7 @@ public class Configuration {
 	 */
 	private static String originalDirectory = null;
 	
-	/**
-	 * Git directory, containing the sources files which are used as a base for the comparison, and used to change to a certain commit
-	 */
-	private static String gitDirectory = null;	
+
 	
 	/**
 	 * The original commit identifier, need to checkout to this commit to get the original directory
@@ -72,6 +69,69 @@ public class Configuration {
 	 * A temporary directory in which the git cloned/checkout directory will be stored in
 	 */
 	private static String temporaryDirectory = (new File("temp")).getAbsolutePath();
+	
+	/**
+	 * By default, output is disabled
+	 */
+	private static boolean outputEnabled = false;
+	
+	/**
+	 * Parse the arguments passed by the command line
+	 * @param args
+	 */
+	public static void parseArguments(String[] args) {
+		try {
+			int i = 0;
+			while(i < args.length) {
+				if (args[i].equals("-d") || args[i].equals("--destination-directory")) {
+					// Destination folder
+					Configuration.setDestinationDirectory(args[i + 1]);
+					i += 2;
+				} else if (args[i].equals("-rd") || args[i].equals("--revised-directory")) {
+					Configuration.setRevisedDirectory(args[i + 1]);
+					i += 2;
+				} else if (args[i].equals("-od") || args[i].equals("--original-directory")) {
+					Configuration.setOriginalDirectory(args[i + 1]);
+					i += 2;
+				} else if (args[i].equals("-ru") || args[i].equals("--repository-url")) {
+					Configuration.setOriginalRepositoryURL(args[i + 1]);
+					Configuration.setRevisedRepositoryURL(args[i + 1]);
+					i += 2;
+				} else if (args[i].equals("-oru") || args[i].equals("--original-repository-url")) {
+					Configuration.setOriginalRepositoryURL(args[i + 1]);
+					i += 2;
+				} else if (args[i].equals("-rru") || args[i].equals("--revised-repository-url")) {
+					Configuration.setRevisedRepositoryURL(args[i + 1]);
+					i += 2;
+				} else if (args[i].equals("-oc") || args[i].equals("--original-commit-id")) {
+					Configuration.setOriginalCommitID(args[i + 1]);
+					i += 2;
+				} else if (args[i].equals("-rc") || args[i].equals("--revised-commit-id")) {
+					Configuration.setRevisedCommitID(args[i + 1]);
+					i += 2;
+				} else if (args[i].equals("-obn") || args[i].equals("--original-branch-name")) {
+					Configuration.setOriginalBranchName(args[i + 1]);
+					i += 2;
+				} else if (args[i].equals("-rbn") || args[i].equals("--revised-branch-name")) {
+					Configuration.setRevisedBranchName(args[i + 1]);
+					i += 2;
+				} else if (args[i].equals("-td") || args[i].equals("--temp-directory")) {
+					Configuration.setTemporaryDirectory(args[i + 1]);
+					i += 2;
+				} else if (args[i].equals("-v") || args[i].equals("--verbose")) {
+					Configuration.setOutputEnabled(true);
+					i++;
+				} else {
+					Main.printLine("[Error] Unknown option \"" + args[i] + "\"");
+					System.exit(OperiasStatus.INVALID_ARGUMENTS.ordinal());
+				}
+			}
+		} catch (Exception e) {
+			System.exit(OperiasStatus.INVALID_ARGUMENTS.ordinal());
+		}
+
+	}
+	
 	
 	/**
 	 * Sets and checks the source directory, will throw an exception if it is an invalid directory
@@ -144,8 +204,17 @@ public class Configuration {
 	 * Reset the configuration, used for testing mostly
 	 */
 	public static void resetConfiguration() {
+		destinationDirectory = new File("site").getAbsolutePath();
+		temporaryDirectory = new File("temp").getAbsolutePath();
+		revisedBranchName = null;
+		revisedCommitID = null;
 		revisedDirectory = null;
+		revisedRepositoryURL = null;
+		originalBranchName = null;
+		originalCommitID = null;
 		originalDirectory = null;
+		originalRepositoryURL = null;
+		outputEnabled = false;
 	}
 
 	
@@ -163,19 +232,7 @@ public class Configuration {
 		Configuration.destinationDirectory = destinationDirectory;
 	}
 
-	/**
-	 * @return the gitDirectory
-	 */
-	public static String getGitDirectory() {
-		return gitDirectory;
-	}
-
-	/**
-	 * @param gitDirectory the gitDirectory to set
-	 */
-	public static void setGitDirectory(String gitDirectory) {
-		Configuration.gitDirectory = gitDirectory;
-	}
+	
 
 	/**
 	 * @return the originalCommitID
@@ -277,5 +334,19 @@ public class Configuration {
 	 */
 	public static void setRevisedRepositoryURL(String revisedRepositoryURL) {
 		Configuration.revisedRepositoryURL = revisedRepositoryURL;
+	}
+
+	/**
+	 * @return the outputEnabled
+	 */
+	public static boolean isOutputEnabled() {
+		return outputEnabled;
+	}
+
+	/**
+	 * @param outputEnabled the outputEnabled to set
+	 */
+	public static void setOutputEnabled(boolean outputEnabled) {
+		Configuration.outputEnabled = outputEnabled;
 	}
 }
