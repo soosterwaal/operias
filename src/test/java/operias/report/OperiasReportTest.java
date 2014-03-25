@@ -8,7 +8,7 @@ import java.util.LinkedList;
 
 import operias.cobertura.CoberturaReport;
 import operias.diff.DiffReport;
-import operias.html.HTMLReport;
+import operias.output.html.HTMLReport;
 import operias.report.change.ChangeSourceChange;
 import operias.report.change.CoverageIncreaseChange;
 import operias.report.change.InsertSourceChange;
@@ -144,7 +144,7 @@ public class OperiasReportTest {
 		
 		
 		try {
-			(new HTMLReport(report)).generateSite();
+			(new HTMLReport(report)).generateReport();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

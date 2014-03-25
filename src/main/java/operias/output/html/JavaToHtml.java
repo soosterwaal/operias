@@ -19,7 +19,7 @@
  * USA
  */
 
-package operias.html;
+package operias.output.html;
 
 import java.util.Arrays;
 import java.util.Collection;
