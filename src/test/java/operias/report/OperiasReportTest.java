@@ -17,6 +17,9 @@ import org.junit.Test;
 
 public class OperiasReportTest {
 
+	/**
+	 * Test the creation of a simple operias report
+	 */
 	@Test
 	public void testSimpleOperiasReport() {
 		CoberturaReport originalCoverage = new CoberturaReport(new File("src/test/resources/coverageMavenProject1.xml"));
@@ -141,12 +144,5 @@ public class OperiasReportTest {
 		assertNull(sixthClass.getChanges().get(0).getRevisedCoverage().get(10));
 		assertNull(sixthClass.getChanges().get(0).getRevisedCoverage().get(11));
 		
-		
-		
-		try {
-			(new HTMLReport(report)).generateReport();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 }
