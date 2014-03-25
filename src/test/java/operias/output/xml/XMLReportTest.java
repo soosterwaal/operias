@@ -27,10 +27,31 @@ public class XMLReportTest {
 	CoberturaReport originalCoverage,revisedCoverage ;
 	DiffReport diffReport = null;
 	
+	/**
+	 * Set up, set the destination directory
+	 */
 	@Before
 	public void setUp() {
 		
 		Configuration.setDestinationDirectory(new File("").getAbsolutePath() + "/target");
+		
+		
+		
+	}
+	
+	/**
+	 * Tear down, reset the destination directory
+	 */
+	@After
+	public void tearDown() {
+		Configuration.setDestinationDirectory(new File("").getAbsolutePath()+ "/site");
+	}
+	
+	/**
+	 * Test the standard included projects
+	 */
+	@Test
+	public void testBasicXMLReport()  {
 		
 		originalCoverage = new CoberturaReport(new File("src/test/resources/coverageMavenProject1.xml"));
 		revisedCoverage = new CoberturaReport(new File("src/test/resources/coverageMavenProject2.xml"));
@@ -40,17 +61,6 @@ public class XMLReportTest {
 		} catch (IOException e) {
 			fail();
 		}
-		
-	}
-	
-	@After
-	public void tearDown() {
-		Configuration.setDestinationDirectory(new File("").getAbsolutePath()+ "/site");
-	}
-	
-	
-	@Test
-	public void testBasicXMLReport()  {
 		
 		OperiasReport report = new OperiasReport(originalCoverage, revisedCoverage, diffReport);
 		
@@ -76,6 +86,12 @@ public class XMLReportTest {
 			
 			XPathFactory xPathfactory = XPathFactory.newInstance();
 			XPath xpath = xPathfactory.newXPath();
+			
+
+			assertEquals("0.7857142857142857", xpath.compile("/operias/summary/classChanges/coverageChanges/@originalLineRate").evaluate(doc));
+			assertEquals("0.5", xpath.compile("/operias/summary/classChanges/coverageChanges/@originalConditionRate").evaluate(doc));
+			assertEquals("0.6666666666666666", xpath.compile("/operias/summary/classChanges/coverageChanges/@revisedLineRate").evaluate(doc));
+			assertEquals("0.8461538461538461", xpath.compile("/operias/summary/classChanges/coverageChanges/@revisedConditionRate").evaluate(doc));
 			
 			assertEquals("9" , xpath.compile("/operias/summary/classChanges/coverageChanges/totalRelevantLinesAdded/lineCount").evaluate(doc));	
 			assertEquals("0.33" , xpath.compile("/operias/summary/classChanges/coverageChanges/totalRelevantLinesAdded/lineRate").evaluate(doc));	
@@ -199,7 +215,7 @@ public class XMLReportTest {
 			assertEquals("17 (100.0%)" , xpath.compile("/operias/changedFiles/changedTests/testFile[4]/@sizeChange").evaluate(doc));	
 			assertEquals("/src/test/java/moreExamples/SwitchTest.java" , xpath.compile("/operias/changedFiles/changedTests/testFile[4]/@filename").evaluate(doc));		
 			assertEquals("17 (100.0%)" , xpath.compile("/operias/changedFiles/changedTests/testFile[4]/addedLineCount").evaluate(doc));	
-} catch (Exception e) {
+		} catch (Exception e) {
 			fail(e.getMessage());
 		}
 		

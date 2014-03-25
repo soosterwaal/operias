@@ -79,7 +79,7 @@ public class CoberturaReportTest {
 		CoberturaReport report = new CoberturaReport(file);
 		
 		assertEquals("Line rate not equal", 0.7578125, report.getLineRate(),  delta);
-		assertEquals(0.75,report.getBranchRate(), delta);
+		assertEquals(0.75,report.getConditionRate(), delta);
 		
 		
 		ArrayList<CoberturaPackage> packages = (ArrayList<CoberturaPackage>) report.getPackages();

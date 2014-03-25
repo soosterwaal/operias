@@ -127,6 +127,11 @@ public class XMLReport {
 		}
 
 		Element coverageChanges = doc.createElement("coverageChanges");
+		
+		coverageChanges.setAttribute("originalLineRate", report.getOriginalCoverageReport().getLineRate() + "");
+		coverageChanges.setAttribute("originalConditionRate", report.getOriginalCoverageReport().getConditionRate() + "");
+		coverageChanges.setAttribute("revisedLineRate", report.getRevisedCoverageReport().getLineRate() + "");
+		coverageChanges.setAttribute("revisedConditionRate", report.getRevisedCoverageReport().getConditionRate() + "");
 
 		// Element for removed lines
 		if (totalRelevantLineCountRemoved > 0) {
