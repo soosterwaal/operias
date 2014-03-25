@@ -28,20 +28,12 @@ public class DiffReportTest {
 			assertFalse(diffDir.isEmpty());
 		
 			List<DiffDirectory> dirs = diffDir.getDirectories();
-			List<DiffFile> files = diffDir.getFiles();
 			
 			DiffDirectory diffDir_1 = dirs.get(0);
-			DiffFile diffFile = files.get(0);
 			
 			assertFalse(diffDir_1.isEmpty());
 			assertEquals((new File("")).getAbsolutePath() + "/src/test/resources/simpleMavenProject/src", diffDir_1.getOriginalDirectoryName());
 			assertEquals(SourceDiffState.SAME, diffDir_1.getState());
-			
-			
-			assertEquals((new File("")).getAbsolutePath() + "/src/test/resources/simpleMavenProject/pom.xml", diffFile.getOriginalFileName());
-			
-			
-			assertEquals(SourceDiffState.SAME, diffFile.getSourceState());
 			
 			// Check the src folder, should contain a main and test folder
 			DiffDirectory diffDir_2 = diffDir_1.getDirectories().get(0);
