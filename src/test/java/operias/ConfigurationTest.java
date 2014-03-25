@@ -3,6 +3,8 @@ package operias;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.security.InvalidParameterException;
 
 import operias.test.general.NoExitSecurityManager;
@@ -25,6 +27,76 @@ public class ConfigurationTest {
         System.setSecurityManager(null);
 	}
 	
+	
+	/**
+	 * Test that when an original and/or revised directory is already given, the git extension won't override it
+	 */
+	@Test
+	public void testDirectoryDefaultOverrulesGit() {
+		Configuration.setTemporaryDirectory(new File("").getAbsolutePath() + "/target/gittests");
+		Configuration.setOriginalDirectory("src/test/resources/validMavenDirectory");
+		Configuration.setRevisedDirectory("src/test/resources/validMavenDirectory");
+		
+		Configuration.setRevisedRepositoryURL("https://github.com/soosterwaal/operias.git");
+		Configuration.setOriginalRepositoryURL("https://github.com/soosterwaal/operias.git");
+		
+		Configuration.setOriginalBranchName("master");
+		
+		Configuration.setOriginalCommitID("6143a8cf29eb7d56a0b65cee562d07c29250b71e");
+		Configuration.setRevisedCommitID("342e0d9ce8a62587930a9c8c4cbe208320662b85");
+		
+		try {
+			Configuration.setUpDirectoriesThroughGit();
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
+		assertEquals("src/test/resources/validMavenDirectory", Configuration.getRevisedDirectory());
+		assertEquals("src/test/resources/validMavenDirectory", Configuration.getOriginalDirectory());
+		
+	}
+	
+	
+	/**
+	 * Set up git directories through repo url + branch/commit
+	 */
+	@Test
+	public void testSettingUpDirectoriesUsingGit() {
+		Configuration.setTemporaryDirectory(new File("").getAbsolutePath() + "/target/gittests");
+		Configuration.setRevisedRepositoryURL("https://github.com/soosterwaal/operias.git");
+		Configuration.setOriginalRepositoryURL("https://github.com/soosterwaal/operias.git");
+		
+		Configuration.setOriginalBranchName("master");
+		
+		Configuration.setOriginalCommitID("6143a8cf29eb7d56a0b65cee562d07c29250b71e");
+		Configuration.setRevisedCommitID("342e0d9ce8a62587930a9c8c4cbe208320662b85");
+		
+		try {
+			Configuration.setUpDirectoriesThroughGit();
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
+		
+		// Check if the head is set correctly
+		File HEADfileOriginal = new File(Configuration.getOriginalDirectory(), "/.git/HEAD");
+		
+		
+		try {
+			assertEquals("6143a8cf29eb7d56a0b65cee562d07c29250b71e\n",new String(Files.readAllBytes(HEADfileOriginal.toPath())));
+		} catch (IOException e) {
+			fail(e.getMessage());
+		}
+
+		// Check if the head is set correctly
+		File HEADfileRevised = new File(Configuration.getRevisedDirectory(), "/.git/HEAD");
+		
+		
+		try {
+			assertEquals("342e0d9ce8a62587930a9c8c4cbe208320662b85\n",new String(Files.readAllBytes(HEADfileRevised.toPath())));
+		} catch (IOException e) {
+			fail(e.getMessage());
+		}
+
+	}
 
 	/**
 	 * Test given an argument without a value

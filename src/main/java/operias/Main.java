@@ -29,7 +29,7 @@ public class Main {
 		Configuration.parseArguments(args);
 
 		try {
-			setUpDirectoriesThroughGit();
+			Configuration.setUpDirectoriesThroughGit();
 		} catch (Exception e) {
 			Main.printLine("[Error] Error setting up directory through git");
 			System.exit(OperiasStatus.INVALID_ARGUMENTS.ordinal());
@@ -56,44 +56,7 @@ public class Main {
 	}
 	
 	
-	/**
-	 * Set up the original and/or revised directories according to the provided arguments
-	 * @throws Exception 
-	 */
-	public static void setUpDirectoriesThroughGit() throws Exception {
-
-		if (Configuration.getOriginalDirectory() == null) {
-			// No original directory found, check for git
-			if (Configuration.getOriginalRepositoryURL() != null) {
-
-				Configuration.setOriginalDirectory(Git.clone(Configuration.getOriginalRepositoryURL()));
-			
-				if (Configuration.getOriginalBranchName() != null) {
-					Git.checkout(Configuration.getOriginalDirectory(), Configuration.getOriginalBranchName());
-				}
-				
-				if (Configuration.getOriginalCommitID() != null) {
-					Git.checkout(Configuration.getOriginalDirectory(), Configuration.getOriginalCommitID());
-				}
-			}
-		}
-		
-		if (Configuration.getRevisedDirectory() == null) {
-			// No original directory found, check for git
-			if (Configuration.getRevisedRepositoryURL() != null) {
-
-				Configuration.setRevisedDirectory(Git.clone(Configuration.getRevisedRepositoryURL()));
-			
-				if (Configuration.getRevisedBranchName() != null) {
-					Git.checkout(Configuration.getRevisedDirectory(), Configuration.getRevisedBranchName());
-				}
-				
-				if (Configuration.getRevisedCommitID() != null) {
-					Git.checkout(Configuration.getRevisedDirectory(), Configuration.getRevisedCommitID());
-				}
-			}
-		}
-	}
+	
 	
 	/**
 	 * Print a line to the console, it will only be printed if the verbose argument was given
