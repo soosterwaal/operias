@@ -3,6 +3,8 @@ package operias;
 import java.io.File;
 import java.security.InvalidParameterException;
 
+import operias.git.Git;
+
 
 /**
  * Configuration of operias, checks and sets the source and repository directories and a branch
@@ -217,6 +219,53 @@ public class Configuration {
 		outputEnabled = false;
 	}
 
+	
+	/**
+	 * Set up directory through git. Return the repository directory, based on the repository url, branch name and commit id
+	 * @param repositoryURL
+	 * @param branchName
+	 * @param commitID
+	 * @return
+	 * @throws Exception
+	 */
+	public static String setUpDirectoriesThroughGit(String repositoryURL, String branchName, String commitID) throws Exception {
+		
+		String repositoryDirectory = null;
+		
+		if (repositoryURL != null) {
+
+			repositoryDirectory = Git.clone(repositoryURL);
+		
+			if (branchName != null) {
+				Git.checkout(repositoryDirectory, branchName);
+			}
+			
+			if (Configuration.getOriginalCommitID() != null) {
+				Git.checkout(repositoryDirectory, commitID);
+			}
+		}
+		
+		return repositoryDirectory;
+	}
+	/**
+	 * Set up the original and/or revised directories according to the provided arguments
+	 * @throws Exception 
+	 */
+	public static void setUpDirectoriesThroughGit()  {
+		try {
+			if (Configuration.getOriginalDirectory() == null) {
+				Configuration.setOriginalDirectory(setUpDirectoriesThroughGit(Configuration.getOriginalRepositoryURL(), Configuration.getOriginalBranchName(), Configuration.getOriginalCommitID()));
+			}
+			
+			if (Configuration.getRevisedDirectory() == null) {
+				Configuration.setRevisedDirectory(setUpDirectoriesThroughGit(Configuration.getRevisedRepositoryURL(), Configuration.getRevisedBranchName(), Configuration.getRevisedCommitID()));
+			}
+		} catch(Exception e) {
+
+			Main.printLine("[Error] Error setting up directory through git");
+			System.exit(OperiasStatus.INVALID_ARGUMENTS.ordinal());
+		}
+	}
 	
 	/**
 	 * @return the destinationDirectory
