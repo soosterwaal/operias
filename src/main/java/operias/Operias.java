@@ -2,9 +2,13 @@ package operias;
 
 import java.io.IOException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
 import operias.cobertura.*;
 import operias.diff.DiffReport;
-import operias.html.HTMLReport;
+import operias.output.html.HTMLReport;
+import operias.output.xml.XMLReport;
 import operias.report.OperiasReport;
 
 /**
@@ -86,15 +90,31 @@ public class Operias {
 	 * Write a site based on the report
 	 * @return Operias instance
 	 */
-	public Operias writeSite() {
+	public Operias writeHTMLReport() {
 		
-		System.out.println("[Info] Start writing data to html site");
+		System.out.println("[Info] Start writing data to html report");
 		try {
-			(new HTMLReport(report)).generateSite();
+			(new HTMLReport(report)).generateReport();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return this;
+	}
+	
+	/**
+	 * Write a xml report based on the operias report
+	 * @return This operias instance
+	 */
+	public Operias writeXMLReport() {
+		
+		System.out.println("[Info] Start writing data to xml report");
+		
+		try {
+			(new XMLReport(report)).generateReport();
+		} catch (ParserConfigurationException | TransformerException | IOException e) {
+			e.printStackTrace();
+		}
+		
 		return this;
 	}
 }

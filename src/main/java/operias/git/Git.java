@@ -1,12 +1,10 @@
 package operias.git;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Calendar;
 
 import operias.Configuration;
 
-import org.apache.commons.io.FileUtils;
 
 public class Git {
 

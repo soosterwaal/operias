@@ -30,7 +30,7 @@ public class Main {
 		
 		parseArguments(args);
 
-		new Operias().constructReport().writeSite();
+		new Operias().constructReport().writeHTMLReport().writeXMLReport();
 
 
 		System.out.println("[Info] Cleaning up!");

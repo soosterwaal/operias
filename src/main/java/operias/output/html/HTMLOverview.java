@@ -1,4 +1,4 @@
-package operias.html;
+package operias.output.html;
 
 import java.io.File;
 import java.io.IOException;
@@ -91,13 +91,7 @@ public class HTMLOverview {
 			outputStreamHTMLFile.println("<thead><tr><th>Name</th><th>Amount of lines changed</th><tr></thead><tbody>");
 	
 			for(DiffFile changedTest : report.getChangedTests()) {
-				String fileName = "";
-				
-				if (changedTest.getSourceState() == SourceDiffState.NEW){
-					fileName = changedTest.getRevisedFileName().replace(new File(report.getSourceDiffReport().getRevisedDirectory()).getAbsolutePath() + "/src/test/java/", "");
-				} else {
-					fileName = changedTest.getOriginalFileName().replace(new File(report.getSourceDiffReport().getOriginalDirectory()).getAbsolutePath() + "/src/test/java/", "");
-				}
+				String fileName = changedTest.getFileName(report);
 				
 				outputStreamHTMLFile.println("<tr >");
 				outputStreamHTMLFile.println("<td><a href='"+fileName.replace('/', '.')+".html'>"+fileName+"</a></td>");

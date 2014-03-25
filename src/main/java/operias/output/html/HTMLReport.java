@@ -1,4 +1,4 @@
-package operias.html;
+package operias.output.html;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,7 +40,7 @@ public class HTMLReport {
 	 * Generate the html web site
 	 * @throws IOException 
 	 */
-	public void generateSite() throws IOException {
+	public void generateReport() throws IOException {
 		generateInitialStructure();
 		
 		ArrayList<String> packageNames = new ArrayList<String>();

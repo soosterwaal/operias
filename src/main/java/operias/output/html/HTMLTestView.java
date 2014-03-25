@@ -1,4 +1,4 @@
-package operias.html;
+package operias.output.html;
 
 import java.io.File;
 import java.io.IOException;

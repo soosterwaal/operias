@@ -144,7 +144,7 @@ public class CoberturaReport {
 	/**
 	 * @return the branchRate
 	 */
-	public double getBranchRate() {
+	public double getConditionRate() {
 		return branchRate;
 	}
 

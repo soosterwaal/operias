@@ -1,11 +1,13 @@
 package operias.diff;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+import operias.report.OperiasReport;
 import difflib.Delta;
 import difflib.DiffUtils;
 import difflib.Patch;
@@ -183,6 +185,22 @@ public class DiffFile {
 	 */
 	public int getRevisedLineCount() {
 		return revisedLineCount;
+	}
+	
+	/**
+	 * Get the file name including the path within the project
+	 * @return
+	 */
+	public String getFileName(OperiasReport report) {
+		
+		String fileName = null;
+		if (this.getSourceState() == SourceDiffState.NEW){
+			fileName = this.getRevisedFileName().replace(new File(report.getSourceDiffReport().getRevisedDirectory()).getAbsolutePath(), "");
+		} else {
+			fileName = this.getOriginalFileName().replace(new File(report.getSourceDiffReport().getOriginalDirectory()).getAbsolutePath(), "");
+		}
+		
+		return fileName;
 	}
 
 	
