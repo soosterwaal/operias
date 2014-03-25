@@ -8,10 +8,12 @@ import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import operias.Configuration;
 import operias.cobertura.CoberturaReport;
 import operias.diff.DiffReport;
 import operias.report.OperiasReport;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,6 +24,9 @@ public class XMLReportTest {
 	
 	@Before
 	public void setUp() {
+		
+		Configuration.setDestinationDirectory(new File("").getAbsolutePath() + "/target");
+		
 		originalCoverage = new CoberturaReport(new File("src/test/resources/coverageMavenProject1.xml"));
 		revisedCoverage = new CoberturaReport(new File("src/test/resources/coverageMavenProject2.xml"));
 
@@ -32,6 +37,13 @@ public class XMLReportTest {
 		}
 		
 	}
+	
+	@After
+	public void tearDown() {
+		Configuration.setDestinationDirectory(new File("").getAbsolutePath()+ "/site");
+	}
+	
+	
 	@Test
 	public void testBasicXMLReport()  {
 		

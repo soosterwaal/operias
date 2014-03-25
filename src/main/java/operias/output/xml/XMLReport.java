@@ -2,6 +2,7 @@ package operias.output.xml;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -82,8 +83,12 @@ public class XMLReport {
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		Transformer transformer = transformerFactory.newTransformer();
 		DOMSource source = new DOMSource(doc);
-		(new File(Configuration.getDestinationDirectory(), "operias.xml")).createNewFile();
-		StreamResult result = new StreamResult(new File(Configuration.getDestinationDirectory(), "operias.xml"));
+		File xmlFile = new File(Configuration.getDestinationDirectory(), "operias.xml");
+		xmlFile.createNewFile();
+		
+		PrintStream outputStreamXMLFile = new PrintStream(xmlFile);
+		
+		StreamResult result = new StreamResult(outputStreamXMLFile);
  
 		transformer.transform(source, result);
 	}
