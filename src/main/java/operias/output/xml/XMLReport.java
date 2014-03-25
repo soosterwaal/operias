@@ -161,9 +161,9 @@ public class XMLReport {
 
 		// Elements for changed lines
 		if (totalRelevantLineCountChangedOriginal > 0 || totalRelevantLineCountChangedRevised > 0){
-			Element relevantLinesChanged = doc.createElement("totalRelevantLineChanged");
+			Element relevantLinesChanged = doc.createElement("totalRelevantLinesChanged");
 			Element relevantLinesChangedOriginalCount = doc.createElement("originalLineCount");
-			Element relevantLinesAddedOriginalPercentage = doc.createElement("orignalLineRate");
+			Element relevantLinesAddedOriginalPercentage = doc.createElement("originalLineRate");
 
 			Element relevantLinesChangedRevisedCount = doc.createElement("revisedLineCount");
 			Element relevantLinesAddedRevisedPercentage = doc.createElement("revisedLineRate");
@@ -281,7 +281,7 @@ public class XMLReport {
 			Element classFile = doc.createElement("classFile");
 			classFile.setAttribute("classname", className);
 			classFile.setAttribute("filename", fileName);
-			classFile.setAttribute("state", changedClass.getSourceDiff().getSourceState().toString());
+			classFile.setAttribute("sourceState", changedClass.getSourceDiff().getSourceState().toString());
 			
 
 			Element coverageChanges = doc.createElement("coverageChanges");
@@ -351,7 +351,7 @@ public class XMLReport {
 			if (relevantLineCountChangedOriginal > 0 || relevantLineCountChangedRevised > 0){
 				Element relevantLinesChanged = doc.createElement("relevantLinesChanged");
 				Element relevantLinesChangedOriginalCount = doc.createElement("originalLineCount");
-				Element relevantLinesAddedOriginalPercentage = doc.createElement("orignalLineRate");
+				Element relevantLinesAddedOriginalPercentage = doc.createElement("originalLineRate");
 
 				Element relevantLinesChangedRevisedCount = doc.createElement("revisedLineCount");
 				Element relevantLinesAddedRevisedPercentage = doc.createElement("revisedLineRate");
@@ -395,7 +395,7 @@ public class XMLReport {
 			Element testFile = doc.createElement("testFile");
 		
 			testFile.setAttribute("filename" , fileName);
-			testFile.setAttribute("state" , changedTest.getSourceState().toString());
+			testFile.setAttribute("sourceState" , changedTest.getSourceState().toString());
 			
 			generateSourceDifferenceCount(changedTest, testFile);
 			
@@ -424,14 +424,17 @@ public class XMLReport {
 		}
 		
 		int totalLinesChangedCount = sourceDiffFile.getRevisedLineCount() - sourceDiffFile.getOriginalLineCount();
-		double totalPercentage = Math.round((double)totalLinesChangedCount / (double) sourceDiffFile.getOriginalLineCount() * (double)10000) / (double)100;
+		double totalPercentage = 100.0;
+		if (sourceDiffFile.getOriginalLineCount() > 0) {
+			totalPercentage = Math.round((double)totalLinesChangedCount / (double) sourceDiffFile.getOriginalLineCount() * (double)10000) / (double)100;
+		} 
 
 		root.setAttribute("sizeChange", totalLinesChangedCount + " (" + totalPercentage + "%)" );
 		
 		if (changedLinesOriginalCount > 0) {
 			Element changedLines = doc.createElement("changedLineCount");
 			double percentage = Math.round((double)changedLinesOriginalCount / (double) sourceDiffFile.getOriginalLineCount() * (double)10000) / (double)100;
-			changedLines.appendChild(doc.createTextNode(changedLinesOriginalCount + " into " + changedLinesRevisedCount + "(" + percentage + "%)"));
+			changedLines.appendChild(doc.createTextNode(changedLinesOriginalCount + " into " + changedLinesRevisedCount + " (" + percentage + "%)"));
 			
 			root.appendChild(changedLines);
 		}
@@ -445,7 +448,11 @@ public class XMLReport {
 		
 		if (addedLinesCount > 0) {
 			Element addedLines = doc.createElement("addedLineCount");
-			double percentage = Math.round((double)addedLinesCount / (double) sourceDiffFile.getOriginalLineCount() * (double)10000) / (double)100;
+			double percentage = 100.0;
+			if (sourceDiffFile.getOriginalLineCount() > 0) {
+				 percentage = Math.round((double)addedLinesCount / (double) sourceDiffFile.getOriginalLineCount() * (double)10000) / (double)100;		
+			}
+			
 			addedLines.appendChild(doc.createTextNode(addedLinesCount + " (" + percentage + "%)"));
 			root.appendChild(addedLines);
 		}
