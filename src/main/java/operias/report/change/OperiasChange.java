@@ -1,6 +1,5 @@
 package operias.report.change;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import difflib.Delta;
