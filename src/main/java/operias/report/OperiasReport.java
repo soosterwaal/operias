@@ -3,6 +3,7 @@ package operias.report;
 import java.util.LinkedList;
 import java.util.List;
 
+import operias.Main;
 import operias.cobertura.CoberturaClass;
 import operias.cobertura.CoberturaPackage;
 import operias.cobertura.CoberturaReport;
@@ -98,7 +99,7 @@ public class OperiasReport {
 						} else {
 							// @TODO: think about how to fix this? Using the current structure, a file can only be marked
 							// delete if the diff report says its deleted.
-							System.out.println("[Warning] Found a innerclass which was deleted: " + oClass.getName());
+							Main.printLine("[Warning] Found a innerclass which was deleted: " + oClass.getName());
 						}
 					}
 					
@@ -142,22 +143,22 @@ public class OperiasReport {
 								changedClasses.add(newOFile);
 							}
 						} else {
-							System.out.println("[Warning] Found a innerclass which was added: " + rClass.getName());
+							Main.printLine("[Warning] Found a innerclass which was added: " + rClass.getName());
 						}
 					}
 				}
 			}
 		}
 		
-		System.out.println("[Info] Done collecting and combining the changed classes");
+		Main.printLine("[Info] Done collecting and combining the changed classes");
 		
-		System.out.println("[Info] Collect changed test files");
+		Main.printLine("[Info] Collect changed test files");
 		// Finnaly, retrieve all changes test classes
 		DiffDirectory testDirectory = sourceDiffReport.getDirectory("src/test/java");
 		
 		// And loop through all files to collect the changed ones
 		collectChangedTests(testDirectory);
-		System.out.println("[Info] Done collecting changed test files");
+		Main.printLine("[Info] Done collecting changed test files");
 	
 	}
 	

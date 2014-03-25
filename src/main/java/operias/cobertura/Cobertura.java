@@ -3,6 +3,7 @@ package operias.cobertura;
 import java.io.File;
 import java.io.IOException;
 
+import operias.Main;
 import operias.OperiasStatus;
 
 /**
@@ -44,20 +45,20 @@ public class Cobertura {
 	public CoberturaReport executeCobertura() {
 		boolean succeeded;
 		try {
-			System.out.println("[Info] [" + Thread.currentThread().getName() + "] Start execution of Cobertura");
+			Main.printLine("[Info] [" + Thread.currentThread().getName() + "] Start execution of Cobertura");
 			succeeded = executeCoberturaTask();		
 			if (succeeded) {
 
-				System.out.println("[Info] [" + Thread.currentThread().getName() + "] Parsing Cobertura report");
+				Main.printLine("[Info] [" + Thread.currentThread().getName() + "] Parsing Cobertura report");
 				CoberturaReport coberturaReport = constructReport();
-				System.out.println("[Info] [" + Thread.currentThread().getName() + "] Cleaning up after Cobertura");
+				Main.printLine("[Info] [" + Thread.currentThread().getName() + "] Cleaning up after Cobertura");
 				cleanUp();
-				System.out.println("[Info] [" + Thread.currentThread().getName() + "] Cobertura report finished");
+				Main.printLine("[Info] [" + Thread.currentThread().getName() + "] Cobertura report finished");
 				return coberturaReport;
 			}
 			
 		} catch (IOException | InterruptedException e) {
-			System.out.println("[Error] [" + Thread.currentThread().getName() + "] Error during the execution sequence of Cobertura");
+			Main.printLine("[Error] [" + Thread.currentThread().getName() + "] Error during the execution sequence of Cobertura");
 			System.exit(OperiasStatus.ERROR_COBERTURA_TASK_CREATION.ordinal());
 		}
 		
@@ -80,12 +81,12 @@ public class Cobertura {
 			firstString = (new File(directory)).getCanonicalPath();
 			secondString = (new File("")).getCanonicalPath();
 		} catch (Exception e) {
-			System.out.println("[Error] [" + Thread.currentThread().getName() + "] Error creating cobertura task");
+			Main.printLine("[Error] [" + Thread.currentThread().getName() + "] Error creating cobertura task");
 			System.exit(OperiasStatus.ERROR_COBERTURA_TASK_CREATION.ordinal());
 		}
 		
 		if (firstString.equals(secondString)) {
-			System.out.println("[Error] [" + Thread.currentThread().getName() + "] Cannot execute cobertura on operias, infinite loop!");
+			Main.printLine("[Error] [" + Thread.currentThread().getName() + "] Cannot execute cobertura on operias, infinite loop!");
 			System.exit(OperiasStatus.ERROR_COBERTURA_TASK_OPERIAS_EXECUTION.ordinal());
 		}
 		
@@ -102,9 +103,9 @@ public class Cobertura {
 		
 		if (executionSucceeded) {
 
-			System.out.println("[Info] [" + Thread.currentThread().getName() + "] Succesfully executed cobertura");
+			Main.printLine("[Info] [" + Thread.currentThread().getName() + "] Succesfully executed cobertura");
 		} else {
-			System.out.println("[Error] [" + Thread.currentThread().getName() + "] Error executing cobertura, exit value: " + exitValue);
+			Main.printLine("[Error] [" + Thread.currentThread().getName() + "] Error executing cobertura, exit value: " + exitValue);
 		}
 		return executionSucceeded;	
 	}
@@ -118,7 +119,7 @@ public class Cobertura {
 		File coverageXML = new File(outputDirectory, "target/site/cobertura/coverage.xml");
 		
 		if (!coverageXML.exists()) {
-			System.out.println("[Error] [" + Thread.currentThread().getName() + "] Coverage file was not found!");
+			Main.printLine("[Error] [" + Thread.currentThread().getName() + "] Coverage file was not found!");
 			System.exit(OperiasStatus.COVERAGE_XML_NOT_FOUND.ordinal());
 		}
 		

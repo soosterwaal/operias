@@ -3,6 +3,8 @@ package operias.diff;
 import java.io.File;
 import java.io.IOException;
 
+import operias.Main;
+
 /**
  * A source diff report containing 1 DiffDirectory which includes the source diff changes for the complete project
  * @author soosterwaal
@@ -36,9 +38,9 @@ public class DiffReport {
 		this.revisedDirectory = revisedDirectory;
 		
 
-		System.out.println("[Info] [" + Thread.currentThread().getName() + "] Comparing directory \"" +revisedDirectory + "\" to \"" + originalDirectory+ "\"");
+		Main.printLine("[Info] [" + Thread.currentThread().getName() + "] Comparing directory \"" +revisedDirectory + "\" to \"" + originalDirectory+ "\"");
 		changedFiles = DiffDirectory.compareDirectory(originalDirectory, revisedDirectory);
-		System.out.println("[Info] [" + Thread.currentThread().getName() + "] Done comparing directories");
+		Main.printLine("[Info] [" + Thread.currentThread().getName() + "] Done comparing directories");
 		
 	}
 
