@@ -170,5 +170,12 @@ public class CoberturaReport {
 		return null;
 	}
 	
-	
+	/**
+	 * Checks if a package exists
+	 * @param packageName
+	 * @return
+	 */
+	public boolean packageExists(String packageName) {
+		return getPackage(packageName) != null;
+	}
 }

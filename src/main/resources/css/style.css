@@ -38,6 +38,7 @@ margin: 1px;
 font-size: 10pt; }
 
 .deletedRow  { background-image:url('../img/arc.png'); }
+.deletedOverviewRow { background-image:url('../img/arc_big.png'); }
 
 .keyword { color: #001D91; font-weight: bold; }
 .comment { color: #9E9E9E; }
