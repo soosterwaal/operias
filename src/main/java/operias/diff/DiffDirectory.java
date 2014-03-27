@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
+
 /**
  * Contains the source diff information for a directory and all its sub directories
  * @author soosterwaal
@@ -140,6 +142,7 @@ public class DiffDirectory {
 		for(String fileName : filesWithinOriginalDirectory) {
 			File originalFile = new File(originalDirectoryFile, fileName);
 			
+			
 			if (originalFile.isHidden()) {
 				continue;
 			}
@@ -154,13 +157,15 @@ public class DiffDirectory {
 					diffDirectory.addDirectory(DiffDirectory.compareDirectory(originalFile.getAbsolutePath(), null));
 				}
 			} else {
-				if (filesWithinNewDirectory.indexOf(fileName) >= 0) {
-					// File exists
-					File newFile = new File(newDirectoryFile, fileName);
-					diffDirectory.addFile(DiffFile.compareFile(originalFile.getAbsolutePath(), newFile.getAbsolutePath()));
-				} else {
-					// File was deleted
-					diffDirectory.addFile(DiffFile.compareFile(originalFile.getAbsolutePath(), null));
+				if (FilenameUtils.getExtension(originalFile.getName()).equals("java")) {
+					if (filesWithinNewDirectory.indexOf(fileName) >= 0) {
+						// File exists
+						File newFile = new File(newDirectoryFile, fileName);
+						diffDirectory.addFile(DiffFile.compareFile(originalFile.getAbsolutePath(), newFile.getAbsolutePath()));
+					} else {
+						// File was deleted
+						diffDirectory.addFile(DiffFile.compareFile(originalFile.getAbsolutePath(), null));
+					}
 				}
 			}
 		}
@@ -178,7 +183,10 @@ public class DiffDirectory {
 					diffDirectory.addDirectory(DiffDirectory.compareDirectory(null, newFile.getAbsolutePath()));		
 				} else {
 					// file is new
-					diffDirectory.addFile(DiffFile.compareFile(null, newFile.getAbsolutePath()));					
+
+					if (FilenameUtils.getExtension(newFile.getName()).equals("java")) {
+						diffDirectory.addFile(DiffFile.compareFile(null, newFile.getAbsolutePath()));		
+					}
 				} 
 			}
 		}

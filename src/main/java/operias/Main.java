@@ -5,8 +5,6 @@ import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 
-
-
 /**
  * Main class of operias
  * @author soosterwaal
