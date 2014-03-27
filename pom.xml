@@ -2,12 +2,12 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.operias.app</groupId>
   <artifactId>operias</artifactId>
-  <version>0.4.0</version>
-  <name>operias-g</name>
+  <version>0.5.0</version>
+  <name>operias</name>
   <description>Operias is an open source tool to produce diff reports between your code and a given branch on github. It shows the differences in source file and the difference in code coverage in one simple overview.</description>
   <properties>
    	<junitVersion>4.11</junitVersion>
-    <jdkVersion>1.7</jdkVersion>
+    <jdkVersion>1.6</jdkVersion>
     <plugin.mvn.compiler.version>3.1</plugin.mvn.compiler.version>
     <project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
     <arguments/>

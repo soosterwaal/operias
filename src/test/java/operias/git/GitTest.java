@@ -3,8 +3,8 @@ package operias.git;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
 
 import operias.Configuration;
 
@@ -50,9 +50,12 @@ public class GitTest {
 			
 			// Check if the head is set correctly
 			File HEADfile = new File(gitDirectory, "/.git/HEAD");
+			FileInputStream fis = new FileInputStream(HEADfile);
+			byte[] data = new byte[(int)HEADfile.length()];
+			fis.read(data);
+			fis.close();
 			
-			
-			assertEquals("8e201ca8e50761cbefe880ceae527fa2393ae2e0\n",new String(Files.readAllBytes(HEADfile.toPath())));
+			assertEquals("8e201ca8e50761cbefe880ceae527fa2393ae2e0\n",new String(data, "UTF-8"));
 		} catch(Exception e) {
 			fail(e.getMessage());
 		}

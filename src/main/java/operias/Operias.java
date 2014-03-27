@@ -116,7 +116,11 @@ public class Operias {
 		
 		try {
 			(new XMLReport(report)).generateReport();
-		} catch (ParserConfigurationException | TransformerException | IOException e) {
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (TransformerException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		

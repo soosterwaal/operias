@@ -3,8 +3,8 @@ package operias;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.security.InvalidParameterException;
 
 import operias.test.general.NoExitSecurityManager;
@@ -103,7 +103,16 @@ public class ConfigurationTest {
 		
 		
 		try {
-			assertEquals("6143a8cf29eb7d56a0b65cee562d07c29250b71e\n",new String(Files.readAllBytes(HEADfileOriginal.toPath())));
+			
+			// Check if the head is set correctly
+			FileInputStream fis = new FileInputStream(HEADfileOriginal);
+			byte[] data = new byte[(int)HEADfileOriginal.length()];
+			fis.read(data);
+			fis.close();
+			
+			assertEquals("6143a8cf29eb7d56a0b65cee562d07c29250b71e\n",new String(data, "UTF-8"));
+		
+		
 		} catch (IOException e) {
 			fail(e.getMessage());
 		}
@@ -113,7 +122,13 @@ public class ConfigurationTest {
 		
 		
 		try {
-			assertEquals("342e0d9ce8a62587930a9c8c4cbe208320662b85\n",new String(Files.readAllBytes(HEADfileRevised.toPath())));
+
+			// Check if the head is set correctly
+			FileInputStream fis = new FileInputStream(HEADfileRevised);
+			byte[] data = new byte[(int)HEADfileRevised.length()];
+			fis.read(data);
+			fis.close();
+			assertEquals("342e0d9ce8a62587930a9c8c4cbe208320662b85\n",new String(data, "UTF-8"));
 		} catch (IOException e) {
 			fail(e.getMessage());
 		}

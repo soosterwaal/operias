@@ -57,7 +57,10 @@ public class Cobertura {
 				return coberturaReport;
 			}
 			
-		} catch (IOException | InterruptedException e) {
+		} catch (IOException e) {
+			Main.printLine("[Error] [" + Thread.currentThread().getName() + "] Error during the execution sequence of Cobertura");
+			System.exit(OperiasStatus.ERROR_COBERTURA_TASK_CREATION.ordinal());
+		} catch (InterruptedException e) {
 			Main.printLine("[Error] [" + Thread.currentThread().getName() + "] Error during the execution sequence of Cobertura");
 			System.exit(OperiasStatus.ERROR_COBERTURA_TASK_CREATION.ordinal());
 		}
