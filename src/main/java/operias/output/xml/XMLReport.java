@@ -313,12 +313,12 @@ public class XMLReport {
 
 			if (changedClass.getSourceDiff().getSourceState() != SourceDiffState.NEW) {
 				classFile.setAttribute("lineCoverageOriginal", changedClass.getOriginalClass().getLineRate() + "");
-				classFile.setAttribute("conditionCoverageOriginal", changedClass.getOriginalClass().getBranchRate() + "");
+				classFile.setAttribute("conditionCoverageOriginal", changedClass.getOriginalClass().getConditionRate() + "");
 			}
 			
 			if (changedClass.getSourceDiff().getSourceState() != SourceDiffState.DELETED) {
 				classFile.setAttribute("lineCoverageRevised", changedClass.getRevisedClass().getLineRate() + "");
-				classFile.setAttribute("conditionCoverageRevised", changedClass.getRevisedClass().getBranchRate() + "");
+				classFile.setAttribute("conditionCoverageRevised", changedClass.getRevisedClass().getConditionRate() + "");
 			}
 			
 			// Element for removed lines

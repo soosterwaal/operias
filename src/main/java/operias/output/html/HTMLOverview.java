@@ -9,11 +9,11 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-
 import org.apache.commons.io.IOUtils;
 
 import operias.Configuration;
-import operias.cobertura.CoberturaReport;
+import operias.cobertura.CoberturaClass;
+import operias.cobertura.CoberturaPackage;
 import operias.diff.DiffFile;
 import operias.diff.SourceDiffState;
 import operias.report.OperiasFile;
@@ -78,7 +78,7 @@ public class HTMLOverview {
 		// ARROW DOWN : &#8595;
 		// ARROW UP : &#8593;
 		outputStreamHTMLFile.println("<h2>Packages</h2><table class='classOverview'>");
-		outputStreamHTMLFile.println("<thead><tr><th>Name</th><th>Line coverage</th><th>Condition coverage</th><th>Source Status</th><tr></thead><tbody>");
+		outputStreamHTMLFile.println("<thead><tr><th>Name</th><th>Line coverage</th><th># Relevant lines</th><th>Condition coverage</th><th># Conditions</th><tr></thead><tbody>");
 
 		generatePackageOverviewHTML(0, report.getChangedClasses(),outputStreamHTMLFile);
 		
@@ -162,47 +162,58 @@ public class HTMLOverview {
 	private void generateHTML(int packageID, List<OperiasFile> changedClasses, PrintStream outputStreamHTMLFile, int packageLevel) {
 		
 		String thisPackageName = this.packageNames.get(packageID);
-		CoberturaReport originalReport = report.getOriginalCoverageReport();
-		CoberturaReport revisedReport = report.getRevisedCoverageReport();
 		
-		double revisedPackageLineCoverage = revisedReport.packageExists(thisPackageName) ? revisedReport.getPackage(thisPackageName).getLineRate(): 0.0;
-		double revisedPackageConditionCoverage = revisedReport.packageExists(thisPackageName) ? revisedReport.getPackage(thisPackageName).getBranchRate() : 0.0;
+		CoberturaPackage originalPackage = report.getOriginalCoverageReport().getPackage(thisPackageName);
+		CoberturaPackage revisedPackage = report.getRevisedCoverageReport().getPackage(thisPackageName);
 		
-		double originalPackageLineCoverage = originalReport.packageExists(thisPackageName) ? originalReport.getPackage(thisPackageName).getLineRate() : 0.0;
-		double originalPackageConditionCoverage = originalReport.packageExists(thisPackageName) ? originalReport.getPackage(thisPackageName).getBranchRate() : 0.0;
-			
-		
-		int originalPackageRelevantsLinesCount = originalReport.packageExists(thisPackageName) ? originalReport.getPackage(thisPackageName).getRelevantLinesCount() : 0;
-		int revisedPackageRelevantsLinesCount = revisedReport.packageExists(thisPackageName) ? revisedReport.getPackage(thisPackageName).getRelevantLinesCount(): 0;
-		
-	
-		
+				
 		SourceDiffState packageState = SourceDiffState.CHANGED;
-		if (!revisedReport.packageExists(thisPackageName)) {
+		if (revisedPackage == null) {
 			packageState = SourceDiffState.DELETED;
-		} else if (!originalReport.packageExists(thisPackageName)) {
+		} else if (originalPackage == null) {
 			packageState = SourceDiffState.NEW;
 		}
 		
 		
-		outputStreamHTMLFile.println("<tr class='packageRow level"+packageLevel+" "+(revisedReport.getPackage(thisPackageName) == null ? "deletedOverviewRow" : "")+"' id='Package"+packageID+"'>");
+		outputStreamHTMLFile.println("<tr class='packageRow level"+packageLevel+" "+(packageState == SourceDiffState.DELETED ? "deletedOverviewRow" : "")+"' id='Package"+packageID+"'>");
 		outputStreamHTMLFile.println("<td>"+thisPackageName+"</td>");
 		
 
-		outputStreamHTMLFile.println(generateCoverageBarsHTML(originalPackageLineCoverage, revisedPackageLineCoverage, packageState));
-		outputStreamHTMLFile.println(generateCoverageBarsHTML(originalPackageConditionCoverage, revisedPackageConditionCoverage, packageState));
 		switch (packageState) {
 			case DELETED:
-				outputStreamHTMLFile.println("<td>"+ (int)originalPackageRelevantsLinesCount+" (Deleted)</td>");
+				outputStreamHTMLFile.println(generateCoverageBarsHTML(originalPackage.getLineRate(), 0.0, packageState));
+				outputStreamHTMLFile.println("<td>"+ (int)originalPackage.getLineCount()+" (Deleted)</td>");
+				outputStreamHTMLFile.println(generateCoverageBarsHTML(originalPackage.getConditionRate(), 0.0, packageState));
+				outputStreamHTMLFile.println("<td>" + originalPackage.getConditionCount()+" (Deleted)</td>");
 				break;
 			case NEW:
-				outputStreamHTMLFile.println("<td>" + (int)revisedPackageRelevantsLinesCount+" (New)</td>");
+				outputStreamHTMLFile.println(generateCoverageBarsHTML(0.0, revisedPackage.getLineRate(), packageState));
+				outputStreamHTMLFile.println("<td>" + (int)revisedPackage.getLineCount()+" (New)</td>");
+				outputStreamHTMLFile.println(generateCoverageBarsHTML(0.0, revisedPackage.getConditionRate(), packageState));
+				outputStreamHTMLFile.println("<td>" + revisedPackage.getConditionCount()+" (New)</td>");
 				break;
 			default:
-				double packageRelevantLinesSizeChange = revisedPackageRelevantsLinesCount - originalPackageRelevantsLinesCount;
-				double packageRelevantLinesSizeChangePercentage = Math.round((double)packageRelevantLinesSizeChange / (double)originalPackageRelevantsLinesCount * (double)10000) / (double)100;	
+				outputStreamHTMLFile.println(generateCoverageBarsHTML(originalPackage.getLineRate(), revisedPackage.getLineRate(), packageState));
+				double packageRelevantLinesSizeChange = revisedPackage.getLineCount() - originalPackage.getLineCount();
+				double packageRelevantLinesSizeChangePercentage = Math.round((double)packageRelevantLinesSizeChange / (double)originalPackage.getLineCount() * (double)10000) / (double)100;	
 
 				outputStreamHTMLFile.println("<td>"+(packageRelevantLinesSizeChange > 0 ? "+" : "") + (int)packageRelevantLinesSizeChange+" ("+packageRelevantLinesSizeChangePercentage+"%)</td>");
+				outputStreamHTMLFile.println(generateCoverageBarsHTML(originalPackage.getConditionRate(), revisedPackage.getConditionRate(), packageState));
+				
+
+				double packageConditionSizeChange = revisedPackage.getConditionCount() - originalPackage.getConditionCount();
+				double packageConditionChangePercentage;
+				if (originalPackage.getConditionCount() == 0 && packageConditionSizeChange != 0) {
+					packageConditionChangePercentage = 100;
+				} else if (revisedPackage.getConditionCount() == 0 && packageConditionSizeChange != 0) {
+					packageConditionChangePercentage = -100;
+				} else {
+					packageConditionChangePercentage = Math.round((double)packageConditionSizeChange / (double)originalPackage.getConditionCount() * (double)10000) / (double)100;
+				}
+				
+				outputStreamHTMLFile.println("<td>"+(packageConditionSizeChange > 0 ? "+" : "") + (int)packageConditionSizeChange+" ("+packageConditionChangePercentage+"%)</td>");
+
+				
 				break;
 		}	
 		
@@ -241,34 +252,52 @@ public class HTMLOverview {
 	public String generateClassRow(OperiasFile changedClass, int packageLevel, int packageID) {
 		String html = "";
 
-		double revisedClassLineCoverage = (changedClass.getSourceDiff().getSourceState() != SourceDiffState.DELETED) ? changedClass.getRevisedClass().getLineRate() : 0.0;
-		double revisedClassConditionCoverage = (changedClass.getSourceDiff().getSourceState() != SourceDiffState.DELETED) ? changedClass.getRevisedClass().getBranchRate() : 0.0;
-
-		double originalClassLineCoverage = (changedClass.getSourceDiff().getSourceState() != SourceDiffState.NEW) ? changedClass.getOriginalClass().getLineRate() : 0.0;
-		double originalClassConditionCoverage = (changedClass.getSourceDiff().getSourceState() != SourceDiffState.NEW) ? changedClass.getOriginalClass().getBranchRate() : 0.0;
-
+		CoberturaClass originalClass = changedClass.getOriginalClass();
+		CoberturaClass revisedClass = changedClass.getRevisedClass();
 			
 		String[] splittedClassName = changedClass.getClassName().split("\\.");
 		String className = splittedClassName[splittedClassName.length - 1];
 		
 		html += "<tr class=' classRowLevel"+packageLevel+" ClassInPackage"+packageID+" "+(changedClass.getSourceDiff().getSourceState() ==SourceDiffState.DELETED ? "deletedOverviewRow"  : "")+"'>";
 		html += "<td><a href='"+changedClass.getClassName()+".html'>"+className+"</a></td>";
-		html += generateCoverageBarsHTML(originalClassLineCoverage, revisedClassLineCoverage, changedClass.getSourceDiff().getSourceState());
-		html += generateCoverageBarsHTML(originalClassConditionCoverage, revisedClassConditionCoverage, changedClass.getSourceDiff().getSourceState());
 		switch (changedClass.getSourceDiff().getSourceState()) {
 			case DELETED:
-				html += "<td>"+ (int)changedClass.getOriginalClass().getLines().size()+" (Deleted)</td>";
+				html += generateCoverageBarsHTML(originalClass.getLineRate(), 0.0, SourceDiffState.DELETED);
+				html += "<td>"+ (int)originalClass.getLineCount()+" (Deleted)</td>";
+				html += generateCoverageBarsHTML(originalClass.getConditionRate(), 0.0, SourceDiffState.DELETED);
+				html += "<td>"+ (int)originalClass.getConditionCount()+" (Deleted)</td>";
 				break;
 			case NEW:
-				html += "<td>" + (int)changedClass.getRevisedClass().getLines().size()+" (New)</td>";
+				html += generateCoverageBarsHTML(0.0, revisedClass.getLineRate(),SourceDiffState.NEW);
+				html += "<td>" + (int)revisedClass.getLineCount()+" (New)</td>";
+				html += generateCoverageBarsHTML(0.0, revisedClass.getConditionRate(), SourceDiffState.NEW);
+				html += "<td>" + (int)revisedClass.getConditionCount()+" (New)</td>";
 				break;
 			default:
-				double classRelevantLinesSizeChange = changedClass.getRevisedClass().getLines().size() - changedClass.getOriginalClass().getLines().size();
-				double classRelevantLinesSizeChangePercentage = Math.round((double)classRelevantLinesSizeChange / (double)changedClass.getOriginalClass().getLines().size() * (double)10000) / (double)100;
+				html += generateCoverageBarsHTML(originalClass.getLineRate(), revisedClass.getLineRate(), changedClass.getSourceDiff().getSourceState());
+				double classRelevantLinesSizeChange = changedClass.getRevisedClass().getLineCount() - changedClass.getOriginalClass().getLineCount();
+				double classRelevantLinesSizeChangePercentage = Math.round((double)classRelevantLinesSizeChange / (double)changedClass.getOriginalClass().getLineCount() * (double)10000) / (double)100;
 
 				html += "<td>"+(classRelevantLinesSizeChange > 0 ? "+" : "") + (int)classRelevantLinesSizeChange+" ("+classRelevantLinesSizeChangePercentage+"%)</td>";
+				html += generateCoverageBarsHTML(originalClass.getConditionRate(), revisedClass.getConditionRate(), changedClass.getSourceDiff().getSourceState());
+				
+				double classConditionSizeChange = changedClass.getRevisedClass().getConditionCount() - changedClass.getOriginalClass().getConditionCount();
+				double classConditionChangePercentage;
+				if (changedClass.getOriginalClass().getConditionCount() == 0 && classConditionSizeChange != 0) {
+					classConditionChangePercentage = 100;
+				} else if (changedClass.getRevisedClass().getConditionCount() == 0 && classConditionSizeChange != 0) {
+					classConditionChangePercentage = -100;
+				} else {
+					classConditionChangePercentage = Math.round((double)classConditionSizeChange / (double)changedClass.getOriginalClass().getConditionCount() * (double)10000) / (double)100;
+				}
+				
+				html += "<td>"+(classConditionSizeChange > 0 ? "+" : "") + (int)classConditionSizeChange+" ("+classConditionChangePercentage+"%)</td>";
+
 				break;
-		}			
+		}	
+			
+		
+		
 		html += "</tr>";
 		
 		return html;
