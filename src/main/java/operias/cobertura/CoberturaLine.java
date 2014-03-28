@@ -1,5 +1,8 @@
 package operias.cobertura;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Contains coverage information for a line of code
  * @author sebas
@@ -28,6 +31,11 @@ public class CoberturaLine {
 	private boolean conditionCompletelyCovered;
 	
 	/**
+	 * List of conditions on this line
+	 */
+	private List<CoberturaCondition> conditions;
+	
+	/**
 	 * Construct a new coberture line instance
 	 * @param number		Line number
 	 * @param hits			Number of hits
@@ -38,6 +46,7 @@ public class CoberturaLine {
 		this.hits = hits;
 		this.condition = condition;
 		this.conditionCompletelyCovered = conditionCompletelyCovered;
+		this.conditions = new ArrayList<CoberturaCondition>();
 	}
 	
 	
@@ -94,4 +103,24 @@ public class CoberturaLine {
 	public Boolean isCovered() {
 		return condition ? conditionCompletelyCovered : hits > 0;
 	}
+
+
+
+	/**
+	 * @return the conditions
+	 */
+	public List<CoberturaCondition> getConditions() {
+		return conditions;
+	}
+
+
+	/**
+	 * Add a condition to the lines
+	 * @param cCondition
+	 */
+	public void addCondition(CoberturaCondition cCondition) {
+		conditions.add(cCondition);
+	}
+	
+	
 }

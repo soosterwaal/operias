@@ -122,17 +122,45 @@ public class CoberturaReport {
 			
 			if (condition) {
 				conditionCompletelyCovered = eLine.getAttribute("condition-coverage").startsWith("100");
+				
 			}
 
 			
 			CoberturaLine cLine = new CoberturaLine(number, hits, condition, conditionCompletelyCovered);
 			
-			
+			if (condition) {
+				addConditionsToLine(cLine, eLine);
+			}
 			
 			cClass.addLine(cLine);
 		}
 	}
 	
+	/**
+	 * Add all conditions from this line to the line 
+	 * @param cLine Cobertura Line instance
+	 * @param eLine XML line element
+	 */
+	private void addConditionsToLine(CoberturaLine cLine, Element eLine) {
+		NodeList linesLists = eLine.getElementsByTagName("conditions");
+		
+		Element eConditions = (Element)linesLists.item(linesLists.getLength() - 1);
+		
+		NodeList conditions = eConditions.getElementsByTagName("condition");
+		
+		for(int i = 0; i < conditions.getLength(); i++){
+			Element eCondition = (Element) conditions.item(i);
+			
+			int number 			= Integer.parseInt(eCondition.getAttribute("number"));
+			String type			= eCondition.getAttribute("type");
+			String coverage		= eCondition.getAttribute("coverage");
+			
+			CoberturaCondition cCondition = new CoberturaCondition(number, type, coverage);
+			
+			cLine.addCondition(cCondition);
+		}
+			
+	}
 
 	/**
 	 * @return the lineRate
@@ -170,5 +198,12 @@ public class CoberturaReport {
 		return null;
 	}
 	
-	
+	/**
+	 * Checks if a package exists
+	 * @param packageName
+	 * @return
+	 */
+	public boolean packageExists(String packageName) {
+		return getPackage(packageName) != null;
+	}
 }

@@ -67,7 +67,7 @@ public class CoberturaPackage {
 	/**
 	 * @return the branchRate
 	 */
-	public double getBranchRate() {
+	public double getConditionRate() {
 		return branchRate;
 	}
 
@@ -97,11 +97,25 @@ public class CoberturaPackage {
 	 * Get the number of relevant line for this package
 	 * @return
 	 */
-	public int getRelevantLinesCount() {
+	public int getLineCount() {
 		int count = 0;
 		
 		for(CoberturaClass cClass : classes) {
 			count += cClass.getLines().size();
+		}
+		
+		return count;
+	}
+
+	/**
+	 * Get the amount of conditions in this package
+	 * @return
+	 */
+	public int getConditionCount() {
+		int count = 0;
+		
+		for(CoberturaClass cClass : classes) {
+			count += cClass.getConditionCount();
 		}
 		
 		return count;

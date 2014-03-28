@@ -30,7 +30,6 @@ public class HTMLTestView extends HTMLCodeView {
 		
 		outputStreamHTMLFile.println("<div id='mainContent'><div id='tableContent'>");
 
-
 		InputStream legendStream = getClass().getResourceAsStream("/html/codeviewlegend.html");
 		IOUtils.copy(legendStream, outputStreamHTMLFile);
 		

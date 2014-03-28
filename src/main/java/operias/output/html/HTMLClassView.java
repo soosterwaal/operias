@@ -289,7 +289,7 @@ public class HTMLClassView extends HTMLCodeView {
 				Math.round(file.getRevisedClass().getLineRate() * 100)+"% <br />");
 			
 			outputStreamHTMLFile.println("  <strong>Condition coverage</strong> is "+
-					Math.round(file.getRevisedClass().getBranchRate() * 100)+"% <br />");
+					Math.round(file.getRevisedClass().getConditionRate() * 100)+"% <br />");
 			outputStreamHTMLFile.println("</div>");
 			
 		} else if (file.getRevisedClass() == null) {
@@ -300,7 +300,7 @@ public class HTMLClassView extends HTMLCodeView {
 				Math.round(file.getOriginalClass().getLineRate() * 100)+"% <br />");
 			
 			outputStreamHTMLFile.println("  <strong>Branch coverage</strong> was "+
-					Math.round(file.getOriginalClass().getBranchRate() * 100)+"% <br />");
+					Math.round(file.getOriginalClass().getConditionRate() * 100)+"% <br />");
 			outputStreamHTMLFile.println("</div>");
 			
 		} else {
@@ -320,17 +320,17 @@ public class HTMLClassView extends HTMLCodeView {
 						Math.round(file.getOriginalClass().getLineRate() * 100)+"%<br />");
 			}
 			
-			if (file.getOriginalClass().getBranchRate() > file.getRevisedClass().getBranchRate()) {
+			if (file.getOriginalClass().getConditionRate() > file.getRevisedClass().getConditionRate()) {
 				outputStreamHTMLFile.println("  <strong>Branch coverage</strong> decreased from "+
-						Math.round(file.getOriginalClass().getBranchRate() * 100)+"% to "+
-						Math.round(file.getRevisedClass().getBranchRate() * 100)+"% <br />");
-			} else if (file.getOriginalClass().getBranchRate() < file.getRevisedClass().getBranchRate()) {
+						Math.round(file.getOriginalClass().getConditionRate() * 100)+"% to "+
+						Math.round(file.getRevisedClass().getConditionRate() * 100)+"% <br />");
+			} else if (file.getOriginalClass().getConditionRate() < file.getRevisedClass().getConditionRate()) {
 				outputStreamHTMLFile.println("  <strong>Branch coverage</strong> increased from "+
-						Math.round(file.getOriginalClass().getBranchRate() * 100)+"% to "+
-						Math.round(file.getRevisedClass().getBranchRate() * 100)+"% <br />");
+						Math.round(file.getOriginalClass().getConditionRate() * 100)+"% to "+
+						Math.round(file.getRevisedClass().getConditionRate() * 100)+"% <br />");
 			} else {
 				outputStreamHTMLFile.println("  <strong>Branch coverage</strong> stayed the same at "+
-						Math.round(file.getOriginalClass().getBranchRate() * 100)+"%<br />");
+						Math.round(file.getOriginalClass().getConditionRate() * 100)+"%<br />");
 			}
 			outputStreamHTMLFile.println("<br/>");
 			

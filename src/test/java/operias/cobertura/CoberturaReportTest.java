@@ -89,7 +89,7 @@ public class CoberturaReportTest {
 		
 		assertEquals("operias", cPackage.getName());
 		assertEquals(0.6376811594202898, cPackage.getLineRate(), delta);
-		assertEquals(0.6, cPackage.getBranchRate(), delta);
+		assertEquals(0.6, cPackage.getConditionRate(), delta);
 		
 		
 		// Check classes
@@ -101,7 +101,7 @@ public class CoberturaReportTest {
 		assertEquals("operias.Configuration", cClass.getName());
 		assertEquals("operias/Configuration.java", cClass.getFileName());
 		assertEquals(0.9230769230769231, cClass.getLineRate(), delta);
-		assertEquals(1.0, cClass.getBranchRate(), delta);
+		assertEquals(1.0, cClass.getConditionRate(), delta);
 		
 		// Check lines in class
 		LinkedList<CoberturaLine> classLines = (LinkedList<CoberturaLine>) cClass.getLines();
