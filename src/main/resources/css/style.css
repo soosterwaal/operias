@@ -11,7 +11,7 @@ table { border-collapse:collapse; width: 100%; font-size: 11pt; }
 
 .classOverview tr { border-bottom: 1px solid #22008A; }
 .classOverview th { text-align: left; font-weight: bold; font-size:13pt;}
-.classOverview td { padding-top: 12px; padding-bottom: 9px;}
+.classOverview td { padding-top: 13px; padding-bottom: 10px;}
 
 #revisedCoverageTable, #originalCoverageTable, #sourceDiffTable {display:none;}
 

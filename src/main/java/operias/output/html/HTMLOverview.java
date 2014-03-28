@@ -78,7 +78,7 @@ public class HTMLOverview {
 		// ARROW DOWN : &#8595;
 		// ARROW UP : &#8593;
 		outputStreamHTMLFile.println("<h2>Packages</h2><table class='classOverview'>");
-		outputStreamHTMLFile.println("<thead><tr><th>Name</th><th>Line coverage</th><th># Relevant lines</th><th>Condition coverage</th><th># Conditions</th><tr></thead><tbody>");
+		outputStreamHTMLFile.println("<thead><tr><th>Name</th><th style='width:230px'>Line coverage</th><th style='width:182px;'># Relevant lines</th><th style='width:230px'>Condition coverage</th><th># Conditions</th><tr></thead><tbody>");
 
 		generatePackageOverviewHTML(0, report.getChangedClasses(),outputStreamHTMLFile);
 		

@@ -143,13 +143,5 @@ public class OperiasReportTest {
 		assertNull(sixthClass.getChanges().get(0).getRevisedCoverage().get(9));
 		assertNull(sixthClass.getChanges().get(0).getRevisedCoverage().get(10));
 		assertNull(sixthClass.getChanges().get(0).getRevisedCoverage().get(11));
-		
-		
-		try {
-			new HTMLReport(report).generateReport();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 }
