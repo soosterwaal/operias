@@ -9,7 +9,6 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.xml.transform.Source;
 
 import org.apache.commons.io.IOUtils;
 
@@ -172,19 +171,11 @@ public class HTMLOverview {
 		double originalPackageLineCoverage = originalReport.packageExists(thisPackageName) ? originalReport.getPackage(thisPackageName).getLineRate() : 0.0;
 		double originalPackageConditionCoverage = originalReport.packageExists(thisPackageName) ? originalReport.getPackage(thisPackageName).getBranchRate() : 0.0;
 			
-	
-		double packageRelevantLinesSizeChangePercentage = 0;
 		
 		int originalPackageRelevantsLinesCount = originalReport.packageExists(thisPackageName) ? originalReport.getPackage(thisPackageName).getRelevantLinesCount() : 0;
 		int revisedPackageRelevantsLinesCount = revisedReport.packageExists(thisPackageName) ? revisedReport.getPackage(thisPackageName).getRelevantLinesCount(): 0;
 		
-		int packageRelevantLinesSizeChange = revisedPackageRelevantsLinesCount - originalPackageRelevantsLinesCount;
-		
-		if (originalPackageRelevantsLinesCount == 0) {
-			packageRelevantLinesSizeChangePercentage = 100;
-		} else {
-			packageRelevantLinesSizeChangePercentage = Math.round((double)packageRelevantLinesSizeChange / (double)originalPackageRelevantsLinesCount * (double)10000) / (double)100;	
-		}
+	
 		
 		SourceDiffState packageState = SourceDiffState.CHANGED;
 		if (!revisedReport.packageExists(thisPackageName)) {
@@ -200,7 +191,21 @@ public class HTMLOverview {
 
 		outputStreamHTMLFile.println(generateCoverageBarsHTML(originalPackageLineCoverage, revisedPackageLineCoverage, packageState));
 		outputStreamHTMLFile.println(generateCoverageBarsHTML(originalPackageConditionCoverage, revisedPackageConditionCoverage, packageState));
-		outputStreamHTMLFile.println("<td>"+(packageRelevantLinesSizeChange > 0 ? "+" : "") + packageRelevantLinesSizeChange+" ("+packageRelevantLinesSizeChangePercentage+"%)</td>");
+		switch (packageState) {
+			case DELETED:
+				outputStreamHTMLFile.println("<td>"+ (int)originalPackageRelevantsLinesCount+" (Deleted)</td>");
+				break;
+			case NEW:
+				outputStreamHTMLFile.println("<td>" + (int)revisedPackageRelevantsLinesCount+" (New)</td>");
+				break;
+			default:
+				double packageRelevantLinesSizeChange = revisedPackageRelevantsLinesCount - originalPackageRelevantsLinesCount;
+				double packageRelevantLinesSizeChangePercentage = Math.round((double)packageRelevantLinesSizeChange / (double)originalPackageRelevantsLinesCount * (double)10000) / (double)100;	
+
+				outputStreamHTMLFile.println("<td>"+(packageRelevantLinesSizeChange > 0 ? "+" : "") + (int)packageRelevantLinesSizeChange+" ("+packageRelevantLinesSizeChangePercentage+"%)</td>");
+				break;
+		}	
+		
 		outputStreamHTMLFile.println("</tr>");
 		
 		displayedPackages.add(packageID);
@@ -241,30 +246,29 @@ public class HTMLOverview {
 
 		double originalClassLineCoverage = (changedClass.getSourceDiff().getSourceState() != SourceDiffState.NEW) ? changedClass.getOriginalClass().getLineRate() : 0.0;
 		double originalClassConditionCoverage = (changedClass.getSourceDiff().getSourceState() != SourceDiffState.NEW) ? changedClass.getOriginalClass().getBranchRate() : 0.0;
-		
-		double classRelevantLinesSizeChange, classRelevantLinesSizeChangePercentage;
-		
-		if (changedClass.getSourceDiff().getSourceState() == SourceDiffState.DELETED) {
-			classRelevantLinesSizeChange = -changedClass.getOriginalClass().getLines().size();
-			classRelevantLinesSizeChangePercentage = -100;
-		} else if (changedClass.getSourceDiff().getSourceState() == SourceDiffState.NEW) {
-			classRelevantLinesSizeChange = changedClass.getRevisedClass().getLines().size();
-			classRelevantLinesSizeChangePercentage = 100;
-		} else {
-			classRelevantLinesSizeChange = changedClass.getRevisedClass().getLines().size() - changedClass.getOriginalClass().getLines().size();
-			classRelevantLinesSizeChangePercentage = Math.round((double)classRelevantLinesSizeChange / (double)changedClass.getOriginalClass().getLines().size() * (double)10000) / (double)100;
-		}
-		
+
 			
 		String[] splittedClassName = changedClass.getClassName().split("\\.");
 		String className = splittedClassName[splittedClassName.length - 1];
 		
-		html += "<tr class='classRowLevel"+packageLevel+" ClassInPackage"+packageID+" "+(changedClass.getSourceDiff().getSourceState() ==SourceDiffState.DELETED ? "deletedOverviewRow"  : "")+"'>";
+		html += "<tr class=' classRowLevel"+packageLevel+" ClassInPackage"+packageID+" "+(changedClass.getSourceDiff().getSourceState() ==SourceDiffState.DELETED ? "deletedOverviewRow"  : "")+"'>";
 		html += "<td><a href='"+changedClass.getClassName()+".html'>"+className+"</a></td>";
 		html += generateCoverageBarsHTML(originalClassLineCoverage, revisedClassLineCoverage, changedClass.getSourceDiff().getSourceState());
 		html += generateCoverageBarsHTML(originalClassConditionCoverage, revisedClassConditionCoverage, changedClass.getSourceDiff().getSourceState());
-				
-		html += "<td>"+(classRelevantLinesSizeChange > 0 ? "+" : "") + classRelevantLinesSizeChange+" ("+classRelevantLinesSizeChangePercentage+"%)</td>";
+		switch (changedClass.getSourceDiff().getSourceState()) {
+			case DELETED:
+				html += "<td>"+ (int)changedClass.getOriginalClass().getLines().size()+" (Deleted)</td>";
+				break;
+			case NEW:
+				html += "<td>" + (int)changedClass.getRevisedClass().getLines().size()+" (New)</td>";
+				break;
+			default:
+				double classRelevantLinesSizeChange = changedClass.getRevisedClass().getLines().size() - changedClass.getOriginalClass().getLines().size();
+				double classRelevantLinesSizeChangePercentage = Math.round((double)classRelevantLinesSizeChange / (double)changedClass.getOriginalClass().getLines().size() * (double)10000) / (double)100;
+
+				html += "<td>"+(classRelevantLinesSizeChange > 0 ? "+" : "") + (int)classRelevantLinesSizeChange+" ("+classRelevantLinesSizeChangePercentage+"%)</td>";
+				break;
+		}			
 		html += "</tr>";
 		
 		return html;

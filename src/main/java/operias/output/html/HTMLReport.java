@@ -78,6 +78,12 @@ public class HTMLReport {
 		arcImageOutStream.close();
 		arcImageStream.close();
 		
+		InputStream arcBigImageStream = getClass().getResourceAsStream("/img/arc_big.png");
+		OutputStream arcBigImageOutStream = new PrintStream(new File(Configuration.getDestinationDirectory() + "/img/arc_big.png"));
+		IOUtils.copy(arcBigImageStream, arcBigImageOutStream);
+		arcImageOutStream.close();
+		arcImageStream.close();
+		
 		InputStream cssStream = getClass().getResourceAsStream("/css/style.css");
 		OutputStream cssOutStream = new PrintStream(new File(Configuration.getDestinationDirectory() + "/css/style.css"));
 		IOUtils.copy(cssStream, cssOutStream);
