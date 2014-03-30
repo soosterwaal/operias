@@ -6,16 +6,19 @@ public class CoberturaCondition {
 	/**
 	 * Number of the condition
 	 */
+	@SuppressWarnings("unused")
 	private int number;
 	
 	/**
 	 * Type of the condition
 	 */
+	@SuppressWarnings("unused")
 	private String type;
 	
 	/**
 	 * Percentage that the condition was covered
 	 */
+	@SuppressWarnings("unused")
 	private String coverage;
 	
 	
