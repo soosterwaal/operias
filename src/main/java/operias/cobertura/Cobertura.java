@@ -1,7 +1,11 @@
 package operias.cobertura;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 
 import operias.Main;
 import operias.OperiasStatus;
@@ -98,7 +102,13 @@ public class Cobertura {
 
 		Process process = null;
 		process = builder.start();
+		StreamGobbler sto = new StreamGobbler(process.getInputStream(), "OUTPUT");
+		StreamGobbler ste = new StreamGobbler(process.getErrorStream(), "ERROR");
+		
+		sto.start();
+		ste.start();
 		process.waitFor();
+		
 		int exitValue = process.exitValue();
 		process.destroy();
 
@@ -113,6 +123,29 @@ public class Cobertura {
 		return executionSucceeded;	
 	}
 	
+	private class StreamGobbler extends Thread {
+	    InputStream is;
+	    String type;
+
+	    private StreamGobbler(InputStream is, String type) {
+	        this.is = is;
+	        this.type = type;
+	    }
+
+	    @Override
+	    public void run() {
+	        try {
+	            InputStreamReader isr = new InputStreamReader(is);
+	            BufferedReader br = new BufferedReader(isr);
+	            String line = null;
+	            while ((line = br.readLine()) != null)
+	                System.out.println(type + "> " + line);
+	        }
+	        catch (IOException ioe) {
+	            ioe.printStackTrace();
+	        }
+	    }
+	}
 	
 	/**
 	 * Construct a report from the coverage.xml file
