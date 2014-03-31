@@ -111,17 +111,15 @@ public class XMLReport {
 			// Collect all numbers
 			for(OperiasChange change : changes) {
 				// Either there is a change, else no source changes were found, which means that only the coverage changed
-				if (change.getSourceDiffDelta() == null || change.getSourceDiffDelta().getType() == TYPE.CHANGE) {
-					totalRelevantLineCountRemoved += change.countOriginalRelevantLines();
-					totalRelevantLineCountAdded += change.countRevisedRelevantLines();
-					totalRelevantLineCountCoveredAndRemoved += change.countOriginalLinesCovered();
-					totalRelevantLineCountCoveredAndAdded += change.countRevisedLinesCovered();
-				} else if (change.getSourceDiffDelta().getType() ==TYPE.INSERT) {
-					totalRelevantLineCountAdded += change.countRevisedRelevantLines();
-					totalRelevantLineCountCoveredAndAdded += change.countRevisedLinesCovered();
-				} else if (change.getSourceDiffDelta().getType() ==TYPE.DELETE) {
-					totalRelevantLineCountRemoved += change.countOriginalRelevantLines();
-					totalRelevantLineCountCoveredAndRemoved += change.countOriginalLinesCovered();
+				if (change.getSourceDiffDelta() != null) { 
+					 if (change.getSourceDiffDelta().getType() != TYPE.DELETE) {
+						totalRelevantLineCountAdded += change.countRevisedRelevantLines();
+						totalRelevantLineCountCoveredAndAdded += change.countRevisedLinesCovered();
+					}
+					if (change.getSourceDiffDelta().getType() != TYPE.INSERT) {
+						totalRelevantLineCountRemoved += change.countOriginalRelevantLines();
+						totalRelevantLineCountCoveredAndRemoved += change.countOriginalLinesCovered();
+					}
 				}
 			}
 		}
@@ -264,17 +262,15 @@ public class XMLReport {
 			// Collect all numbers
 			for(OperiasChange change : changes) {
 				// Either there is a change, else no source changes were found, which means that only the coverage changed
-				if (change.getSourceDiffDelta() == null || change.getSourceDiffDelta().getType() == TYPE.CHANGE) {
-					relevantLineCountRemoved += change.countOriginalRelevantLines();
-					relevantLineCountAdded += change.countRevisedRelevantLines();
-					relevantLineCountCoveredAndRemoved += change.countOriginalLinesCovered();
-					relevantLineCountCoveredAndAdded += change.countRevisedLinesCovered();
-				} else if (change.getSourceDiffDelta().getType() ==TYPE.INSERT) {
-					relevantLineCountAdded += change.countRevisedRelevantLines();
-					relevantLineCountCoveredAndAdded += change.countRevisedLinesCovered();
-				} else if (change.getSourceDiffDelta().getType() ==TYPE.DELETE) {
-					relevantLineCountRemoved += change.countOriginalRelevantLines();
-					relevantLineCountCoveredAndRemoved += change.countOriginalLinesCovered();
+				if (change.getSourceDiffDelta() != null) {
+					if (change.getSourceDiffDelta().getType() != TYPE.DELETE) {
+						relevantLineCountAdded += change.countRevisedRelevantLines();
+						relevantLineCountCoveredAndAdded += change.countRevisedLinesCovered();
+					}
+					if (change.getSourceDiffDelta().getType() != TYPE.INSERT) {
+						relevantLineCountRemoved += change.countOriginalRelevantLines();
+						relevantLineCountCoveredAndRemoved += change.countOriginalLinesCovered();
+					}
 				}
 			}
 

@@ -93,11 +93,11 @@ public class XMLReportTest {
 			assertEquals("0.6666666666666666", xpath.compile("/operias/summary/classChanges/coverageChanges/@revisedLineRate").evaluate(doc));
 			assertEquals("0.8461538461538461", xpath.compile("/operias/summary/classChanges/coverageChanges/@revisedConditionRate").evaluate(doc));
 			
-			assertEquals("19" , xpath.compile("/operias/summary/classChanges/coverageChanges/totalRelevantLinesAdded/lineCount").evaluate(doc));	
+			assertEquals("15" , xpath.compile("/operias/summary/classChanges/coverageChanges/totalRelevantLinesAdded/lineCount").evaluate(doc));	
 			assertEquals("0.47" , xpath.compile("/operias/summary/classChanges/coverageChanges/totalRelevantLinesAdded/lineRate").evaluate(doc));	
 			
-			assertEquals("9" , xpath.compile("/operias/summary/classChanges/coverageChanges/totalRelevantLinesRemoved/lineCount").evaluate(doc));	
-			assertEquals("0.67" , xpath.compile("/operias/summary/classChanges/coverageChanges/totalRelevantLinesRemoved/lineRate").evaluate(doc));	
+			assertEquals("5" , xpath.compile("/operias/summary/classChanges/coverageChanges/totalRelevantLinesRemoved/lineCount").evaluate(doc));	
+			assertEquals("0.8" , xpath.compile("/operias/summary/classChanges/coverageChanges/totalRelevantLinesRemoved/lineRate").evaluate(doc));	
 
 			
 			assertEquals("32 (66.67%)" , xpath.compile("/operias/summary/classChanges/sourceChanges/addedLineCount").evaluate(doc));	
@@ -135,12 +135,8 @@ public class XMLReportTest {
 			assertEquals("SAME" , xpath.compile("/operias/changedFiles/changedClasses/classFile[2]/@sourceState").evaluate(doc));		
 			assertEquals("/src/main/java/example/Loops.java" , xpath.compile("/operias/changedFiles/changedClasses/classFile[2]/@filename").evaluate(doc));	
 			
-			assertEquals("2" , xpath.compile("/operias/changedFiles/changedClasses/classFile[2]/coverageChanges/relevantLinesRemoved/lineCount").evaluate(doc));	
-			assertEquals("0.0" , xpath.compile("/operias/changedFiles/changedClasses/classFile[2]/coverageChanges/relevantLinesRemoved/lineRate").evaluate(doc));	
 			
-			assertEquals("2" , xpath.compile("/operias/changedFiles/changedClasses/classFile[2]/coverageChanges/relevantLinesAdded/lineCount").evaluate(doc));		
-			assertEquals("1.0" , xpath.compile("/operias/changedFiles/changedClasses/classFile[2]/coverageChanges/relevantLinesAdded/lineRate").evaluate(doc));	
-		
+			
 			assertEquals("0 (0.0%)" , xpath.compile("/operias/changedFiles/changedClasses/classFile[2]/sourceChanges/@sizeChange").evaluate(doc));	
 			
 			
@@ -152,12 +148,10 @@ public class XMLReportTest {
 			assertEquals("CHANGED" , xpath.compile("/operias/changedFiles/changedClasses/classFile[3]/@sourceState").evaluate(doc));		
 			assertEquals("/src/main/java/example/Music.java" , xpath.compile("/operias/changedFiles/changedClasses/classFile[3]/@filename").evaluate(doc));	
 			
-			assertEquals("5" , xpath.compile("/operias/changedFiles/changedClasses/classFile[3]/coverageChanges/relevantLinesRemoved/lineCount").evaluate(doc));	
+			assertEquals("3" , xpath.compile("/operias/changedFiles/changedClasses/classFile[3]/coverageChanges/relevantLinesRemoved/lineCount").evaluate(doc));	
 			assertEquals("1.0" , xpath.compile("/operias/changedFiles/changedClasses/classFile[3]/coverageChanges/relevantLinesRemoved/lineRate").evaluate(doc));		
 			
-			assertEquals("2" , xpath.compile("/operias/changedFiles/changedClasses/classFile[3]/coverageChanges/relevantLinesAdded/lineCount").evaluate(doc));		
-			assertEquals("0.0" , xpath.compile("/operias/changedFiles/changedClasses/classFile[3]/coverageChanges/relevantLinesAdded/lineRate").evaluate(doc));	
-		
+			
 			assertEquals("-5 (-35.71%)" , xpath.compile("/operias/changedFiles/changedClasses/classFile[3]/sourceChanges/@sizeChange").evaluate(doc));	
 			assertEquals("1 (7.14%)" , xpath.compile("/operias/changedFiles/changedClasses/classFile[3]/sourceChanges/addedLineCount").evaluate(doc));	
 			assertEquals("6 (42.86%)" , xpath.compile("/operias/changedFiles/changedClasses/classFile[3]/sourceChanges/removedLineCount").evaluate(doc));	
