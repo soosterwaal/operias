@@ -101,8 +101,8 @@ public class XMLReport {
 		Element testChanges = doc.createElement("testChanges");
 		
 		List<OperiasFile> changedClasses = report.getChangedClasses();
-		int totalRelevantLineCountRemoved = 0, totalRelevantLineCountAdded = 0, totalRelevantLineCountChangedOriginal = 0, totalRelevantLineCountChangedRevised = 0;
-		int totalRelevantLineCountCoveredAndRemoved = 0, totalRelevantLineCountCoveredAndAdded = 0, totalRelevantLineCountCoveredAndChangedOriginal = 0, totalRelevantLineCountCoveredAndChangedRevised = 0;
+		int totalRelevantLineCountRemoved = 0, totalRelevantLineCountAdded = 0;
+		int totalRelevantLineCountCoveredAndRemoved = 0, totalRelevantLineCountCoveredAndAdded = 0;
 		
 		for(OperiasFile changedClass : changedClasses) {
 			
@@ -112,10 +112,10 @@ public class XMLReport {
 			for(OperiasChange change : changes) {
 				// Either there is a change, else no source changes were found, which means that only the coverage changed
 				if (change.getSourceDiffDelta() == null || change.getSourceDiffDelta().getType() == TYPE.CHANGE) {
-					totalRelevantLineCountChangedOriginal += change.countOriginalRelevantLines();
-					totalRelevantLineCountChangedRevised += change.countRevisedRelevantLines();
-					totalRelevantLineCountCoveredAndChangedOriginal += change.countOriginalLinesCovered();
-					totalRelevantLineCountCoveredAndChangedRevised += change.countRevisedLinesCovered();
+					totalRelevantLineCountRemoved += change.countOriginalRelevantLines();
+					totalRelevantLineCountAdded += change.countRevisedRelevantLines();
+					totalRelevantLineCountCoveredAndRemoved += change.countOriginalLinesCovered();
+					totalRelevantLineCountCoveredAndAdded += change.countRevisedLinesCovered();
 				} else if (change.getSourceDiffDelta().getType() ==TYPE.INSERT) {
 					totalRelevantLineCountAdded += change.countRevisedRelevantLines();
 					totalRelevantLineCountCoveredAndAdded += change.countRevisedLinesCovered();
@@ -162,34 +162,11 @@ public class XMLReport {
 			coverageChanges.appendChild(relevantLinesAdded);
 		}
 
-		// Elements for changed lines
-		if (totalRelevantLineCountChangedOriginal > 0 || totalRelevantLineCountChangedRevised > 0){
-			Element relevantLinesChanged = doc.createElement("totalRelevantLinesChanged");
-			Element relevantLinesChangedOriginalCount = doc.createElement("originalLineCount");
-			Element relevantLinesAddedOriginalPercentage = doc.createElement("originalLineRate");
-
-			Element relevantLinesChangedRevisedCount = doc.createElement("revisedLineCount");
-			Element relevantLinesAddedRevisedPercentage = doc.createElement("revisedLineRate");
-			
-			relevantLinesChangedOriginalCount.appendChild(doc.createTextNode("" + totalRelevantLineCountCoveredAndChangedOriginal));
-			relevantLinesChangedRevisedCount.appendChild(doc.createTextNode("" + totalRelevantLineCountCoveredAndChangedRevised));
-			
-			relevantLinesAddedOriginalPercentage.appendChild(doc.createTextNode("" + Math.round((double)totalRelevantLineCountCoveredAndChangedOriginal / (double)totalRelevantLineCountChangedOriginal * 100.0f) / (double)100));
-			relevantLinesAddedRevisedPercentage.appendChild(doc.createTextNode("" + Math.round((double)totalRelevantLineCountCoveredAndChangedRevised / (double)totalRelevantLineCountChangedRevised * 100.0f) / (double)100));
-
-			relevantLinesChanged.appendChild(relevantLinesChangedOriginalCount);
-			relevantLinesChanged.appendChild(relevantLinesAddedOriginalPercentage);
-			relevantLinesChanged.appendChild(relevantLinesChangedRevisedCount);
-			relevantLinesChanged.appendChild(relevantLinesAddedRevisedPercentage);
-			
-			coverageChanges.appendChild(relevantLinesChanged);
-		
-		}
 		
 		classChanges.appendChild(coverageChanges);	
 		
 		// Collect a summary of source changes
-		int totalClassSourceLinesAdded = 0, totalClassSourceLinesRemoved = 0, totalClassSourceLinesChangedOriginal = 0, totalClassSourceLinesChangedRevised = 0;
+		int totalClassSourceLinesAdded = 0, totalClassSourceLinesRemoved = 0;
 		int totalClassSourceLinesOriginal = 0;
 		
 		
@@ -197,8 +174,8 @@ public class XMLReport {
 			totalClassSourceLinesOriginal += classFile.getSourceDiff().getOriginalLineCount();
 			for(Delta sourceDiff : classFile.getSourceDiff().getChanges()) {
 				if (sourceDiff.getType() == TYPE.CHANGE) {
-					totalClassSourceLinesChangedOriginal += sourceDiff.getOriginal().size();
-					totalClassSourceLinesChangedRevised += sourceDiff.getRevised().size();
+					totalClassSourceLinesRemoved += sourceDiff.getOriginal().size();
+					totalClassSourceLinesAdded += sourceDiff.getRevised().size();
 				} else if (sourceDiff.getType() == TYPE.DELETE) {
 					totalClassSourceLinesRemoved += sourceDiff.getOriginal().size();
 				} else if (sourceDiff.getType() == TYPE.INSERT) {
@@ -211,17 +188,12 @@ public class XMLReport {
 		Element classSourceChanges = doc.createElement("sourceChanges");
 		Element classSourceLinesAdded = doc.createElement("addedLineCount");
 		Element classSourceLinesRemoved = doc.createElement("removedLineCount");
-		Element classSourceLinesChanged = doc.createElement("changedLineCount");
 		
 		classSourceLinesAdded.appendChild(doc.createTextNode(totalClassSourceLinesAdded + " (" + Math.round((double)totalClassSourceLinesAdded / (double)totalClassSourceLinesOriginal * (double)10000) / (double)100+"%)"));
 		classSourceLinesRemoved.appendChild(doc.createTextNode(totalClassSourceLinesRemoved + " (" + Math.round((double)totalClassSourceLinesRemoved / (double)totalClassSourceLinesOriginal * (double)10000) / (double)100+"%)"));
-		classSourceLinesChanged.appendChild(doc.createTextNode(totalClassSourceLinesChangedOriginal + " to " + totalClassSourceLinesChangedRevised + " (" + Math.round((double)totalClassSourceLinesChangedOriginal / (double)totalClassSourceLinesOriginal * (double)10000) / (double)100+"%)"));
-
+		
 		classSourceChanges.appendChild(classSourceLinesAdded);
 		classSourceChanges.appendChild(classSourceLinesRemoved);
-		classSourceChanges.appendChild(classSourceLinesChanged);
-		
-		
 		
 		
 		classChanges.appendChild(classSourceChanges);
@@ -231,8 +203,6 @@ public class XMLReport {
 		// Collect a summary of source changes
 	    totalClassSourceLinesAdded = 0;
 	    totalClassSourceLinesRemoved = 0; 
-	    totalClassSourceLinesChangedOriginal = 0; 
-	    totalClassSourceLinesChangedRevised = 0;
 		totalClassSourceLinesOriginal = 0;
 		
 		
@@ -240,8 +210,8 @@ public class XMLReport {
 			totalClassSourceLinesOriginal += testFile.getOriginalLineCount();
 			for(Delta sourceDiff : testFile.getChanges()) {
 				if (sourceDiff.getType() == TYPE.CHANGE) {
-					totalClassSourceLinesChangedOriginal += sourceDiff.getOriginal().size();
-					totalClassSourceLinesChangedRevised += sourceDiff.getRevised().size();
+					totalClassSourceLinesRemoved += sourceDiff.getOriginal().size();
+					totalClassSourceLinesAdded += sourceDiff.getRevised().size();
 				} else if (sourceDiff.getType() == TYPE.DELETE) {
 					totalClassSourceLinesRemoved += sourceDiff.getOriginal().size();
 				} else if (sourceDiff.getType() == TYPE.INSERT) {
@@ -254,15 +224,12 @@ public class XMLReport {
 		Element testSourceChanges = doc.createElement("sourceChanges");
 		Element testSourceLinesAdded = doc.createElement("addedLineCount");
 		Element testSourceLinesRemoved = doc.createElement("removedLineCount");
-		Element testSourceLinesChanged = doc.createElement("changedLineCount");
 		
 		testSourceLinesAdded.appendChild(doc.createTextNode(totalClassSourceLinesAdded + " (" + Math.round((double)totalClassSourceLinesAdded / (double)totalClassSourceLinesOriginal * (double)10000) / (double)100+"%)"));
 		testSourceLinesRemoved.appendChild(doc.createTextNode(totalClassSourceLinesRemoved + " (" + Math.round((double)totalClassSourceLinesRemoved / (double)totalClassSourceLinesOriginal * (double)10000) / (double)100+"%)"));
-		testSourceLinesChanged.appendChild(doc.createTextNode(totalClassSourceLinesChangedOriginal + " to " + totalClassSourceLinesChangedRevised + " (" + Math.round((double)totalClassSourceLinesChangedOriginal / (double)totalClassSourceLinesOriginal * (double)10000) / (double)100+"%)"));
-
+		
 		testSourceChanges.appendChild(testSourceLinesAdded);
 		testSourceChanges.appendChild(testSourceLinesRemoved);
-		testSourceChanges.appendChild(testSourceLinesChanged);
 		
 		testChanges.appendChild(testSourceChanges);
 		summaryRoot.appendChild(testChanges);
@@ -289,8 +256,8 @@ public class XMLReport {
 
 			Element coverageChanges = doc.createElement("coverageChanges");
 			
-			int relevantLineCountRemoved = 0, relevantLineCountAdded = 0, relevantLineCountChangedOriginal = 0, relevantLineCountChangedRevised = 0;
-			int relevantLineCountCoveredAndRemoved = 0, relevantLineCountCoveredAndAdded = 0, relevantLineCountCoveredAndChangedOriginal = 0, relevantLineCountCoveredAndChangedRevised = 0;
+			int relevantLineCountRemoved = 0, relevantLineCountAdded = 0;
+			int relevantLineCountCoveredAndRemoved = 0, relevantLineCountCoveredAndAdded = 0;
 	
 			List<OperiasChange> changes = changedClass.getChanges();
 			
@@ -298,10 +265,10 @@ public class XMLReport {
 			for(OperiasChange change : changes) {
 				// Either there is a change, else no source changes were found, which means that only the coverage changed
 				if (change.getSourceDiffDelta() == null || change.getSourceDiffDelta().getType() == TYPE.CHANGE) {
-					relevantLineCountChangedOriginal += change.countOriginalRelevantLines();
-					relevantLineCountChangedRevised += change.countRevisedRelevantLines();
-					relevantLineCountCoveredAndChangedOriginal += change.countOriginalLinesCovered();
-					relevantLineCountCoveredAndChangedRevised += change.countRevisedLinesCovered();
+					relevantLineCountRemoved += change.countOriginalRelevantLines();
+					relevantLineCountAdded += change.countRevisedRelevantLines();
+					relevantLineCountCoveredAndRemoved += change.countOriginalLinesCovered();
+					relevantLineCountCoveredAndAdded += change.countRevisedLinesCovered();
 				} else if (change.getSourceDiffDelta().getType() ==TYPE.INSERT) {
 					relevantLineCountAdded += change.countRevisedRelevantLines();
 					relevantLineCountCoveredAndAdded += change.countRevisedLinesCovered();
@@ -350,28 +317,7 @@ public class XMLReport {
 				coverageChanges.appendChild(relevantLinesAdded);
 			}
 
-			// Elements for changed lines
-			if (relevantLineCountChangedOriginal > 0 || relevantLineCountChangedRevised > 0){
-				Element relevantLinesChanged = doc.createElement("relevantLinesChanged");
-				Element relevantLinesChangedOriginalCount = doc.createElement("originalLineCount");
-				Element relevantLinesAddedOriginalPercentage = doc.createElement("originalLineRate");
-
-				Element relevantLinesChangedRevisedCount = doc.createElement("revisedLineCount");
-				Element relevantLinesAddedRevisedPercentage = doc.createElement("revisedLineRate");
-				
-				relevantLinesChangedOriginalCount.appendChild(doc.createTextNode("" + relevantLineCountCoveredAndChangedOriginal));
-				relevantLinesChangedRevisedCount.appendChild(doc.createTextNode("" + relevantLineCountCoveredAndChangedRevised));
-				
-				relevantLinesAddedOriginalPercentage.appendChild(doc.createTextNode("" + Math.round((double)relevantLineCountCoveredAndChangedOriginal / (double)relevantLineCountChangedOriginal * 100.0f) / (double)100));
-				relevantLinesAddedRevisedPercentage.appendChild(doc.createTextNode("" + Math.round((double)relevantLineCountCoveredAndChangedRevised / (double)relevantLineCountChangedRevised * 100.0f) / (double)100));
-
-				relevantLinesChanged.appendChild(relevantLinesChangedOriginalCount);
-				relevantLinesChanged.appendChild(relevantLinesAddedOriginalPercentage);
-				relevantLinesChanged.appendChild(relevantLinesChangedRevisedCount);
-				relevantLinesChanged.appendChild(relevantLinesAddedRevisedPercentage);
-				
-				coverageChanges.appendChild(relevantLinesChanged);
-			}
+			
 			
 			classFile.appendChild(coverageChanges);
 			
@@ -413,12 +359,12 @@ public class XMLReport {
 	 */
 	private void generateSourceDifferenceCount(DiffFile sourceDiffFile, Element root) {
 		
-		int removedLinesCount = 0, addedLinesCount = 0, changedLinesOriginalCount = 0, changedLinesRevisedCount = 0;
+		int removedLinesCount = 0, addedLinesCount = 0;
 		
 		for(Delta sourceDiff : sourceDiffFile.getChanges()) {
 			if (sourceDiff.getType() == TYPE.CHANGE) {
-				changedLinesOriginalCount += sourceDiff.getOriginal().size();
-				changedLinesRevisedCount += sourceDiff.getRevised().size();
+				removedLinesCount += sourceDiff.getOriginal().size();
+				addedLinesCount += sourceDiff.getRevised().size();
 			} else if (sourceDiff.getType() == TYPE.DELETE) {
 				removedLinesCount += sourceDiff.getOriginal().size();
 			} else if (sourceDiff.getType() == TYPE.INSERT) {
@@ -434,13 +380,6 @@ public class XMLReport {
 
 		root.setAttribute("sizeChange", totalLinesChangedCount + " (" + totalPercentage + "%)" );
 		
-		if (changedLinesOriginalCount > 0) {
-			Element changedLines = doc.createElement("changedLineCount");
-			double percentage = Math.round((double)changedLinesOriginalCount / (double) sourceDiffFile.getOriginalLineCount() * (double)10000) / (double)100;
-			changedLines.appendChild(doc.createTextNode(changedLinesOriginalCount + " into " + changedLinesRevisedCount + " (" + percentage + "%)"));
-			
-			root.appendChild(changedLines);
-		}
 
 		if (removedLinesCount > 0) {
 			Element removedLines = doc.createElement("removedLineCount");
