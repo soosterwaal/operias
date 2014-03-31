@@ -112,13 +112,13 @@ public class XMLReport {
 			for(OperiasChange change : changes) {
 				// Either there is a change, else no source changes were found, which means that only the coverage changed
 				if (change.getSourceDiffDelta() != null) { 
-					 if (change.getSourceDiffDelta().getType() != TYPE.DELETE) {
-						totalRelevantLineCountAdded += change.countRevisedRelevantLines();
-						totalRelevantLineCountCoveredAndAdded += change.countRevisedLinesCovered();
-					}
-					if (change.getSourceDiffDelta().getType() != TYPE.INSERT) {
+					if (change.getSourceDiffDelta().getType() == TYPE.DELETE || change.getSourceDiffDelta().getType() == TYPE.CHANGE) {
 						totalRelevantLineCountRemoved += change.countOriginalRelevantLines();
 						totalRelevantLineCountCoveredAndRemoved += change.countOriginalLinesCovered();
+					}
+					if (change.getSourceDiffDelta().getType() == TYPE.INSERT || change.getSourceDiffDelta().getType() == TYPE.CHANGE) {
+						totalRelevantLineCountAdded += change.countRevisedRelevantLines();
+						totalRelevantLineCountCoveredAndAdded += change.countRevisedLinesCovered();
 					}
 				}
 			}
