@@ -297,6 +297,8 @@ public class DiffDirectory {
 			if (directory.getOriginalDirectoryName().equals(directoryName) || directory.getRevisedDirectoryName().equals(directoryName)) {
 				return directory;
 			} else if (directoryName.startsWith(directory.getOriginalDirectoryName()) || directoryName.startsWith(directory.getRevisedDirectoryName())) {
+				// Check sub directories
+				
 				DiffDirectory tempDir = directory.getDirectory(directoryName);
 				
 				if (tempDir != null) {

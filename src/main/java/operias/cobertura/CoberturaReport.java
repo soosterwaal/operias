@@ -30,6 +30,10 @@ public class CoberturaReport {
 	 */
 	private List<CoberturaPackage> packages;
 	
+	/**
+	 * List of sources from where the data was collected
+	 */
+	private List<String> sources;
 	
 	/**
 	 * Construct a new cobertura report according to the provided coverage xml
@@ -43,6 +47,7 @@ public class CoberturaReport {
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder;
 		packages = new ArrayList<CoberturaPackage>();
+		sources = new ArrayList<String>();
 		
 		try {
 			dBuilder = dbFactory.newDocumentBuilder();
@@ -53,11 +58,22 @@ public class CoberturaReport {
 			lineRate = Double.parseDouble(coverage.getAttribute("line-rate"));
 			branchRate = Double.parseDouble(coverage.getAttribute("branch-rate"));
 			
+			// Get all the sources, used by cobertura
+			NodeList sources = doc.getElementsByTagName("source");
+			for(int i = 0; i < sources.getLength(); i++) {
+				Element eSource = (Element)sources.item(i);
+				if(!eSource.getTextContent().equals("--source")) {
+					this.sources.add(eSource.getTextContent());
+				}
+			}
+			
+			
+			// Get all the packages in the report
 			NodeList packages = doc.getElementsByTagName("package");
 			
-			for (int temp = 0; temp < packages.getLength(); temp++) {
+			for (int i = 0; i < packages.getLength(); i++) {
 				 
-				Element ePackage = (Element) packages.item(temp);
+				Element ePackage = (Element) packages.item(i);
 				
 				String packageName = ePackage.getAttribute("name");
 				double packageLineRate = Double.parseDouble(ePackage.getAttribute("line-rate"));
@@ -205,5 +221,12 @@ public class CoberturaReport {
 	 */
 	public boolean packageExists(String packageName) {
 		return getPackage(packageName) != null;
+	}
+
+	/**
+	 * @return the sources
+	 */
+	public List<String> getSources() {
+		return sources;
 	}
 }

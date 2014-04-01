@@ -4,7 +4,7 @@
 <coverage line-rate="0.7857142857142857" branch-rate="0.5" lines-covered="11" lines-valid="14" branches-covered="3" branches-valid="6" complexity="1.8" version="2.0.3" timestamp="1391072062071">
 	<sources>
 		<source>--source</source>
-		<source>/Users/sebas/Documents/Eclipse Workspace/mavenProject1/src/main/java</source>
+		<source>src/test/resources/mavenProject1/src/main/java</source>
 	</sources>
 	<packages>
 		<package name="example" line-rate="0.8461538461538461" branch-rate="0.5" complexity="1.8">

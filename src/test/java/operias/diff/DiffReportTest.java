@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
@@ -240,20 +241,25 @@ public class DiffReportTest {
 	
 	@Test
 	public void testGetFile()  {
+		ArrayList<String> sourceLocations = new ArrayList<String>();
+		
+		sourceLocations.add(new File("src/test/resources/simpleMavenProject/src/main/java").getAbsolutePath());
+		sourceLocations.add(new File("src/test/resources/simpleMavenProject2/src/main/java").getAbsolutePath());
+		
 		DiffReport diffReport;
 		try {
 			diffReport = new DiffReport("src/test/resources/simpleMavenProject", "src/test/resources/simpleMavenProject2");
-			DiffFile file = diffReport.getFile("src/main/java/simpleMavenProject/Simple.java");
+			DiffFile file = diffReport.getFile(sourceLocations, "simpleMavenProject/Simple.java");
 			
 			assertNotNull(file);
 			assertEquals((new File("src/test/resources/simpleMavenProject", "src/main/java/simpleMavenProject/Simple.java")).getAbsolutePath(), file.getOriginalFileName());
 
-			file = diffReport.getFile("src/main/java/simpleMavenProject/Simple2.java");
+			file = diffReport.getFile(sourceLocations, "simpleMavenProject/Simple2.java");
 	
 			assertNotNull(file);
 			assertEquals((new File("src/test/resources/simpleMavenProject2", "src/main/java/simpleMavenProject/Simple2.java")).getAbsolutePath(), file.getRevisedFileName());
 			
-			file = diffReport.getFile("src/main/java/simpleMavenProject/DOESNOTEXISTS.java");
+			file = diffReport.getFile(sourceLocations, "simpleMavenProject/DOESNOTEXISTS.java");
 			
 			assertNull(file);
 		} catch (IOException e) {

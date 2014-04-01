@@ -1,5 +1,6 @@
 package operias.report;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -50,6 +51,11 @@ public class OperiasReport {
 	 */
 	private List<DiffFile> changedTests;
 	
+	
+	/**
+	 * A list of possible file locations
+	 */
+	private List<String> sourceLocations;
 	/**
 	 * Construct a new operias report
 	 * @param reportRepo
@@ -62,6 +68,10 @@ public class OperiasReport {
 		this.sourceDiffReport = sourceDiffReport;
 		this.changedClasses = new LinkedList<OperiasFile>();
 		this.changedTests = new LinkedList<DiffFile>();
+		
+		// Combine all sources from both the original and revised reports
+		sourceLocations = new ArrayList<String>(originalReport.getSources());
+		sourceLocations.addAll(revisedReport.getSources());
 		
 		ParseReport();
 	}
@@ -79,7 +89,7 @@ public class OperiasReport {
 			if (rPackage != null) {
 				for(CoberturaClass oClass : oPackage.getClasses()) {
 					
-					DiffFile fileDiff = sourceDiffReport.getFile("src/main/java/" + oClass.getFileName());
+					DiffFile fileDiff = sourceDiffReport.getFile(sourceLocations, oClass.getFileName());
 					CoberturaClass rClass = rPackage.getClass(oClass.getName());
 					
 					if (rClass != null) {
@@ -107,7 +117,7 @@ public class OperiasReport {
 			} else {
 				// All classes must be marked as deleted
 				for(CoberturaClass oClass : oPackage.getClasses()) {
-					DiffFile fileDiff = sourceDiffReport.getFile("src/main/java/" + oClass.getFileName());
+					DiffFile fileDiff = sourceDiffReport.getFile(sourceLocations, oClass.getFileName());
 					OperiasFile newOFile = new OperiasFile(oClass, fileDiff);
 					if (newOFile.getChanges().size() > 0) {
 						changedClasses.add(newOFile);
@@ -123,7 +133,7 @@ public class OperiasReport {
 			if (oPackage == null) {
 				// Package was new so, all classes should be "new"
 				for(CoberturaClass rClass : rPackage.getClasses()) {
-					DiffFile fileDiff = sourceDiffReport.getFile("src/main/java/" + rClass.getFileName());
+					DiffFile fileDiff = sourceDiffReport.getFile(sourceLocations, rClass.getFileName());
 					OperiasFile newOFile = new OperiasFile(rClass, fileDiff);
 					if (newOFile.getChanges().size() > 0) {
 						changedClasses.add(newOFile);
@@ -136,7 +146,7 @@ public class OperiasReport {
 					
 					if (oClass == null) {
 						// Class was new
-						DiffFile fileDiff = sourceDiffReport.getFile("src/main/java/" + rClass.getFileName());
+						DiffFile fileDiff = sourceDiffReport.getFile(sourceLocations, rClass.getFileName());
 						if (fileDiff.getSourceState() == SourceDiffState.NEW) {
 							OperiasFile newOFile = new OperiasFile(rClass, fileDiff);
 							if (newOFile.getChanges().size() > 0) {
@@ -153,11 +163,15 @@ public class OperiasReport {
 		Main.printLine("[Info] Done collecting and combining the changed classes");
 		
 		Main.printLine("[Info] Collect changed test files");
+		
 		// Finnaly, retrieve all changes test classes
-		DiffDirectory testDirectory = sourceDiffReport.getDirectory("src/test/java");
+		for(String sourceLocation : sourceLocations) {
+			String baseLocation = sourceLocation.replaceAll("src/main/java", "src/test/java");
+			DiffDirectory testDirectory = sourceDiffReport.getDirectory(baseLocation);
+			collectChangedTests(testDirectory);
+		}
 		
 		// And loop through all files to collect the changed ones
-		collectChangedTests(testDirectory);
 		Main.printLine("[Info] Done collecting changed test files");
 	
 	}
@@ -168,7 +182,8 @@ public class OperiasReport {
 	 */
 	private void collectChangedTests(DiffDirectory directory) {
 		for(DiffFile file : directory.getFiles()) {
-			if (file.getSourceState() != SourceDiffState.SAME) {
+			// Check if the file was changed, and not yet adedd to the list
+			if (file.getSourceState() != SourceDiffState.SAME && !this.changedTests.contains(file)) {
 				this.changedTests.add(file);
 			}
 		}
