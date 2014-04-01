@@ -133,9 +133,9 @@ public class MainTest {
 		assertTrue(new File(destDirectory + "/moreExamples.Switch.html").exists());
 		assertTrue(new File(destDirectory + "/operias.xml").exists());
 		assertTrue(new File(destDirectory + "/src.test.java.example.CalculationsTest.java.html").exists());
-		assertTrue(new File(destDirectory + "/src.test.java.example.LoopsTest.java").exists());
-		assertTrue(new File(destDirectory + "/src.test.java.example.MusicTest.java").exists());
-		assertTrue(new File(destDirectory + "/src.test.java.moreExamples.SwitchTest.java").exists());
+		assertTrue(new File(destDirectory + "/src.test.java.example.LoopsTest.java.html").exists());
+		assertTrue(new File(destDirectory + "/src.test.java.example.MusicTest.java.html").exists());
+		assertTrue(new File(destDirectory + "/src.test.java.moreExamples.SwitchTest.java.html").exists());
 	}
 	
 	
