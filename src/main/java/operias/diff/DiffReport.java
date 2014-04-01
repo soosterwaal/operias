@@ -2,6 +2,7 @@ package operias.diff;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import operias.Main;
 
@@ -73,17 +74,9 @@ public class DiffReport {
 	 */
 	public DiffDirectory getDirectory(String directoryName) {
 		
-		String searchDirName = (new File(originalDirectory, directoryName)).getAbsolutePath();
+		String searchDirName = (new File(directoryName)).getAbsolutePath();
 		
-		DiffDirectory searchDirectory = changedFiles.getDirectory(searchDirName);
-		
-		if (searchDirectory == null) {
-			searchDirName = (new File(revisedDirectory, directoryName)).getAbsolutePath();
-			
-			searchDirectory = changedFiles.getDirectory(searchDirName);
-		}
-		
-		return searchDirectory;
+		return changedFiles.getDirectory(searchDirName);
 	}
 	
 	/**
@@ -91,22 +84,18 @@ public class DiffReport {
 	 * @param filename
 	 * @return the file diff instance, or null if not found
 	 */
-	public DiffFile getFile(String filename) {
+	public DiffFile getFile(List<String> sourceLocations, String filename) {
 
-		// first search for the original directory + filename, if the file was found,
-		// it means it was changed, same or deleted
-		String searchFileName = (new File(originalDirectory, filename)).getAbsolutePath();
-		
-		DiffFile searchedFile = changedFiles.getFile(searchFileName);
-		
-		if (searchedFile == null) {
-			searchFileName = (new File(revisedDirectory, filename)).getAbsolutePath();
+		// Loop through all possible locations
+		for(String baseLocation : sourceLocations) {
+			String searchFileName = (new File(baseLocation + "/", filename)).getAbsolutePath();
+			DiffFile searchedFile = changedFiles.getFile(searchFileName);
 			
-			searchedFile = changedFiles.getFile(searchFileName);
+			if (searchedFile != null) {
+				return searchedFile;
+			}
 		}
 		
-		// if not found, search with the new direcotry + filename, if the file was found,
-		// it means it was new, else it doesn't exists in any of the directories
-		return searchedFile;
+		return null;
 	}
 }

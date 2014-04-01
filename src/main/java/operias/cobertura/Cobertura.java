@@ -94,7 +94,7 @@ public class Cobertura {
 		}
 		
 		
-		ProcessBuilder builder = new ProcessBuilder("mvn","clean", "cobertura:cobertura", "-Dcobertura.report.format=xml", "-f", pomXML.getAbsolutePath());
+		ProcessBuilder builder = new ProcessBuilder("mvn","clean", "cobertura:cobertura", "-Dcobertura.aggregate=true", "-Dcobertura.report.format=xml", "-f", pomXML.getAbsolutePath());
 
 		Process process = null;
 		process = builder.start();

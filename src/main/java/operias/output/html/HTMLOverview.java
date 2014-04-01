@@ -107,7 +107,7 @@ public class HTMLOverview {
 				}
 				outputStreamHTMLFile.println("</tr >");
 				
-				new HTMLTestView(fileName.replace('/', '.'), changedTest);
+				new HTMLTestView(fileName.replace('/', '.').replaceFirst(".", ""), changedTest);
 				
 			}
 			
