@@ -51,12 +51,18 @@ public class HTMLOverview {
 	 * 
 	 * @param report
 	 * @param packageNames
-	 * @throws IOException
 	 */
-	public HTMLOverview(OperiasReport report, List<String> packageNames) throws IOException {
+	public HTMLOverview(OperiasReport report, List<String> packageNames) {
 		this.report = report;
 		this.packageNames = packageNames;
-		
+	}
+	
+	/**
+	 * Generate HTM:
+	 * @throws IOException
+	 */
+	public void generateHTML() throws IOException {
+
 		Collections.sort(this.packageNames, new PackageComparator());
 		
 		this.displayedPackages = new LinkedList<Integer>();
@@ -343,42 +349,46 @@ public class HTMLOverview {
 			case CHANGED:
 			case SAME:
 				if (originalCoverage > revisedCoverage) {
-					barHTML  += "<div class='coverageChangeBar' title='Coverage increased from " + Math.round(originalCoverage * 100) +"% to " + Math.round(revisedCoverage * 100) +"%'>";
+					barHTML  += "<div class='coverageChangeBar' title='Coverage decreased from " + Math.round(originalCoverage * 10000) / (double)100 +"% to " + Math.round(revisedCoverage * 10000) / (double)100 +"%'>";
 
-					double originalWidth = 100 - Math.floor(originalCoverage * 100);
-					double decreasedWidth = Math.ceil(Math.abs(revisedCoverage - originalCoverage) * 100);
-					barHTML += "<div class='originalCoverage' style='width:"+(100 - originalWidth - decreasedWidth)+"%'> </div>";
+					
+					// Force at least 1 decreasedWidth
+					double decreasedWidth = Math.max(Math.round(Math.abs(revisedCoverage - originalCoverage) * 100), 1);
+
+					double originalWidth = Math.round(originalCoverage * 100) - decreasedWidth;
+					
+					barHTML += "<div class='originalCoverage' style='width:"+originalWidth+"%'> </div>";
 					barHTML += "<div class='decreasedCoverage'  style='width:"+decreasedWidth+"%'> </div>";
-					barHTML += "<div class='originalNotCoverage' style='width:"+originalWidth+"%'> </div>";
+					barHTML += "<div class='originalNotCoverage' style='width:"+(100 - originalWidth - decreasedWidth)+"%'> </div>";
 				} else if (originalCoverage < revisedCoverage) {
-					barHTML  += "<div class='coverageChangeBar' title='Coverage decreased from " + Math.round(originalCoverage * 100) +"% to " + Math.round(revisedCoverage * 100) +"%'>";		
+					barHTML  += "<div class='coverageChangeBar' title='Coverage increased from " + Math.round(originalCoverage * 10000)  / (double)100+"% to " + Math.round(revisedCoverage * 10000)  / (double)100 +"%'>";		
 
-					double originalWidth = Math.floor(originalCoverage * 100);
-					double increasedWidth = Math.ceil((revisedCoverage - originalCoverage) * 100);
+					double increasedWidth = Math.max(Math.round((revisedCoverage - originalCoverage) * 100), 1);
+					double originalWidth = Math.round(revisedCoverage * 100) - increasedWidth;
 					
 					barHTML += "<div class='originalCoverage' style='width:" + originalWidth +"%'> </div>";
-					barHTML += "<div class='increasedCoverage' style='width:"+increasedWidth+"%''> </div>";
-					barHTML += "<div class='originalNotCoverage' style='width:"+(100 - originalWidth - increasedWidth)+"%'> </div>";
+					barHTML += "<div class='increasedCoverage'  style='width:"+increasedWidth+"%'> </div>";
+					barHTML += "<div class='originalNotCoverage' style='width:"+ (100 - originalWidth - increasedWidth)+"%'> </div>";
 				} else {
-					barHTML  += "<div class='coverageChangeBar' title='Coverage stayed the same at " + Math.round(originalCoverage * 100) +"%'>";		
+					barHTML  += "<div class='coverageChangeBar' title='Coverage stayed the same at " + Math.round(originalCoverage * 10000)  / (double)100 +"%'>";		
 
-					double originalWidth = Math.floor(originalCoverage * 100);
+					double originalWidth = Math.max(Math.round(originalCoverage * 100), 1);
 					
 					barHTML += "<div class='originalCoverage' style='width:" + originalWidth +"%'> </div>";
 					barHTML += "<div class='originalNotCoverage' style='width:"+(100 - originalWidth)+"%'> </div>";
 				}
 				break;
 			case NEW:
-				double revisedCoveredWidth = Math.floor(revisedCoverage * 100);
+				double revisedCoveredWidth = Math.max(Math.round(revisedCoverage * 100), 1);
 				
-				barHTML  += "<div class='coverageChangeBar' title='Coverage is " + Math.round(revisedCoverage * 100) +"%'>";
+				barHTML  += "<div class='coverageChangeBar' title='Coverage is " + Math.round(revisedCoverage * 10000)  / (double)100+"%'>";
 				barHTML += "<div class='increasedCoverage' style='width:" + revisedCoveredWidth +"%'> </div>";
 				barHTML += "<div class='decreasedCoverage' style='width:"+(100 - revisedCoveredWidth)+"%'> </div>";
 				break;
 			case DELETED:
-				double originalCoveredWidth = Math.ceil(originalCoverage * 100);
+				double originalCoveredWidth = Math.max(Math.round(originalCoverage * 100), 1);
 				
-				barHTML  += "<div class='coverageChangeBar' title='Coverage was " + Math.round(originalCoverage * 100) +"%'>";
+				barHTML  += "<div class='coverageChangeBar' title='Coverage was " + Math.round(originalCoverage * 10000) / (double)100 +"%'>";
 				barHTML += "<div class='originalCoverage' style='width:" + originalCoveredWidth +"%'> </div>";
 				barHTML += "<div class='originalNotCoverage' style='width:"+(100 - originalCoveredWidth)+"%'> </div>";
 				break;
