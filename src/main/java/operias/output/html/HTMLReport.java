@@ -54,7 +54,7 @@ public class HTMLReport {
 		}
 		
 		// Construct index.html
-		new HTMLOverview(report, packageNames);
+		new HTMLOverview(report, packageNames).generateHTML();
 		
 	}
 	
