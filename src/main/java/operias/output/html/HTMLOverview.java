@@ -99,9 +99,10 @@ public class HTMLOverview {
 	
 			for(DiffFile changedTest : report.getChangedTests()) {
 				String fileName = changedTest.getFileName(report);
+				String fileURL = fileName.replace('/', '.').replaceFirst(".", "");
 				
 				outputStreamHTMLFile.println("<tr >");
-				outputStreamHTMLFile.println("<td><a href='"+fileName.replace('/', '.')+".html'>"+fileName+"</a></td>");
+				outputStreamHTMLFile.println("<td><a href='"+fileURL+".html'>"+fileName+"</a></td>");
 				if (changedTest.getSourceState() == SourceDiffState.NEW) {
 					outputStreamHTMLFile.println("<td>"+changedTest.getRevisedLineCount()+" (New)</td>");
 				} else if (changedTest.getSourceState() == SourceDiffState.DELETED) {
@@ -113,7 +114,7 @@ public class HTMLOverview {
 				}
 				outputStreamHTMLFile.println("</tr >");
 				
-				new HTMLTestView(fileName.replace('/', '.').replaceFirst(".", ""), changedTest);
+				new HTMLTestView(fileURL, changedTest);
 				
 			}
 			
