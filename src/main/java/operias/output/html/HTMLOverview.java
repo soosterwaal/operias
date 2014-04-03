@@ -84,7 +84,7 @@ public class HTMLOverview {
 		// ARROW DOWN : &#8595;
 		// ARROW UP : &#8593;
 		outputStreamHTMLFile.println("<h2>Packages</h2><table class='classOverview'>");
-		outputStreamHTMLFile.println("<thead><tr><th>Name</th><th style='width:230px'>Line coverage</th><th style='width:182px;'># Relevant lines</th><th style='width:230px'>Condition coverage</th><th># Conditions</th><tr></thead><tbody>");
+		outputStreamHTMLFile.println("<thead><tr><th>Name</th><th style='width:260px'>Line coverage</th><th style='width:182px;'># Relevant lines</th><th style='width:260px'>Condition coverage</th><th># Conditions</th><th style='white-space:nowrap;'>Source Changes</th><tr></thead><tbody>");
 
 		generatePackageOverviewHTML(0, report.getChangedClasses(),outputStreamHTMLFile);
 		
@@ -99,21 +99,24 @@ public class HTMLOverview {
 	
 			for(DiffFile changedTest : report.getChangedTests()) {
 				String fileName = changedTest.getFileName(report);
+				String fileURL = fileName.replace('/', '.').replaceFirst(".", "");
 				
 				outputStreamHTMLFile.println("<tr >");
-				outputStreamHTMLFile.println("<td><a href='"+fileName.replace('/', '.')+".html'>"+fileName+"</a></td>");
+				outputStreamHTMLFile.println("<td><a href='"+fileURL+".html'>"+fileName+"</a></td>");
 				if (changedTest.getSourceState() == SourceDiffState.NEW) {
-					outputStreamHTMLFile.println("<td>+"+changedTest.getRevisedLineCount()+" (100%)</td>");
+					outputStreamHTMLFile.println("<td>"+changedTest.getRevisedLineCount()+" (New)</td>");
 				} else if (changedTest.getSourceState() == SourceDiffState.DELETED) {
-					outputStreamHTMLFile.println("<td>-"+changedTest.getOriginalLineCount()+" (100%)</td>");
+					outputStreamHTMLFile.println("<td>-"+changedTest.getOriginalLineCount()+" (Deleted)</td>");
 				} else {
-					int changedLineCount = changedTest.getRevisedLineCount() - changedTest.getOriginalLineCount();
-					double changedLineCountPercentage = Math.round((double)changedLineCount / (double) changedTest.getOriginalLineCount() * (double)10000) / (double)100;
-					outputStreamHTMLFile.println("<td>"+(changedLineCount > 0 ? "+" : "") +changedLineCount+"("+changedLineCountPercentage+"%)</td>");
+					int addedLineCount = changedTest.getAddedLinesCount();
+					int removedLineCount = changedTest.getRemovedLineCount();
+					double addedLineCountPercentage = Math.round((double)addedLineCount / (double) changedTest.getOriginalLineCount() * (double)10000) / (double)100;
+					double removedLineCountPercentage = Math.round((double)removedLineCount / (double) changedTest.getOriginalLineCount() * (double)10000) / (double)100;
+					outputStreamHTMLFile.println("<td>"+(addedLineCount > 0 ? "<span class=inceasedText>+" + addedLineCount + " (" + addedLineCountPercentage + "%)</span> " : "") +""+(removedLineCount > 0 ? "<span class=decreasedText>-" + removedLineCount + " (" + removedLineCountPercentage + "%) " : "") +"</span></td>");
 				}
 				outputStreamHTMLFile.println("</tr >");
 				
-				new HTMLTestView(fileName.replace('/', '.').replaceFirst(".", ""), changedTest);
+				new HTMLTestView(fileURL, changedTest);
 				
 			}
 			
@@ -191,12 +194,14 @@ public class HTMLOverview {
 				outputStreamHTMLFile.println("<td>"+ (int)originalPackage.getLineCount()+" (Deleted)</td>");
 				outputStreamHTMLFile.println(generateCoverageBarsHTML(originalPackage.getConditionRate(), 0.0, packageState));
 				outputStreamHTMLFile.println("<td>" + originalPackage.getConditionCount()+" (Deleted)</td>");
+				
 				break;
 			case NEW:
 				outputStreamHTMLFile.println(generateCoverageBarsHTML(0.0, revisedPackage.getLineRate(), packageState));
 				outputStreamHTMLFile.println("<td>" + (int)revisedPackage.getLineCount()+" (New)</td>");
 				outputStreamHTMLFile.println(generateCoverageBarsHTML(0.0, revisedPackage.getConditionRate(), packageState));
 				outputStreamHTMLFile.println("<td>" + revisedPackage.getConditionCount()+" (New)</td>");
+				
 				break;
 			default:
 				outputStreamHTMLFile.println(generateCoverageBarsHTML(originalPackage.getLineRate(), revisedPackage.getLineRate(), packageState));
@@ -218,12 +223,12 @@ public class HTMLOverview {
 				}
 				
 				outputStreamHTMLFile.println("<td>"+(packageConditionSizeChange > 0 ? "+" : "") + (int)packageConditionSizeChange+" ("+packageConditionChangePercentage+"%)</td>");
-
+				
 				
 				break;
 		}	
 		
-		outputStreamHTMLFile.println("</tr>");
+		outputStreamHTMLFile.println("<td></td></tr>");
 		
 		displayedPackages.add(packageID);
 		
@@ -272,12 +277,18 @@ public class HTMLOverview {
 				html += "<td>"+ (int)originalClass.getLineCount()+" (Deleted)</td>";
 				html += generateCoverageBarsHTML(originalClass.getConditionRate(), 0.0, SourceDiffState.DELETED);
 				html += "<td>"+ (int)originalClass.getConditionCount()+" (Deleted)</td>";
+				int removedLineCount = changedClass.getSourceDiff().getRemovedLineCount();
+				html += "<td style='white-space: nowrap;'>"+(removedLineCount > 0 ? "<span class=decreasedText>-" + removedLineCount + " (Deleted) " : "") +"</span></td>";
+
 				break;
 			case NEW:
 				html += generateCoverageBarsHTML(0.0, revisedClass.getLineRate(),SourceDiffState.NEW);
 				html += "<td>" + (int)revisedClass.getLineCount()+" (New)</td>";
 				html += generateCoverageBarsHTML(0.0, revisedClass.getConditionRate(), SourceDiffState.NEW);
 				html += "<td>" + (int)revisedClass.getConditionCount()+" (New)</td>";
+				int addedLineCount = changedClass.getSourceDiff().getAddedLinesCount();
+				html += "<td style='white-space: nowrap;'>"+(addedLineCount > 0 ? "<span class=inceasedText>+" + addedLineCount + " (New)</span> " : "");
+
 				break;
 			default:
 				html += generateCoverageBarsHTML(originalClass.getLineRate(), revisedClass.getLineRate(), changedClass.getSourceDiff().getSourceState());
@@ -298,6 +309,12 @@ public class HTMLOverview {
 				}
 				
 				html += "<td>"+(classConditionSizeChange > 0 ? "+" : "") + (int)classConditionSizeChange+" ("+classConditionChangePercentage+"%)</td>";
+				
+				addedLineCount = changedClass.getSourceDiff().getAddedLinesCount();
+				removedLineCount = changedClass.getSourceDiff().getRemovedLineCount();
+				double addedLineCountPercentage = Math.round((double)addedLineCount / (double) changedClass.getSourceDiff().getOriginalLineCount() * (double)10000) / (double)100;
+				double removedLineCountPercentage = Math.round((double)removedLineCount / (double) changedClass.getSourceDiff().getOriginalLineCount() * (double)10000) / (double)100;
+				html += "<td style='white-space: nowrap;'>"+(addedLineCount > 0 ? "<span class=inceasedText>+" + addedLineCount + " (" + addedLineCountPercentage + "%)</span> " : "") +""+(removedLineCount > 0 ? "<span class=decreasedText>-" + removedLineCount + " (" + removedLineCountPercentage + "%) " : "") +"</span></td>";
 
 				break;
 		}	
@@ -319,7 +336,7 @@ public class HTMLOverview {
 	public String generateCoverageBarsHTML(double originalCoverage, double revisedCoverage, SourceDiffState fileState) {
 		double coverageChange = Math.round((revisedCoverage - originalCoverage) * (double)10000) / (double)100;
 		
-		String html = "<td>" + generateCoverageBarHTML(originalCoverage, revisedCoverage, fileState);
+		String html = "<td style='white-space: nowrap;'>" + generateCoverageBarHTML(originalCoverage, revisedCoverage, fileState);
 		html += "<span class='"+
 					// Make the text green or red according to the coverage percentage make it normal if the file was deleted
 					((coverageChange > 0) ? "inceasedText" : (coverageChange < 0 && fileState != SourceDiffState.DELETED) ? "decreasedText" : "")+"'>"+
@@ -328,7 +345,7 @@ public class HTMLOverview {
 					((coverageChange > 0 && (fileState == SourceDiffState.CHANGED || fileState == SourceDiffState.SAME)) ? "+" : "")
 					
 					// The coverage percentage, take absolute value when deleted to remove the - sign
-					+(fileState == SourceDiffState.DELETED ? ((int)Math.abs(coverageChange)) : (int)coverageChange)+"%</span>"+ "</td>";
+					+(fileState == SourceDiffState.DELETED ? (Math.abs(coverageChange)) : coverageChange)+"%</span>"+ "</td>";
 		return html;
 	}
 	
@@ -379,14 +396,14 @@ public class HTMLOverview {
 				}
 				break;
 			case NEW:
-				double revisedCoveredWidth = Math.max(Math.round(revisedCoverage * 100), 1);
+				double revisedCoveredWidth = Math.round(revisedCoverage * 100);
 				
 				barHTML  += "<div class='coverageChangeBar' title='Coverage is " + Math.round(revisedCoverage * 10000)  / (double)100+"%'>";
 				barHTML += "<div class='increasedCoverage' style='width:" + revisedCoveredWidth +"%'> </div>";
 				barHTML += "<div class='decreasedCoverage' style='width:"+(100 - revisedCoveredWidth)+"%'> </div>";
 				break;
 			case DELETED:
-				double originalCoveredWidth = Math.max(Math.round(originalCoverage * 100), 1);
+				double originalCoveredWidth =  Math.round(originalCoverage * 100);
 				
 				barHTML  += "<div class='coverageChangeBar' title='Coverage was " + Math.round(originalCoverage * 10000) / (double)100 +"%'>";
 				barHTML += "<div class='originalCoverage' style='width:" + originalCoveredWidth +"%'> </div>";

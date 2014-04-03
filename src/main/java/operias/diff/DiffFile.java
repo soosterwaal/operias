@@ -9,6 +9,7 @@ import java.util.List;
 
 import operias.report.OperiasReport;
 import difflib.Delta;
+import difflib.Delta.TYPE;
 import difflib.DiffUtils;
 import difflib.Patch;
 
@@ -202,6 +203,33 @@ public class DiffFile {
 		
 		return fileName;
 	}
-
+	
+	/**
+	 * COunt the amount of lines added
+	 * @return Amount of lines added
+	 */
+	public int getAddedLinesCount() {
+		int count = 0;
+		for(Delta change : changes) {
+			if (change.getType() != TYPE.DELETE) {
+				count += change.getRevised().size();
+			}
+		}
+		return count;
+	}
+	
+	/**
+	 * Count the amoutn of lines removed
+	 * @return Amount of lines removed
+	 */
+	public int getRemovedLineCount() {
+		int count = 0;
+		for(Delta change : changes) {
+			if (change.getType() != TYPE.DELETE) {
+				count += change.getOriginal().size();
+			}
+		}
+		return count;
+	}
 	
 }
