@@ -238,6 +238,38 @@ public class HTMLOverviewTest {
 			fail(e.getMessage());
 		}
 	}
+	
+	/**
+	 * Test the html generation of the bar html for a decrease in coverage, fixing issue #65
+	 */
+	@SuppressWarnings("rawtypes")
+	@Test
+	public void testCoverageBarsHTMLPercentage() {
+		
+		HTMLOverview overview = new HTMLOverview(null, new ArrayList<String> ());
+		
+		Class[] parameterTypes = new Class[3];
+		parameterTypes[0] = double.class;
+		parameterTypes[1] = double.class;
+		parameterTypes[2] = SourceDiffState.class;
+		
+		try {
+			Method barHTMLMethod = overview.getClass().getDeclaredMethod("generateCoverageBarsHTML", parameterTypes);
+
+			Object[] args = new Object[3];
+			args[0] = (double)0.5525;
+			args[1] = (double)0.6576;
+			args[2] = SourceDiffState.CHANGED;
+			
+			String barHTML = (String)barHTMLMethod.invoke(overview, args);
+			
+			assertEquals("<td><div class='coverageChangeBar' title='Coverage increased from 55.25% to 65.76%'><div class='originalCoverage' style='width:55.0%'> </div><div class='increasedCoverage'  style='width:11.0%'> </div><div class='originalNotCoverage' style='width:34.0%'> </div></div><span class='inceasedText'>+10.51%</span></td>", barHTML);
+
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
+	}
+	
 	/**
 	 * Test the html generation of the bar html for a decrease in coverage
 	 */

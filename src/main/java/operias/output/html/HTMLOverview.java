@@ -328,7 +328,7 @@ public class HTMLOverview {
 					((coverageChange > 0 && (fileState == SourceDiffState.CHANGED || fileState == SourceDiffState.SAME)) ? "+" : "")
 					
 					// The coverage percentage, take absolute value when deleted to remove the - sign
-					+(fileState == SourceDiffState.DELETED ? ((int)Math.abs(coverageChange)) : (int)coverageChange)+"%</span>"+ "</td>";
+					+(fileState == SourceDiffState.DELETED ? (Math.abs(coverageChange)) : coverageChange)+"%</span>"+ "</td>";
 		return html;
 	}
 	
