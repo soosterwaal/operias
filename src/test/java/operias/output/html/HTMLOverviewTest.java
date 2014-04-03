@@ -169,7 +169,7 @@ public class HTMLOverviewTest {
 			
 			barHTML = (String)barHTMLMethod.invoke(overview, args);
 			
-			assertEquals("<div class='coverageChangeBar' title='Coverage is 0.1%'><div class='increasedCoverage' style='width:1.0%'> </div><div class='decreasedCoverage' style='width:99.0%'> </div></div>", barHTML);
+			assertEquals("<div class='coverageChangeBar' title='Coverage is 0.1%'><div class='increasedCoverage' style='width:0.0%'> </div><div class='decreasedCoverage' style='width:100.0%'> </div></div>", barHTML);
 
 
 		
@@ -222,7 +222,7 @@ public class HTMLOverviewTest {
 			
 			barHTML = (String)barHTMLMethod.invoke(overview, args);
 			
-			assertEquals("<div class='coverageChangeBar' title='Coverage was 0.1%'><div class='originalCoverage' style='width:1.0%'> </div><div class='originalNotCoverage' style='width:99.0%'> </div></div>", barHTML);
+			assertEquals("<div class='coverageChangeBar' title='Coverage was 0.1%'><div class='originalCoverage' style='width:0.0%'> </div><div class='originalNotCoverage' style='width:100.0%'> </div></div>", barHTML);
 
 
 		
@@ -263,7 +263,7 @@ public class HTMLOverviewTest {
 			
 			String barHTML = (String)barHTMLMethod.invoke(overview, args);
 			
-			assertEquals("<td><div class='coverageChangeBar' title='Coverage increased from 55.25% to 65.76%'><div class='originalCoverage' style='width:55.0%'> </div><div class='increasedCoverage'  style='width:11.0%'> </div><div class='originalNotCoverage' style='width:34.0%'> </div></div><span class='inceasedText'>+10.51%</span></td>", barHTML);
+			assertEquals("<td style='white-space: nowrap;'><div class='coverageChangeBar' title='Coverage increased from 55.25% to 65.76%'><div class='originalCoverage' style='width:55.0%'> </div><div class='increasedCoverage'  style='width:11.0%'> </div><div class='originalNotCoverage' style='width:34.0%'> </div></div><span class='inceasedText'>+10.51%</span></td>", barHTML);
 
 		} catch (Exception e) {
 			fail(e.getMessage());
