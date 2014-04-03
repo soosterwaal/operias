@@ -103,9 +103,9 @@ public class HTMLOverview {
 				outputStreamHTMLFile.println("<tr >");
 				outputStreamHTMLFile.println("<td><a href='"+fileName.replace('/', '.')+".html'>"+fileName+"</a></td>");
 				if (changedTest.getSourceState() == SourceDiffState.NEW) {
-					outputStreamHTMLFile.println("<td>+"+changedTest.getRevisedLineCount()+" (100%)</td>");
+					outputStreamHTMLFile.println("<td>"+changedTest.getRevisedLineCount()+" (New)</td>");
 				} else if (changedTest.getSourceState() == SourceDiffState.DELETED) {
-					outputStreamHTMLFile.println("<td>-"+changedTest.getOriginalLineCount()+" (100%)</td>");
+					outputStreamHTMLFile.println("<td>-"+changedTest.getOriginalLineCount()+" (Deleted)</td>");
 				} else {
 					int changedLineCount = changedTest.getRevisedLineCount() - changedTest.getOriginalLineCount();
 					double changedLineCountPercentage = Math.round((double)changedLineCount / (double) changedTest.getOriginalLineCount() * (double)10000) / (double)100;
