@@ -19,8 +19,8 @@ After that, go to the target directory and execute:
 Parameter | Short parameter name | Description | 
 ----------|----------|-----------|
 --destination-directory | -d | The directory where the generated site will be placed
---revised-directory | -rd | This directory contains the revised source code, this directory will be compared to the original directory
---original-directory | -od | This directory contains the original source code, unchanged.
+--revised-directory | -rd | This directory contains the revised source code, this directory will be compared to the original directory. This should be the project directory containing the main pom.xml.
+--original-directory | -od | This directory contains the original source code, unchanged. This should be the project directory containing the main pom.xml.
 --repository-url | -ru | Instead of providing a directories containing the versions, you can also give a git url. Operias will clone the repository into it's own temporary repository directory.
 --original-repository-url | -oru | The git url used for the original version of the source code.
 --original-commit-id | -oc | Operias will checkout to this commit to use as original source code. 
