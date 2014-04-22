@@ -117,20 +117,17 @@ public class CoverageReportTest {
 		
 		assertEquals(3, testcases.size());
 		
-		TestReport succesfullReport = testcases.get(2);
-		assertEquals(TestResultType.SUCCESS, succesfullReport.getResult());
-		assertEquals("example.MusicTest", succesfullReport.getClassName());
-		assertEquals("testMusic", succesfullReport.getCaseName());
-		
-
-		TestReport errorReport = testcases.get(0);
-		assertEquals(TestResultType.ERROR, errorReport.getResult());
-		assertEquals("example.CalculationsTest", errorReport.getClassName());
-		assertEquals("testSomeCalcution", errorReport.getCaseName());
-		
-		TestReport failReport = testcases.get(1);
-		assertEquals(TestResultType.FAILURE, failReport.getResult());
-		assertEquals("example.LoopsTest", failReport.getClassName());
-		assertEquals("testLoop", failReport.getCaseName());
+		for(TestReport tReport : testcases) {
+			if (tReport.getResult() == TestResultType.SUCCESS) {
+				assertEquals("example.MusicTest", tReport.getClassName());
+				assertEquals("testMusic", tReport.getCaseName());
+			} else if (tReport.getResult() == TestResultType.ERROR) {
+				assertEquals("example.CalculationsTest", tReport.getClassName());
+				assertEquals("testSomeCalcution", tReport.getCaseName());
+			} else if (tReport.getResult() == TestResultType.FAILURE) {
+				assertEquals("example.LoopsTest", tReport.getClassName());
+				assertEquals("testLoop", tReport.getCaseName());
+			} 
+		}
 	}
 }
