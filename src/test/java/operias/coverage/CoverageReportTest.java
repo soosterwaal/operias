@@ -113,7 +113,7 @@ public class CoverageReportTest {
 		
 		assertEquals(26, classLines.size());
 		
-		List<TestReport> testcases = report.getTests();
+		List<TestReport> testcases = report.getAllTests();
 		
 		assertEquals(3, testcases.size());
 		

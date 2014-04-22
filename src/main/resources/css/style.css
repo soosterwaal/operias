@@ -9,8 +9,17 @@ table { border-collapse:collapse; width: 100%; font-size: 11pt; }
 .code td:last-child {  border-left: 1px solid #22008A; padding-left: 10px;  width:100%; }
 .code td:first-child { border-right: 1px solid #22008A; }
 
+.testResult { width: 600px; margin: 20px; display:none;}
+
+.testResultButton:hover { text-decoration:underline; cursor:pointer;}
+
+.failedTests { width: 680px !important; display: inline-block;  vertical-align:top;}
+.failedTests tr { border-bottom: 1px solid #22008A; }
+.failedTests th { text-align: left; font-weight: bold; font-size:14pt; width: 698px;}
+.failedTests td { padding-top: 13px; padding-bottom: 10px;  word-break: break-all; vertical-align: top; }
+
 .classOverview tr { border-bottom: 1px solid #22008A; }
-.classOverview th { text-align: left; font-weight: bold; font-size:13pt;}
+.classOverview th { text-align: left; font-weight: bold; font-size:14pt;}
 .classOverview td { padding-top: 13px; padding-bottom: 10px;}
 
 #revisedCoverageTable, #originalCoverageTable, #sourceDiffTable {display:none;}

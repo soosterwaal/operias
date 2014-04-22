@@ -3,6 +3,7 @@ package operias.coverage;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -73,6 +74,16 @@ public class CoverageReport {
 	public CoverageReport constructReport() {
 
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		/*dbFactory.setNamespaceAware(false);
+		dbFactory.setValidating(false);
+			try {
+			dbFactory.setFeature("http://xml.org/sax/features/namespaces", false);
+			dbFactory.setFeature("http://xml.org/sax/features/validation", false);
+			dbFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-dtd-grammar", false);
+			dbFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+		} catch (Exception e) { 
+		
+		}*/
 		DocumentBuilder dBuilder;
 		
 
@@ -329,7 +340,36 @@ public class CoverageReport {
 	/**
 	 * @return the tests
 	 */
-	public List<TestReport> getTests() {
+	public List<TestReport> getAllTests() {
 		return tests;
+	}
+	
+	/**
+	 * Checks if the coverage reports has any failed tests
+	 * @return True if some of the tests failed
+	 */
+	public boolean hasFailedTests() {
+		for(TestReport report : tests) {
+			if (report.getResult() == TestResultType.ERROR || report.getResult() == TestResultType.FAILURE){
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Get a list of the failed tests
+	 * @return
+	 */
+	public List<TestReport> getFailedTests() {
+		List<TestReport> failedList = new ArrayList<TestReport>();
+		for(TestReport report : tests) {
+			if (report.getResult() == TestResultType.ERROR || report.getResult() == TestResultType.FAILURE){
+				failedList.add(report);
+			}
+		}
+		
+		return failedList;
 	}
 }

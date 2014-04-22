@@ -14,6 +14,7 @@ import org.apache.commons.io.IOUtils;
 import operias.Configuration;
 import operias.coverage.CoberturaClass;
 import operias.coverage.CoberturaPackage;
+import operias.coverage.TestReport;
 import operias.diff.DiffFile;
 import operias.diff.SourceDiffState;
 import operias.report.OperiasFile;
@@ -91,7 +92,85 @@ public class HTMLOverview {
 
 		outputStreamHTMLFile.println("</tbody></table>");
 		
+		generateTestDifferenceView(outputStreamHTMLFile);
 		
+
+		generateTestCaseResults(outputStreamHTMLFile);
+		
+		outputStreamHTMLFile.println("</div>");
+		
+		InputStream footerStream = getClass().getResourceAsStream("/html/footer.html");
+		IOUtils.copy(footerStream, outputStreamHTMLFile);
+		
+		outputStreamHTMLFile.close();
+		footerStream.close();
+		headerStream.close();
+	}
+	
+	/**
+	 * Generate the view to show the failed tests
+	 * @param outputStreamHTMLFile
+	 */
+	private void generateTestCaseResults(PrintStream outputStreamHTMLFile)  {
+		if (report.getOriginalCoverageReport().hasFailedTests() || report.getRevisedCoverageReport().hasFailedTests() || true) {
+			// Got failed tests
+			outputStreamHTMLFile.println("<h2>Failed Test Cases</h2><table class='failedTests'>");
+			outputStreamHTMLFile.println("<thead><tr><th>Failed test cases in original version</th><tr></thead><tbody>");
+	
+			List<TestReport> failedOriginalTestCases = report.getOriginalCoverageReport().getFailedTests();
+			int testIdentifier = 0;
+			for(int i = 0; i < failedOriginalTestCases.size(); i++) {
+				outputStreamHTMLFile.println("<tr><td>");
+				TestReport aOriginalFailedCase = failedOriginalTestCases.get(i);
+				outputStreamHTMLFile.println("<div class='testResultButton' id='"+testIdentifier+"'>" + aOriginalFailedCase.getClassName() + " - " + aOriginalFailedCase.getCaseName()+ "</div>");
+				outputStreamHTMLFile.println(generateDetailedTestCaseResultHTML(testIdentifier, aOriginalFailedCase));
+				outputStreamHTMLFile.println("</td></tr>");
+				testIdentifier++;
+			}
+			outputStreamHTMLFile.println("</tbody></table>");
+			
+			outputStreamHTMLFile.println("<table class='failedTests' style='margin-left:36px;'>");
+			outputStreamHTMLFile.println("<thead><tr><th>Failed test cases in revised version</th><tr></thead><tbody>");
+
+			List<TestReport> failedRevisedTestCases = report.getRevisedCoverageReport().getFailedTests();
+			
+			for(int i = 0; i < failedRevisedTestCases.size(); i++) {
+				outputStreamHTMLFile.println("<tr><td>");
+				TestReport aRevisedFailedCase = failedRevisedTestCases.get(i);
+				outputStreamHTMLFile.println("<div class='testResultButton' id='"+testIdentifier+"'>" + aRevisedFailedCase.getClassName() + " - " + aRevisedFailedCase.getCaseName() + "</div>");
+				outputStreamHTMLFile.println(generateDetailedTestCaseResultHTML(testIdentifier, aRevisedFailedCase));
+				outputStreamHTMLFile.println("</td></tr>");
+				testIdentifier++;
+			}
+			outputStreamHTMLFile.println("</tbody></table>");
+
+		}
+	}
+	
+	/**
+	 * Generate a detailed result table of a test case
+	 * @return
+	 */
+	private String generateDetailedTestCaseResultHTML(int testIdentifier, TestReport testCase){
+		String html = "<table class='testResult' id='testResult" +testIdentifier+"'>";
+		html += "<tr><td>Test Result</td><td class=decreasedText>" + testCase.getResult() + " </td></tr>";
+		html += "<tr><td>Type</td><td>" + testCase.getType() + " </td></tr>";
+		html += "<tr><td>Message</td><td>" + testCase.getMessage() + " </td></tr>";
+		html += "<tr><td>Trace</td><td style='font-size:9px'>" + testCase.getTrace().replaceAll("(\r\n|\n)", "<br />") + " </td></tr>";
+		
+		html += "</table>";
+		
+		return html;
+	}
+	
+	/**
+	 * Generate the test difference view
+	 * @param outputStreamHTMLFile
+	 * @throws IOException
+	 */
+	private void generateTestDifferenceView(PrintStream outputStreamHTMLFile) throws IOException {
+		
+
 		// Show list of changed test classes
 		if (report.getChangedTests().size() > 0) {
 			outputStreamHTMLFile.println("<h2>Test Classes</h2><table class='classOverview'>");
@@ -122,15 +201,6 @@ public class HTMLOverview {
 			
 			outputStreamHTMLFile.println("</tbody></table>");
 		}
-		
-		outputStreamHTMLFile.println("</div>");
-		
-		InputStream footerStream = getClass().getResourceAsStream("/html/footer.html");
-		IOUtils.copy(footerStream, outputStreamHTMLFile);
-		
-		outputStreamHTMLFile.close();
-		footerStream.close();
-		headerStream.close();
 	}
 
 	/**
