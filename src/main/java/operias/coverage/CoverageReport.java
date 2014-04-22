@@ -74,6 +74,7 @@ public class CoverageReport {
 
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder;
+		
 
 		try {
 			dBuilder = dbFactory.newDocumentBuilder();
@@ -179,8 +180,8 @@ public class CoverageReport {
 		@Override
 		public boolean accept(File dir, String name) {
 			try {
-				String[] splittedFileName = name.split(".");
-				return splittedFileName[splittedFileName.length].equals("xml");
+				String[] splittedFileName = name.split("\\.");
+				return splittedFileName[splittedFileName.length - 1].equals("xml");
 			} catch(Exception e) {
 				return false;
 			}
@@ -323,5 +324,12 @@ public class CoverageReport {
 	 */
 	public List<String> getSources() {
 		return sources;
+	}
+
+	/**
+	 * @return the tests
+	 */
+	public List<TestReport> getTests() {
+		return tests;
 	}
 }

@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import operias.OperiasStatus;
 import operias.coverage.CoberturaClass;
@@ -80,7 +81,7 @@ public class CoverageReportTest {
 		double delta = 0.0001;
 		File file = new File("src/test/resources/coverage.xml");
 
-		CoverageReport report = new CoverageReport(file, "").constructReport();
+		CoverageReport report = new CoverageReport(file, "src/test/resources/sureFireReports/").constructReport();
 		
 		assertEquals("Line rate not equal", 0.7578125, report.getLineRate(),  delta);
 		assertEquals(0.75,report.getConditionRate(), delta);
@@ -112,6 +113,24 @@ public class CoverageReportTest {
 		
 		assertEquals(26, classLines.size());
 		
+		List<TestReport> testcases = report.getTests();
 		
+		assertEquals(3, testcases.size());
+		
+		TestReport succesfullReport = testcases.get(2);
+		assertEquals(TestResultType.SUCCESS, succesfullReport.getResult());
+		assertEquals("example.MusicTest", succesfullReport.getClassName());
+		assertEquals("testMusic", succesfullReport.getCaseName());
+		
+
+		TestReport errorReport = testcases.get(0);
+		assertEquals(TestResultType.ERROR, errorReport.getResult());
+		assertEquals("example.CalculationsTest", errorReport.getClassName());
+		assertEquals("testSomeCalcution", errorReport.getCaseName());
+		
+		TestReport failReport = testcases.get(1);
+		assertEquals(TestResultType.FAILURE, failReport.getResult());
+		assertEquals("example.LoopsTest", failReport.getClassName());
+		assertEquals("testLoop", failReport.getCaseName());
 	}
 }
