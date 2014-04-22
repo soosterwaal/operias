@@ -2,19 +2,15 @@ package operias.coverage;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.filechooser.FileFilter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import operias.OperiasStatus;
 
@@ -177,18 +173,12 @@ public class CoverageReport {
 	 * @author soosterwaal
 	 *
 	 */
-	private class XMLFileFilter extends FileFilter {
+	private class XMLFileFilter implements FilenameFilter {
 
 		@Override
-		public boolean accept(File file) {
-			String[] splittedFileName = file.getName().split(".");
+		public boolean accept(File dir, String name) {
+			String[] splittedFileName = name.split(".");
 			return splittedFileName[splittedFileName.length].equals("xml");
-		}
-
-		@Override
-		public String getDescription() {
-			
-			return "Filter on XML files";
 		}
 	}
 	
