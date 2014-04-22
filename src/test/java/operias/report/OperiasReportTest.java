@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 
-import operias.cobertura.CoberturaReport;
+import operias.coverage.CoverageReport;
 import operias.diff.DiffReport;
 import operias.report.change.ChangeSourceChange;
 import operias.report.change.CoverageIncreaseChange;
@@ -21,8 +21,8 @@ public class OperiasReportTest {
 	 */
 	@Test
 	public void testSimpleOperiasReport() {
-		CoberturaReport originalCoverage = new CoberturaReport(new File("src/test/resources/coverageMavenProject1.xml"));
-		CoberturaReport revisedCoverage = new CoberturaReport(new File("src/test/resources/coverageMavenProject2.xml"));
+		CoverageReport originalCoverage = new CoverageReport(new File("src/test/resources/coverageMavenProject1.xml"), "").constructReport();
+		CoverageReport revisedCoverage = new CoverageReport(new File("src/test/resources/coverageMavenProject2.xml"), "").constructReport();
 		DiffReport diffReport = null;
 		try {
 			diffReport = new DiffReport("src/test/resources/mavenProject1", "src/test/resources/mavenProject2");

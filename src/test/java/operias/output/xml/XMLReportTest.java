@@ -13,7 +13,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
 
 import operias.Configuration;
-import operias.cobertura.CoberturaReport;
+import operias.coverage.CoverageReport;
 import operias.diff.DiffReport;
 import operias.report.OperiasReport;
 
@@ -24,7 +24,7 @@ import org.w3c.dom.Document;
 
 public class XMLReportTest {
 
-	CoberturaReport originalCoverage,revisedCoverage ;
+	CoverageReport originalCoverage,revisedCoverage ;
 	DiffReport diffReport = null;
 	
 	/**
@@ -53,8 +53,8 @@ public class XMLReportTest {
 	@Test
 	public void testBasicXMLReport()  {
 		
-		originalCoverage = new CoberturaReport(new File("src/test/resources/coverageMavenProject1.xml"));
-		revisedCoverage = new CoberturaReport(new File("src/test/resources/coverageMavenProject2.xml"));
+		originalCoverage = new CoverageReport(new File("src/test/resources/coverageMavenProject1.xml"), "").constructReport();
+		revisedCoverage = new CoverageReport(new File("src/test/resources/coverageMavenProject2.xml"), "").constructReport();
 
 		try {
 			diffReport = new DiffReport("src/test/resources/mavenProject1", "src/test/resources/mavenProject2");

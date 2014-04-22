@@ -1,4 +1,4 @@
-package operias.cobertura;
+package operias.coverage;
 
 public class CoberturaCondition {
 

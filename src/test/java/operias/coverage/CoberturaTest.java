@@ -1,10 +1,11 @@
-package operias.cobertura;
+package operias.coverage;
 
 import static org.junit.Assert.*;
-
 import operias.OperiasStatus;
 
 import org.junit.*;
+
+import operias.coverage.Cobertura;
 import operias.test.general.*;
 
 public class CoberturaTest {

@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import operias.OperiasStatus;
-import operias.cobertura.*;
+import operias.coverage.*;
 import operias.diff.DiffFile;
 import operias.report.change.ChangeSourceChange;
 import operias.report.change.CoverageDecreaseChange;

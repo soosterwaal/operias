@@ -1,4 +1,4 @@
-package operias.cobertura;
+package operias.coverage;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +42,7 @@ public class Cobertura {
 	 * we need to execute mvn cobertura:cobertura -Dcobertura.report.format=xml -f directory on the target directory.
 	 * @return A Cobertura report object
 	 */
-	public CoberturaReport executeCobertura() {
+	public CoverageReport executeCobertura() {
 		boolean succeeded;
 		try {
 			Main.printLine("[Info] [" + Thread.currentThread().getName() + "] Start execution of Cobertura");
@@ -50,7 +50,7 @@ public class Cobertura {
 			if (succeeded) {
 
 				Main.printLine("[Info] [" + Thread.currentThread().getName() + "] Parsing Cobertura report");
-				CoberturaReport coberturaReport = constructReport();
+				CoverageReport coberturaReport = constructReport();
 				Main.printLine("[Info] [" + Thread.currentThread().getName() + "] Cleaning up after Cobertura");
 				cleanUp();
 				Main.printLine("[Info] [" + Thread.currentThread().getName() + "] Cobertura report finished");
@@ -120,7 +120,7 @@ public class Cobertura {
 	 * Construct a report from the coverage.xml file
 	 * @return
 	 */
-	private CoberturaReport constructReport() {
+	private CoverageReport constructReport() {
 		File coverageXML = new File(outputDirectory, "target/site/cobertura/coverage.xml");
 		
 		if (!coverageXML.exists()) {
@@ -128,7 +128,7 @@ public class Cobertura {
 			System.exit(OperiasStatus.COVERAGE_XML_NOT_FOUND.ordinal());
 		}
 		
-		return new CoberturaReport(coverageXML);
+		return new CoverageReport(coverageXML, outputDirectory + "/target/surefire-reports/").constructReport();
 	}
 	
 	/**

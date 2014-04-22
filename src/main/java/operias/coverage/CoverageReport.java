@@ -1,20 +1,35 @@
-package operias.cobertura;
+package operias.coverage;
 
 import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.filechooser.FileFilter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import operias.OperiasStatus;
 
-public class CoberturaReport {
+public class CoverageReport {
 
+	/**
+	 * Coverage xml
+	 */
+	private File coverageXML;
+	
+	/**
+	 * Directory in which cobertura will search for surefire reports
+	 */
+	private String surefireDirectory;
+	
 	/**
 	 * Line rate of the project
 	 */
@@ -36,19 +51,34 @@ public class CoberturaReport {
 	private List<String> sources;
 	
 	/**
-	 * Construct a new cobertura report according to the provided coverage xml
+	 * List of the report of the test suite
+	 */
+	private List<TestReport> tests;
+	
+	/**
+	 * Create a coverage report based on only a xml file
 	 * @param coverageXML
 	 */
-	public CoberturaReport(File coverageXML) {
+	public CoverageReport(File coverageXML, String surefireDirectory) {
 		if (coverageXML == null || !coverageXML.exists() || !coverageXML.isFile() || !coverageXML.canRead()) {
 			System.exit(OperiasStatus.ERROR_COBERTURA_INVALID_XML.ordinal());
 		}
-		
-		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder dBuilder;
+		this.coverageXML = coverageXML;
+		this.surefireDirectory = surefireDirectory;
 		packages = new ArrayList<CoberturaPackage>();
 		sources = new ArrayList<String>();
+		tests = new ArrayList<TestReport>();
 		
+	}
+	
+	/**
+	 * Construct the report
+	 */
+	public CoverageReport constructReport() {
+
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder;
+
 		try {
 			dBuilder = dbFactory.newDocumentBuilder();
 		
@@ -90,6 +120,76 @@ public class CoberturaReport {
 			System.exit(OperiasStatus.ERROR_COBERTURA_INVALID_XML.ordinal());
 		}
 		
+		if (!surefireDirectory.equals("")) {
+			File sureFireDirectory = new File(surefireDirectory);
+			File[] sureFireReports = sureFireDirectory.listFiles((FilenameFilter) new XMLFileFilter());
+			
+			
+			for(File sureFireReport : sureFireReports) {
+	
+				try {
+					dBuilder = dbFactory.newDocumentBuilder();
+					Document doc = dBuilder.parse(sureFireReport);
+	
+					Element testsuite = doc.getDocumentElement();
+					String testsuiteName = testsuite.getAttribute("name");
+					
+					NodeList testCases = doc.getElementsByTagName("testcase");
+					
+					for(int i = 0; i < testCases.getLength(); i++) {
+						Element testCase = (Element)testCases.item(i);
+						String testCaseName = testCase.getAttribute("name");
+					
+						NodeList errors = testCase.getElementsByTagName("error");
+						if (errors.getLength() > 0) {
+							Element error = (Element)errors.item(0);
+							
+							TestReport report = new TestReport(testsuiteName, testCaseName, TestResultType.ERROR, error.getAttribute("message"), error.getAttribute("type"), error.getTextContent());
+							
+							tests.add(report);
+							continue;
+						}
+	
+						NodeList failures = testCase.getElementsByTagName("failure");
+						if (failures.getLength() > 0) {
+							Element failure = (Element)failures.item(0);
+							
+							TestReport report = new TestReport(testsuiteName, testCaseName, TestResultType.FAILURE, failure.getAttribute("message"), failure.getAttribute("type"), failure.getTextContent());
+							
+							tests.add(report);
+							continue;
+						}
+						
+						//Succesfully executed test
+						tests.add(new TestReport(testsuiteName, testCaseName));
+					}
+					
+				} catch (Exception e) {
+					System.exit(OperiasStatus.ERROR_SUREFIRE_INVALID_XML.ordinal());
+				}
+			}
+		}
+		return this;
+	}
+	
+	/**
+	 * File filter, to only accept xml files
+	 * @author soosterwaal
+	 *
+	 */
+	private class XMLFileFilter extends FileFilter {
+
+		@Override
+		public boolean accept(File file) {
+			String[] splittedFileName = file.getName().split(".");
+			return splittedFileName[splittedFileName.length].equals("xml");
+		}
+
+		@Override
+		public String getDescription() {
+			
+			return "Filter on XML files";
+		}
 	}
 	
 	/**

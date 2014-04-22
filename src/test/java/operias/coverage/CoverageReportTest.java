@@ -1,4 +1,4 @@
-package operias.cobertura;
+package operias.coverage;
 
 import static org.junit.Assert.*;
 
@@ -7,6 +7,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import operias.OperiasStatus;
+import operias.coverage.CoberturaClass;
+import operias.coverage.CoberturaLine;
+import operias.coverage.CoberturaPackage;
+import operias.coverage.CoverageReport;
 import operias.test.general.ExitException;
 import operias.test.general.NoExitSecurityManager;
 
@@ -14,7 +18,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class CoberturaReportTest {
+public class CoverageReportTest {
 
 	/**
 	 * Set up the security manager
@@ -40,7 +44,7 @@ public class CoberturaReportTest {
 		boolean exceptionThrown = false;
 		
 		try {
-			new CoberturaReport(null);
+			new CoverageReport((File)null, "").constructReport();;
 		} catch(ExitException e) {
 			exceptionThrown = true;
 			assertEquals("Wrong exit code", OperiasStatus.ERROR_COBERTURA_INVALID_XML.ordinal(), e.status);
@@ -50,7 +54,7 @@ public class CoberturaReportTest {
 		exceptionThrown = false;
 		
 		try {
-			new CoberturaReport(new File(""));
+			new CoverageReport(new File(""), "").constructReport();;
 		} catch(ExitException e) {
 			exceptionThrown = true;
 			assertEquals("Wrong exit code", OperiasStatus.ERROR_COBERTURA_INVALID_XML.ordinal(), e.status);
@@ -60,7 +64,7 @@ public class CoberturaReportTest {
 		exceptionThrown = false;
 		
 		try {
-			new CoberturaReport(new File("src/test/resources/nonExistingFile.xml"));
+			new CoverageReport(new File("src/test/resources/nonExistingFile.xml"), "").constructReport();;
 		} catch(ExitException e) {
 			exceptionThrown = true;
 			assertEquals("Wrong exit code", OperiasStatus.ERROR_COBERTURA_INVALID_XML.ordinal(), e.status);
@@ -75,8 +79,8 @@ public class CoberturaReportTest {
 	public void testLoadXML() {
 		double delta = 0.0001;
 		File file = new File("src/test/resources/coverage.xml");
-		
-		CoberturaReport report = new CoberturaReport(file);
+
+		CoverageReport report = new CoverageReport(file, "").constructReport();
 		
 		assertEquals("Line rate not equal", 0.7578125, report.getLineRate(),  delta);
 		assertEquals(0.75,report.getConditionRate(), delta);

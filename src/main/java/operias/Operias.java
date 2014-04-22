@@ -5,7 +5,7 @@ import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import operias.cobertura.*;
+import operias.coverage.*;
 import operias.diff.DiffReport;
 import operias.output.html.HTMLReport;
 import operias.output.xml.XMLReport;
@@ -20,9 +20,9 @@ public class Operias {
 
 	OperiasReport report;
 	
-	CoberturaReport reportRevised;
+	CoverageReport reportRevised;
 	
-	CoberturaReport reportOriginal;
+	CoverageReport reportOriginal;
 	
 	DiffReport reportFileDiff;
 	/**
@@ -77,11 +77,11 @@ public class Operias {
 	 * @param dataFile Data file used
 	 * @return A cobertura report containing coverage metrics
 	 */
-	private CoberturaReport constructCoberturaReport(String baseDirectory) {
+	private CoverageReport constructCoberturaReport(String baseDirectory) {
 		
 		Cobertura cobertura = new Cobertura(baseDirectory);
 		
-		CoberturaReport report = cobertura.executeCobertura();
+		CoverageReport report = cobertura.executeCobertura();
 		
 		if (report == null) {
 			System.exit(OperiasStatus.ERROR_COBERTURA_TASK_EXECUTION.ordinal());	

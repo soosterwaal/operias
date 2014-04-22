@@ -12,8 +12,8 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 
 import operias.Configuration;
-import operias.cobertura.CoberturaClass;
-import operias.cobertura.CoberturaPackage;
+import operias.coverage.CoberturaClass;
+import operias.coverage.CoberturaPackage;
 import operias.diff.DiffFile;
 import operias.diff.SourceDiffState;
 import operias.report.OperiasFile;

@@ -102,5 +102,10 @@ public enum OperiasStatus {
 	/**
 	 * Error during the cloning process
 	 */
-	ERROR_CLONE_GIT;
+	ERROR_CLONE_GIT, 
+	
+	/**
+	 * Invalid xml in a surefire report
+	 */
+	ERROR_SUREFIRE_INVALID_XML;
 }

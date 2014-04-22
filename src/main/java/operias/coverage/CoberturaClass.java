@@ -1,4 +1,4 @@
-package operias.cobertura;
+package operias.coverage;
 
 import java.util.LinkedList;
 import java.util.List;

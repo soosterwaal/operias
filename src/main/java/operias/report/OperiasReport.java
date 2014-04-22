@@ -5,9 +5,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import operias.Main;
-import operias.cobertura.CoberturaClass;
-import operias.cobertura.CoberturaPackage;
-import operias.cobertura.CoberturaReport;
+import operias.coverage.CoberturaClass;
+import operias.coverage.CoberturaPackage;
+import operias.coverage.CoverageReport;
 import operias.diff.DiffDirectory;
 import operias.diff.DiffFile;
 import operias.diff.DiffReport;
@@ -29,12 +29,12 @@ public class OperiasReport {
 	/**
 	 * Original report of cobertura
 	 */
-	private CoberturaReport originalReport;
+	private CoverageReport originalReport;
 	
 	/**
 	 * New report of cobertura
 	 */
-	private CoberturaReport revisedReport;
+	private CoverageReport revisedReport;
 	
 	/**
 	 * Source diff report between the directories
@@ -62,7 +62,7 @@ public class OperiasReport {
 	 * @param reportSource
 	 * @param reportFileDiff
 	 */
-	public OperiasReport(CoberturaReport originalReport, CoberturaReport revisedReport, DiffReport sourceDiffReport) {
+	public OperiasReport(CoverageReport originalReport, CoverageReport revisedReport, DiffReport sourceDiffReport) {
 		this.originalReport = originalReport;
 		this.revisedReport = revisedReport;
 		this.sourceDiffReport = sourceDiffReport;
@@ -203,14 +203,14 @@ public class OperiasReport {
 	/**
 	 * @return the originalReport
 	 */
-	public CoberturaReport getOriginalCoverageReport() {
+	public CoverageReport getOriginalCoverageReport() {
 		return originalReport;
 	}
 
 	/**
 	 * @return the revisedReport
 	 */
-	public CoberturaReport getRevisedCoverageReport() {
+	public CoverageReport getRevisedCoverageReport() {
 		return revisedReport;
 	}
 	

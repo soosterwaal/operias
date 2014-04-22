@@ -11,8 +11,8 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 
 import operias.Configuration;
-import operias.cobertura.CoberturaClass;
-import operias.cobertura.CoberturaLine;
+import operias.coverage.CoberturaClass;
+import operias.coverage.CoberturaLine;
 import operias.diff.SourceDiffState;
 import operias.report.OperiasFile;
 import operias.report.change.ChangeSourceChange;
