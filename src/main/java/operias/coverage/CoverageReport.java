@@ -120,48 +120,49 @@ public class CoverageReport {
 			File sureFireDirectory = new File(surefireDirectory);
 			File[] sureFireReports = sureFireDirectory.listFiles((FilenameFilter) new XMLFileFilter());
 			
-			
-			for(File sureFireReport : sureFireReports) {
-	
-				try {
-					dBuilder = dbFactory.newDocumentBuilder();
-					Document doc = dBuilder.parse(sureFireReport);
-	
-					Element testsuite = doc.getDocumentElement();
-					String testsuiteName = testsuite.getAttribute("name");
-					
-					NodeList testCases = doc.getElementsByTagName("testcase");
-					
-					for(int i = 0; i < testCases.getLength(); i++) {
-						Element testCase = (Element)testCases.item(i);
-						String testCaseName = testCase.getAttribute("name");
-					
-						NodeList errors = testCase.getElementsByTagName("error");
-						if (errors.getLength() > 0) {
-							Element error = (Element)errors.item(0);
+			if(sureFireReports != null) {
+				for(File sureFireReport : sureFireReports) {
+		
+					try {
+						dBuilder = dbFactory.newDocumentBuilder();
+						Document doc = dBuilder.parse(sureFireReport);
+		
+						Element testsuite = doc.getDocumentElement();
+						String testsuiteName = testsuite.getAttribute("name");
+						
+						NodeList testCases = doc.getElementsByTagName("testcase");
+						
+						for(int i = 0; i < testCases.getLength(); i++) {
+							Element testCase = (Element)testCases.item(i);
+							String testCaseName = testCase.getAttribute("name");
+						
+							NodeList errors = testCase.getElementsByTagName("error");
+							if (errors.getLength() > 0) {
+								Element error = (Element)errors.item(0);
+								
+								TestReport report = new TestReport(testsuiteName, testCaseName, TestResultType.ERROR, error.getAttribute("message"), error.getAttribute("type"), error.getTextContent());
+								
+								tests.add(report);
+								continue;
+							}
+		
+							NodeList failures = testCase.getElementsByTagName("failure");
+							if (failures.getLength() > 0) {
+								Element failure = (Element)failures.item(0);
+								
+								TestReport report = new TestReport(testsuiteName, testCaseName, TestResultType.FAILURE, failure.getAttribute("message"), failure.getAttribute("type"), failure.getTextContent());
+								
+								tests.add(report);
+								continue;
+							}
 							
-							TestReport report = new TestReport(testsuiteName, testCaseName, TestResultType.ERROR, error.getAttribute("message"), error.getAttribute("type"), error.getTextContent());
-							
-							tests.add(report);
-							continue;
-						}
-	
-						NodeList failures = testCase.getElementsByTagName("failure");
-						if (failures.getLength() > 0) {
-							Element failure = (Element)failures.item(0);
-							
-							TestReport report = new TestReport(testsuiteName, testCaseName, TestResultType.FAILURE, failure.getAttribute("message"), failure.getAttribute("type"), failure.getTextContent());
-							
-							tests.add(report);
-							continue;
+							//Succesfully executed test
+							tests.add(new TestReport(testsuiteName, testCaseName));
 						}
 						
-						//Succesfully executed test
-						tests.add(new TestReport(testsuiteName, testCaseName));
+					} catch (Exception e) {
+						System.exit(OperiasStatus.ERROR_SUREFIRE_INVALID_XML.ordinal());
 					}
-					
-				} catch (Exception e) {
-					System.exit(OperiasStatus.ERROR_SUREFIRE_INVALID_XML.ordinal());
 				}
 			}
 		}
@@ -177,8 +178,12 @@ public class CoverageReport {
 
 		@Override
 		public boolean accept(File dir, String name) {
-			String[] splittedFileName = name.split(".");
-			return splittedFileName[splittedFileName.length].equals("xml");
+			try {
+				String[] splittedFileName = name.split(".");
+				return splittedFileName[splittedFileName.length].equals("xml");
+			} catch(Exception e) {
+				return false;
+			}
 		}
 	}
 	
