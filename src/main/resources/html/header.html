@@ -7,6 +7,11 @@
 		<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
 		<script type="text/javascript">
 			$(document).ready(function() {
+				$(".testResultButton").click(function() {
+					var id = $(this).attr('id');
+					$("#testResult"+id).toggle();
+				});
+			
 				$("#showAllChanges").click(function() {
 					$("#revisedCoverageTable, #originalCoverageTable, #sourceDiffTable").hide();
 					$("#combinedTable").show();

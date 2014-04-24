@@ -3,6 +3,7 @@ package operias.coverage;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -73,7 +74,18 @@ public class CoverageReport {
 	public CoverageReport constructReport() {
 
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		/*dbFactory.setNamespaceAware(false);
+		dbFactory.setValidating(false);
+			try {
+			dbFactory.setFeature("http://xml.org/sax/features/namespaces", false);
+			dbFactory.setFeature("http://xml.org/sax/features/validation", false);
+			dbFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-dtd-grammar", false);
+			dbFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+		} catch (Exception e) { 
+		
+		}*/
 		DocumentBuilder dBuilder;
+		
 
 		try {
 			dBuilder = dbFactory.newDocumentBuilder();
@@ -120,48 +132,49 @@ public class CoverageReport {
 			File sureFireDirectory = new File(surefireDirectory);
 			File[] sureFireReports = sureFireDirectory.listFiles((FilenameFilter) new XMLFileFilter());
 			
-			
-			for(File sureFireReport : sureFireReports) {
-	
-				try {
-					dBuilder = dbFactory.newDocumentBuilder();
-					Document doc = dBuilder.parse(sureFireReport);
-	
-					Element testsuite = doc.getDocumentElement();
-					String testsuiteName = testsuite.getAttribute("name");
-					
-					NodeList testCases = doc.getElementsByTagName("testcase");
-					
-					for(int i = 0; i < testCases.getLength(); i++) {
-						Element testCase = (Element)testCases.item(i);
-						String testCaseName = testCase.getAttribute("name");
-					
-						NodeList errors = testCase.getElementsByTagName("error");
-						if (errors.getLength() > 0) {
-							Element error = (Element)errors.item(0);
+			if(sureFireReports != null) {
+				for(File sureFireReport : sureFireReports) {
+		
+					try {
+						dBuilder = dbFactory.newDocumentBuilder();
+						Document doc = dBuilder.parse(sureFireReport);
+		
+						Element testsuite = doc.getDocumentElement();
+						String testsuiteName = testsuite.getAttribute("name");
+						
+						NodeList testCases = doc.getElementsByTagName("testcase");
+						
+						for(int i = 0; i < testCases.getLength(); i++) {
+							Element testCase = (Element)testCases.item(i);
+							String testCaseName = testCase.getAttribute("name");
+						
+							NodeList errors = testCase.getElementsByTagName("error");
+							if (errors.getLength() > 0) {
+								Element error = (Element)errors.item(0);
+								
+								TestReport report = new TestReport(testsuiteName, testCaseName, TestResultType.ERROR, error.getAttribute("message"), error.getAttribute("type"), error.getTextContent());
+								
+								tests.add(report);
+								continue;
+							}
+		
+							NodeList failures = testCase.getElementsByTagName("failure");
+							if (failures.getLength() > 0) {
+								Element failure = (Element)failures.item(0);
+								
+								TestReport report = new TestReport(testsuiteName, testCaseName, TestResultType.FAILURE, failure.getAttribute("message"), failure.getAttribute("type"), failure.getTextContent());
+								
+								tests.add(report);
+								continue;
+							}
 							
-							TestReport report = new TestReport(testsuiteName, testCaseName, TestResultType.ERROR, error.getAttribute("message"), error.getAttribute("type"), error.getTextContent());
-							
-							tests.add(report);
-							continue;
-						}
-	
-						NodeList failures = testCase.getElementsByTagName("failure");
-						if (failures.getLength() > 0) {
-							Element failure = (Element)failures.item(0);
-							
-							TestReport report = new TestReport(testsuiteName, testCaseName, TestResultType.FAILURE, failure.getAttribute("message"), failure.getAttribute("type"), failure.getTextContent());
-							
-							tests.add(report);
-							continue;
+							//Succesfully executed test
+							tests.add(new TestReport(testsuiteName, testCaseName));
 						}
 						
-						//Succesfully executed test
-						tests.add(new TestReport(testsuiteName, testCaseName));
+					} catch (Exception e) {
+						System.exit(OperiasStatus.ERROR_SUREFIRE_INVALID_XML.ordinal());
 					}
-					
-				} catch (Exception e) {
-					System.exit(OperiasStatus.ERROR_SUREFIRE_INVALID_XML.ordinal());
 				}
 			}
 		}
@@ -177,8 +190,12 @@ public class CoverageReport {
 
 		@Override
 		public boolean accept(File dir, String name) {
-			String[] splittedFileName = name.split(".");
-			return splittedFileName[splittedFileName.length].equals("xml");
+			try {
+				String[] splittedFileName = name.split("\\.");
+				return splittedFileName[splittedFileName.length - 1].equals("xml");
+			} catch(Exception e) {
+				return false;
+			}
 		}
 	}
 	
@@ -318,5 +335,41 @@ public class CoverageReport {
 	 */
 	public List<String> getSources() {
 		return sources;
+	}
+
+	/**
+	 * @return the tests
+	 */
+	public List<TestReport> getAllTests() {
+		return tests;
+	}
+	
+	/**
+	 * Checks if the coverage reports has any failed tests
+	 * @return True if some of the tests failed
+	 */
+	public boolean hasFailedTests() {
+		for(TestReport report : tests) {
+			if (report.getResult() == TestResultType.ERROR || report.getResult() == TestResultType.FAILURE){
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Get a list of the failed tests
+	 * @return
+	 */
+	public List<TestReport> getFailedTests() {
+		List<TestReport> failedList = new ArrayList<TestReport>();
+		for(TestReport report : tests) {
+			if (report.getResult() == TestResultType.ERROR || report.getResult() == TestResultType.FAILURE){
+				failedList.add(report);
+			}
+		}
+		
+		return failedList;
 	}
 }

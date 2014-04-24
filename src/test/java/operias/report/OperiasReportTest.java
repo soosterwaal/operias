@@ -8,6 +8,7 @@ import java.util.LinkedList;
 
 import operias.coverage.CoverageReport;
 import operias.diff.DiffReport;
+import operias.output.html.HTMLReport;
 import operias.report.change.ChangeSourceChange;
 import operias.report.change.CoverageIncreaseChange;
 import operias.report.change.InsertSourceChange;
@@ -21,8 +22,8 @@ public class OperiasReportTest {
 	 */
 	@Test
 	public void testSimpleOperiasReport() {
-		CoverageReport originalCoverage = new CoverageReport(new File("src/test/resources/coverageMavenProject1.xml"), "").constructReport();
-		CoverageReport revisedCoverage = new CoverageReport(new File("src/test/resources/coverageMavenProject2.xml"), "").constructReport();
+		CoverageReport originalCoverage = new CoverageReport(new File("src/test/resources/coverageMavenProject1.xml"), "src/test/resources/sureFireReports/").constructReport();
+		CoverageReport revisedCoverage = new CoverageReport(new File("src/test/resources/coverageMavenProject2.xml"), "src/test/resources/sureFireReports/").constructReport();
 		DiffReport diffReport = null;
 		try {
 			diffReport = new DiffReport("src/test/resources/mavenProject1", "src/test/resources/mavenProject2");
@@ -142,5 +143,12 @@ public class OperiasReportTest {
 		assertNull(sixthClass.getChanges().get(0).getRevisedCoverage().get(9));
 		assertNull(sixthClass.getChanges().get(0).getRevisedCoverage().get(10));
 		assertNull(sixthClass.getChanges().get(0).getRevisedCoverage().get(11));
+		
+		try {
+		new HTMLReport(report).generateReport();
+		} catch (Exception e) {
+			
+		
+		}
 	}
 }
