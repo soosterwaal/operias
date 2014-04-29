@@ -22,14 +22,19 @@
       <version>${junitVersion}</version>
     </dependency>
     <dependency>
-    	<groupId>com.googlecode.java-diff-utils</groupId>
-    	<artifactId>diffutils</artifactId>
-    	<version>1.2.1</version>	
-	</dependency>
-    <dependency>
     	<groupId>com.operias.report</groupId>
     	<artifactId>operias-report</artifactId>
     	<version>0.5.2</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.eclipse.jetty</groupId>
+    	<artifactId>jetty-server</artifactId>
+    	<version>9.2.0.M0</version>
+    </dependency>
+    <dependency>
+    	<groupId>com.google.code.gson</groupId>
+    	<artifactId>gson</artifactId>
+    	<version>2.2.4</version>
     </dependency>
   </dependencies>
   <build>
@@ -69,6 +74,7 @@
     </plugins>
     <pluginManagement>
     	<plugins>
+    
     		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
     		<plugin>
     			<groupId>org.eclipse.m2e</groupId>
@@ -109,4 +115,5 @@
   	<version>0.5.2</version>
   </parent>
   <groupId>com.operias.servlet</groupId>
+  <version>0.1.0</version>
 </project>
