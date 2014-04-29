@@ -3,7 +3,6 @@ package operias.coverage;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
