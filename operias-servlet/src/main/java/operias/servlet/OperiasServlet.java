@@ -8,7 +8,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import operias.test.general.NoExitSecurityManager;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.jetty.server.Request;
@@ -26,25 +25,22 @@ public class OperiasServlet extends AbstractHandler {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		int serverPort = 8080;
-		if (args.length > 2) {
-			serverPort = Integer.parseInt(args[2]);
-		}
-		
-		username = args[0];
-		password = args[1];
+		if (Configuration.parseArguments(args)) {
 		
 
-        System.setSecurityManager(new NoExitSecurityManager());
-        
-		Server server = new Server(serverPort);
-	    server.setHandler(new OperiasServlet());
-	    
-	    try {
-	    	server.start();
-	    } catch (Exception e) {
-	    	e.printStackTrace();
-	    }
+	        
+			Server server = new Server(Configuration.getServerPort());
+		    server.setHandler(new OperiasServlet());
+		    
+		    try {
+		    	server.start();
+		    } catch (Exception e) {
+		    	e.printStackTrace();
+		    }
+		}
+		else {
+			System.exit(1);
+		}
 		
 	}
 

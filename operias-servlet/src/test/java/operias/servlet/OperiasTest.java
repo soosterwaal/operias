@@ -18,6 +18,9 @@ public class OperiasTest {
 	 */
 	@Test
 	public void testPullData() {
+
+		Configuration.setTemporaryDirectory(new File("target/").getAbsolutePath());
+		Configuration.setResultDirectory(new File("target/").getAbsolutePath());
 		String pullData = fileToString(new File(new File("").getAbsolutePath(), "src/test/resources/pulldata.json").getAbsolutePath());
 		
 		JsonParser parser = new JsonParser();
@@ -32,7 +35,9 @@ public class OperiasTest {
 	 */
 	@Test
 	public void testMessageConstruction() {
-		
+
+		Configuration.setTemporaryDirectory(new File("target/").getAbsolutePath());
+		Configuration.setResultDirectory(new File("target/").getAbsolutePath());
 		Operias op = new Operias(null);
 		op.setXmlResult(new File(new File("").getAbsolutePath(), "src/test/resources/operias.xml"));
 		

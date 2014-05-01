@@ -25,11 +25,6 @@ public class Operias {
 	
 	
 	/**
-	 * The comments url for the data;
-	 */
-	String commentsURL;
-	
-	/**
 	 * Construct a new operias execution instance
 	 * @param pullData
 	 */
@@ -61,11 +56,10 @@ public class Operias {
 				String baseSHA = base.get("sha").getAsString();
 				String baseRef = base.get("ref").getAsString();
 				
-				commentsURL = pullRequest.get("comments_url").getAsString();
 				
 				String[] operiasArgs = new String[17];
 
-				String destinationDirectory = new File(new File("").getAbsolutePath(), "/result" + pullID).getAbsolutePath();
+				String destinationDirectory = new File(Configuration.getResultDirectory(), "/result" + pullID).getAbsolutePath();
 				operiasArgs[0] = "--original-repository-url";
 				operiasArgs[1] = baseCloneURL;
 				operiasArgs[2] = "--original-commit-id";
@@ -79,10 +73,9 @@ public class Operias {
 				operiasArgs[10] = "--revised-branch-name";
 				operiasArgs[11] = headRef;
 				operiasArgs[12] = "--temp-directory";
-				operiasArgs[13] = new File(new File("").getAbsolutePath(), "/temp" + pullID + Calendar.getInstance().getTimeInMillis()).getAbsolutePath();
+				operiasArgs[13] = new File(Configuration.getTemporaryDirectory(), "/temp" + pullID  + Calendar.getInstance().getTimeInMillis()).getAbsolutePath();
 				operiasArgs[14] = "--destination-directory";
 				operiasArgs[15] = destinationDirectory;
-				operiasArgs[16] = "--verbose";
 
 				try {
 					operias.Main.main(operiasArgs);
@@ -242,11 +235,21 @@ public class Operias {
 	}
 	
 	/**
-	 * Get the comments url, only filled after execute has run succesfully
+	 * Get the comments url
 	 * @return
 	 */
 	public String GetCommentsURL() {
-		return commentsURL;
+		JsonObject pullRequest = gitData.getAsJsonObject("pull_request");
+		return pullRequest.get("comments_url").getAsString();
+	}
+	
+	/**
+	 * Get the pull request id
+	 * @return
+	 */
+	public String GetPullRequestID() {
+		JsonObject pullRequest = gitData.getAsJsonObject("pull_request");
+		return pullRequest.get("id").getAsString();
 	}
 
 	/**
