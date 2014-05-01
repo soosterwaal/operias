@@ -34,7 +34,34 @@ public class GitServletHandler extends AbstractHandler {
 		// Get the object containig all information
 		final JsonObject object = parser.parse(inputData).getAsJsonObject();
 		
-		Thread operiasThread = new Thread("Operias") { public void run() { new Operias(object); }};
+		
+		Thread operiasThread = new Thread("Operias") { 
+			public void run() { 
+				Operias op = new Operias(object);
+				if(op.execute()) {
+					
+					String message = op.constructMessage();
+
+					JsonObject data = new JsonObject();
+					data.addProperty("body", message);
+					
+					ProcessBuilder builder = new ProcessBuilder(
+							"curl", 
+							"-u", Configuration.getGitHubUsername()+":" + Configuration.getGitHubPassword(),
+							op.GetCommentsURL(),
+							"-d", data.toString());
+					Process process = null;
+					try {
+						process = builder.start();
+						process.waitFor();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					
+					process.destroy();
+				}
+			}
+		};
 		operiasThread.start();
 		
 		

@@ -1,5 +1,6 @@
 package operias.servlet;
 
+
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 
@@ -15,6 +16,7 @@ public class OperiasServlet  {
 		if (Configuration.parseArguments(args)) {
 		
 
+	        System.setSecurityManager(new NoExitSecurityManager());
 			Server gitServer = new Server(Configuration.getGitServerPort());
 		    gitServer.setHandler(new GitServletHandler());
 		    
@@ -30,12 +32,17 @@ public class OperiasServlet  {
 		    try {
 		    	htmlServer.start();
 		    	gitServer.start();
+		    	htmlServer.join();
+		    	gitServer.join();
 		    } catch (Exception e) {
+		    	
 		    	e.printStackTrace();
 		    }
 		}
 		else {
+			
 			System.exit(1);
+			
 		}
 		
 	}

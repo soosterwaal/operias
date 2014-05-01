@@ -69,7 +69,7 @@ public class Configuration {
 					Configuration.setGitServerPort(Integer.parseInt(args[i + 1]));
 					i += 2;
 				} else if (args[i].equals("-hp") || args[i].equals("--html-server-port")) {
-					Configuration.setGitServerPort(Integer.parseInt(args[i + 1]));
+					Configuration.setHtmlServerPort(Integer.parseInt(args[i + 1]));
 					i += 2;
 				}  else if (args[i].equals("-td") || args[i].equals("--temporary-directory")) {
 					Configuration.setTemporaryDirectory(args[i + 1]);

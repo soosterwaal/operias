@@ -29,7 +29,7 @@
     <dependency>
     	<groupId>org.eclipse.jetty</groupId>
     	<artifactId>jetty-server</artifactId>
-    	<version>9.2.0.M0</version>
+    	<version>8.1.15.v20140411</version>
     </dependency>
     <dependency>
     	<groupId>com.google.code.gson</groupId>
@@ -115,5 +115,5 @@
   	<version>0.5.2</version>
   </parent>
   <groupId>com.operias.servlet</groupId>
-  <version>0.1.0</version>
+  <version>0.3.0</version>
 </project>

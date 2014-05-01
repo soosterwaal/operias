@@ -9,6 +9,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 public class OperiasTest {
@@ -18,7 +19,6 @@ public class OperiasTest {
 	/**
 	 * Test correct working of execution of operias
 	 */
-	@Test
 	public void testPullData() {
 
 		Configuration.setTemporaryDirectory(new File("target/").getAbsolutePath());
@@ -37,10 +37,14 @@ public class OperiasTest {
 	 */
 	@Test
 	public void testMessageConstruction() {
-
+		JsonObject gitData = new JsonObject();
+		JsonObject pullRequest = new JsonObject();
+		pullRequest.addProperty("id", "pullid1");
+		gitData.add("pull_request", pullRequest);
 		Configuration.setTemporaryDirectory(new File("target/").getAbsolutePath());
 		Configuration.setResultDirectory(new File("target/").getAbsolutePath());
-		Operias op = new Operias(null);
+		Configuration.setServerIP("127.0.0.1");
+		Operias op = new Operias(gitData);
 		op.setXmlResult(new File(new File("").getAbsolutePath(), "src/test/resources/operias.xml"));
 		
 		String message = op.constructMessage();
@@ -55,7 +59,9 @@ public class OperiasTest {
 
 "The following changes were made to the test suite of the project: \n" +
 "- 88 (6.73%) lines were added \n" +
-"- 434 (33.18%) lines were removed \n", message );
+"- 434 (33.18%) lines were removed \n\n"+
+
+"[Click here](http://127.0.0.1:8080/resultpullid1/index.html) for a more detailed report for this pull request.", message );
 	}
 	
 	/**

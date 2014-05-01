@@ -60,22 +60,23 @@ public class Operias {
 				String[] operiasArgs = new String[17];
 
 				String destinationDirectory = new File(Configuration.getResultDirectory(), "/result" + pullID).getAbsolutePath();
-				operiasArgs[0] = "--original-repository-url";
-				operiasArgs[1] = baseCloneURL;
-				operiasArgs[2] = "--original-commit-id";
-				operiasArgs[3] = baseSHA;
-				operiasArgs[4] = "--original-branch-name";
-				operiasArgs[5] = baseRef;
-				operiasArgs[6] = "--revised-repository-url";
-				operiasArgs[7] = headCloneURL;
-				operiasArgs[8] = "--revised-commit-id";
-				operiasArgs[9] = headSHA;
-				operiasArgs[10] = "--revised-branch-name";
-				operiasArgs[11] = headRef;
-				operiasArgs[12] = "--temp-directory";
-				operiasArgs[13] = new File(Configuration.getTemporaryDirectory(), "/temp" + pullID  + Calendar.getInstance().getTimeInMillis()).getAbsolutePath();
-				operiasArgs[14] = "--destination-directory";
-				operiasArgs[15] = destinationDirectory;
+				operiasArgs[0] = "--verbose";
+				operiasArgs[1] = "--original-repository-url";
+				operiasArgs[2] = baseCloneURL;
+				operiasArgs[3] = "--original-commit-id";
+				operiasArgs[4] = baseSHA;
+				operiasArgs[5] = "--original-branch-name";
+				operiasArgs[6] = baseRef;
+				operiasArgs[7] = "--revised-repository-url";
+				operiasArgs[8] = headCloneURL;
+				operiasArgs[9] = "--revised-commit-id";
+				operiasArgs[10] = headSHA;
+				operiasArgs[11] = "--revised-branch-name";
+				operiasArgs[12] = headRef;
+				operiasArgs[13] = "--temp-directory";
+				operiasArgs[14] = new File(Configuration.getTemporaryDirectory(), "/temp" + pullID  + Calendar.getInstance().getTimeInMillis()).getAbsolutePath();
+				operiasArgs[15] = "--destination-directory";
+				operiasArgs[16] = destinationDirectory;
 
 				try {
 					operias.Main.main(operiasArgs);
@@ -218,8 +219,8 @@ public class Operias {
 					testMessage += testAddedLinesMessage + testRemovedLinesMessage;
 				}
 					
-					String linkMessage = "";
-				//linkMessage = "\n[Click here](http://87.253.142.214:8081"+path+"/) for a more detailed report for this pull request."
+				String linkMessage = "";
+				linkMessage = "\n[Click here](http://"+Configuration.getServerIP()+":"+Configuration.getHtmlServerPort()+"/result"+GetPullRequestID()+"/index.html) for a more detailed report for this pull request.";
 					
 				message = summaryMessage+ classMessage + testMessage + linkMessage;
 				
