@@ -12,6 +12,8 @@ import org.junit.Test;
 import com.google.gson.JsonParser;
 
 public class OperiasTest {
+	
+	
 
 	/**
 	 * Test correct working of execution of operias
@@ -20,7 +22,7 @@ public class OperiasTest {
 	public void testPullData() {
 
 		Configuration.setTemporaryDirectory(new File("target/").getAbsolutePath());
-		Configuration.setResultDirectory(new File("target/").getAbsolutePath());
+		Configuration.setResultDirectory(new File("target/test").getAbsolutePath());
 		String pullData = fileToString(new File(new File("").getAbsolutePath(), "src/test/resources/pulldata.json").getAbsolutePath());
 		
 		JsonParser parser = new JsonParser();

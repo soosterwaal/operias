@@ -30,12 +30,17 @@ public class Configuration {
 	/**
 	 * Server IP, so we know from were we serve the files
 	 */
-	private static String serverIP;
+	private static String htmlServerIP;
 	
 	/**
 	 * Server Port
 	 */
-	private static int serverPort = 8080;
+	private static int gitServerPort = 8081;
+
+	/**
+	 * Server Port
+	 */
+	private static int htmlServerPort = 8080;
 	
 	/**
 	 * Directory where the result will be stored, is relative to working directory
@@ -60,10 +65,13 @@ public class Configuration {
 					// Destination folder
 					Configuration.setServerIP(args[i + 1]);
 					i += 2;
-				} else if (args[i].equals("-port") || args[i].equals("--server-port")) {
-					Configuration.setServerPort(Integer.parseInt(args[i + 1]));
+				} else if (args[i].equals("-gp") || args[i].equals("--git-server-port")) {
+					Configuration.setGitServerPort(Integer.parseInt(args[i + 1]));
 					i += 2;
-				} else if (args[i].equals("-td") || args[i].equals("--temporary-directory")) {
+				} else if (args[i].equals("-hp") || args[i].equals("--html-server-port")) {
+					Configuration.setGitServerPort(Integer.parseInt(args[i + 1]));
+					i += 2;
+				}  else if (args[i].equals("-td") || args[i].equals("--temporary-directory")) {
 					Configuration.setTemporaryDirectory(args[i + 1]);
 					i += 2;
 				} else if (args[i].equals("-rd") || args[i].equals("--results-directory")) {
@@ -85,7 +93,7 @@ public class Configuration {
 			return false;
 		}
 		
-		if (serverIP == null) {
+		if (htmlServerIP == null) {
 			System.out.println("[Error] Missing argument --server-ip");
 			return false;
 		}
@@ -134,29 +142,17 @@ public class Configuration {
 	 * @return the serverIP
 	 */
 	public static String getServerIP() {
-		return serverIP;
+		return htmlServerIP;
 	}
 
 	/**
 	 * @param serverIP the serverIP to set
 	 */
 	public static void setServerIP(String serverIP) {
-		Configuration.serverIP = serverIP;
+		Configuration.htmlServerIP = serverIP;
 	}
 
-	/**
-	 * @return the serverPort
-	 */
-	public static int getServerPort() {
-		return serverPort;
-	}
-
-	/**
-	 * @param serverPort the serverPort to set
-	 */
-	public static void setServerPort(int serverPort) {
-		Configuration.serverPort = serverPort;
-	}
+	
 
 	/**
 	 * @return the resultDirectory
@@ -184,5 +180,33 @@ public class Configuration {
 	 */
 	public static void setTemporaryDirectory(String temporaryDirectory) {
 		Configuration.temporaryDirectory = temporaryDirectory;
+	}
+
+	/**
+	 * @return the gitServerPort
+	 */
+	public static int getGitServerPort() {
+		return gitServerPort;
+	}
+
+	/**
+	 * @param gitServerPort the gitServerPort to set
+	 */
+	public static void setGitServerPort(int gitServerPort) {
+		Configuration.gitServerPort = gitServerPort;
+	}
+
+	/**
+	 * @return the htmlServerPort
+	 */
+	public static int getHtmlServerPort() {
+		return htmlServerPort;
+	}
+
+	/**
+	 * @param htmlServerPort the htmlServerPort to set
+	 */
+	public static void setHtmlServerPort(int htmlServerPort) {
+		Configuration.htmlServerPort = htmlServerPort;
 	}
 }
