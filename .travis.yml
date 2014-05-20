@@ -3,4 +3,4 @@ jdk:
   - oraclejdk7
   
 script: 
-  - mvn cobertura:cobertura -Dcobertura.report.format=xml coveralls:cobertura
+  - mvn cobertura:cobertura -Dcobertura.report.format=xml
