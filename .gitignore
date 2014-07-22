@@ -10,3 +10,5 @@
 
 site*
 /target
+
+operias-servlet/results/operias.xml

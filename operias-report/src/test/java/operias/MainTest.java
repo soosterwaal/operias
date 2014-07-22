@@ -68,20 +68,20 @@ public class MainTest {
 		Main.main(arguments);
 		
 		// Check if th destination directory exists and the temp is deleted correctly
-		assertFalse(new File(tempDirectory).exists());
-		assertTrue(new File(destDirectory).exists());
+		assertFalse("Temporary directort still exists" , new File(tempDirectory).exists());
+		assertTrue("Destination directort does not exists", new File(destDirectory).exists());
 		
 		// Finnaly, check the content
-		assertTrue(new File(destDirectory + "/img").exists());
-		assertTrue(new File(destDirectory + "/img/arc.png").exists());
-		assertTrue(new File(destDirectory + "/css").exists());
-		assertTrue(new File(destDirectory + "/css/style.css").exists());
-		assertTrue(new File(destDirectory + "/simpleMavenProject.Simple.html").exists());
-		assertTrue(new File(destDirectory + "/simpleMavenProject2.Simple2.html").exists());
-		assertTrue(new File(destDirectory + "/samples.src.test.java.simpleMavenProject.SimpleTest.java.html").exists());
-		assertTrue(new File(destDirectory + "/samples2.src.test.java.simpleMavenProject2.Simple2Test.java.html").exists());
-		assertTrue(new File(destDirectory + "/index.html").exists());
-		assertTrue(new File(destDirectory + "/operias.xml").exists());
+		assertTrue("Image folder does not exists", new File(destDirectory + "/img").exists());
+		assertTrue("1", new File(destDirectory + "/img/arc.png").exists());
+		assertTrue("2", new File(destDirectory + "/css").exists());
+		assertTrue("3", new File(destDirectory + "/css/style.css").exists());
+		assertTrue("4", new File(destDirectory + "/simpleMavenProject.Simple.SAME.html").exists());
+		assertTrue("5", new File(destDirectory + "/simpleMavenProject2.Simple2.CHANGED.html").exists());
+		assertTrue("6", new File(destDirectory + "/samples.src.test.java.simpleMavenProject.SimpleTest.java.html").exists());
+		assertTrue("7", new File(destDirectory + "/samples2.src.test.java.simpleMavenProject2.Simple2Test.java.html").exists());
+		assertTrue("8", new File(destDirectory + "/index.html").exists());
+		assertTrue("9", new File(destDirectory + "/operias.xml").exists());
 	}
 	
 	/**
@@ -161,12 +161,12 @@ public class MainTest {
 		assertTrue(new File(destDirectory + "/img/arc.png").exists());
 		assertTrue(new File(destDirectory + "/css").exists());
 		assertTrue(new File(destDirectory + "/css/style.css").exists());
-		assertTrue(new File(destDirectory + "/example.Calculations.html").exists());
-		assertTrue(new File(destDirectory + "/example.deletablePackage.DeletableClass.html").exists());
-		assertTrue(new File(destDirectory + "/example.Loops.html").exists());
-		assertTrue(new File(destDirectory + "/example.NewClass.html").exists());
+		assertTrue(new File(destDirectory + "/example.Calculations.CHANGED.html").exists());
+		assertTrue(new File(destDirectory + "/example.deletablePackage.DeletableClass.DELETED.html").exists());
+		assertTrue(new File(destDirectory + "/example.Loops.SAME.html").exists());
+		assertTrue(new File(destDirectory + "/example.NewClass.NEW.html").exists());
 		assertTrue(new File(destDirectory + "/index.html").exists());
-		assertTrue(new File(destDirectory + "/moreExamples.Switch.html").exists());
+		assertTrue(new File(destDirectory + "/moreExamples.Switch.NEW.html").exists());
 		assertTrue(new File(destDirectory + "/operias.xml").exists());
 		assertTrue(new File(destDirectory + "/src.test.java.example.CalculationsTest.java.html").exists());
 		assertTrue(new File(destDirectory + "/src.test.java.example.LoopsTest.java.html").exists());
