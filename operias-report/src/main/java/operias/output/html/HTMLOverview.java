@@ -340,7 +340,7 @@ public class HTMLOverview {
 		String className = splittedClassName[splittedClassName.length - 1];
 		
 		html += "<tr class=' classRowLevel"+packageLevel+" ClassInPackage"+packageID+" "+(changedClass.getSourceDiff().getSourceState() ==SourceDiffState.DELETED ? "deletedOverviewRow"  : "")+"'>";
-		html += "<td><a href='"+changedClass.getClassName()+".html'>"+className+"</a></td>";
+		html += "<td><a href='"+changedClass.getClassName()+"."+changedClass.getSourceDiff().getSourceState()+".html'>"+className+"</a></td>";
 		switch (changedClass.getSourceDiff().getSourceState()) {
 			case DELETED:
 				html += generateCoverageBarsHTML(originalClass.getLineRate(), 0.0, SourceDiffState.DELETED);

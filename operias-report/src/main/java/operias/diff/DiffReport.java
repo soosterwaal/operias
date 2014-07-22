@@ -2,6 +2,7 @@ package operias.diff;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import operias.Main;
@@ -78,24 +79,47 @@ public class DiffReport {
 		
 		return changedFiles.getDirectory(searchDirName);
 	}
-	
+
 	/**
-	 * Get the file diff instance of the given file
+	 * Get the file diff instance of the given file, returning the first instance found with the given state
 	 * @param filename
 	 * @return the file diff instance, or null if not found
 	 */
-	public DiffFile getFile(List<String> sourceLocations, String filename) {
+	public DiffFile getFile(List<String> sourceLocations, String filename, SourceDiffState state) {
 
 		// Loop through all possible locations
 		for(String baseLocation : sourceLocations) {
 			String searchFileName = (new File(baseLocation + "/", filename)).getAbsolutePath();
 			DiffFile searchedFile = changedFiles.getFile(searchFileName);
 			
-			if (searchedFile != null) {
+			if (searchedFile != null && searchedFile.getSourceState() == state) {
 				return searchedFile;
 			}
 		}
 		
 		return null;
+	}
+	/**
+	 * Get the file diff instance of the given file, returning the first instance found
+	 * @param filename
+	 * @return the file diff instance, or null if not found
+	 */
+	public List<DiffFile> getFiles(List<String> sourceLocations, String filename) {
+
+		List<DiffFile> foundFiles = new ArrayList<DiffFile>();
+		
+		// Loop through all possible locations
+		for(String baseLocation : sourceLocations) {
+			String searchFileName = (new File(baseLocation + "/", filename)).getAbsolutePath();
+			DiffFile searchedFile = changedFiles.getFile(searchFileName);
+			
+			if (searchedFile != null) {
+				if (!foundFiles.contains(searchedFile)) {
+					foundFiles.add(searchedFile);
+				}
+			}
+		}
+		
+		return foundFiles;
 	}
 }

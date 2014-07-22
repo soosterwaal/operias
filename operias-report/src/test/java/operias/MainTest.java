@@ -84,6 +84,42 @@ public class MainTest {
 		assertTrue(new File(destDirectory + "/operias.xml").exists());
 	}
 	
+	/**
+	 * Test operis for a multi module maven project
+	 */
+	@Test
+	public void testFunctionalMultiModuleNameChange() {
+		
+		try {
+			new File(new File("").getAbsolutePath() + "/target/testsProjects/multiProjectModuleNameChange1").mkdirs();
+			FileUtils.copyDirectory(
+				new File(new File("").getAbsolutePath() +"/src/test/resources/multiProjectModuleNameChange1"), 
+				new File(new File("").getAbsolutePath() +"/target/testsProjects/multiProjectModuleNameChange1"));
+			
+			new File(new File("").getAbsolutePath() +"/target/testsProjects/multiProjectModuleNameChange2").mkdirs();
+			FileUtils.copyDirectory(
+				new File(new File("").getAbsolutePath() +"/src/test/resources/multiProjectModuleNameChange2"), 
+				new File(new File("").getAbsolutePath() +"/target/testsProjects/multiProjectModuleNameChange2"));
+		} catch (IOException e) {
+			fail(e.getMessage());
+		}
+		
+		String tempDirectory = new File("").getAbsolutePath() + "/target/temp" + Calendar.getInstance().getTime().getTime();
+		String destDirectory = new File("").getAbsolutePath() + "/target/mainTestMultiNameChange" + Calendar.getInstance().getTime().getTime();
+		assertFalse(new File(tempDirectory).exists());
+		String[] arguments = new String[] {
+				"--original-directory", new File("").getAbsolutePath() + "/target/testsProjects/multiProjectModuleNameChange1",
+				"--revised-directory", new File("").getAbsolutePath() + "/target/testsProjects/multiProjectModuleNameChange2",
+				"--temp-directory", tempDirectory,
+				"--destination-directory", destDirectory
+		};
+		
+		Main.main(arguments);
+		
+		// Check if th destination directory exists and the temp is deleted correctly
+		assertFalse(new File(tempDirectory).exists());
+		assertTrue(new File(destDirectory).exists());
+	}
 	@Test
 	/**
 	 * Function test for a single module proejct

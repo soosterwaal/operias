@@ -32,7 +32,7 @@ public class HTMLClassView extends HTMLCodeView {
 	 */
 	public HTMLClassView(OperiasFile file, List<OperiasFile> changedFiles) throws IOException {
 		
-		File classHTMLFile = new File(Configuration.getDestinationDirectory() + "/" + file.getClassName() + ".html");
+		File classHTMLFile = new File(Configuration.getDestinationDirectory() + "/" + file.getClassName() + "."+file.getSourceDiff().getSourceState()+".html");
 		classHTMLFile.createNewFile();
 		
 		PrintStream outputStreamHTMLFile = new PrintStream(classHTMLFile);

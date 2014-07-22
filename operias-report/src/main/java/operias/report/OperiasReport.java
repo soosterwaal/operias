@@ -89,16 +89,9 @@ public class OperiasReport {
 			if (rPackage != null) {
 				for(CoberturaClass oClass : oPackage.getClasses()) {
 					
-					DiffFile fileDiff = sourceDiffReport.getFile(sourceLocations, oClass.getFileName());
-					CoberturaClass rClass = rPackage.getClass(oClass.getName());
+					List<DiffFile> fileDiffs = sourceDiffReport.getFiles(sourceLocations, oClass.getFileName());
 					
-					if (rClass != null) {
-						// We got the class, so we can compare the classes for any differences
-						OperiasFile newOFile = new OperiasFile(oClass, rClass, fileDiff);
-						if (newOFile.getChanges().size() > 0) {
-							changedClasses.add(newOFile);
-						}
-					} else {
+					for(DiffFile fileDiff : fileDiffs) {
 						// Class was deleted!
 						if (fileDiff.getSourceState() == SourceDiffState.DELETED) {
 							
@@ -106,18 +99,26 @@ public class OperiasReport {
 							if (newOFile.getChanges().size() > 0) {
 								changedClasses.add(newOFile);
 							}
-						} else {
-							// @TODO: think about how to fix this? Using the current structure, a file can only be marked
-							// delete if the diff report says its deleted.
-							Main.printLine("[Warning] Found a innerclass which was deleted: " + oClass.getName());
+						} else  {
+							CoberturaClass rClass = rPackage.getClass(oClass.getName());
+							if (rClass != null) {
+								// We got the class, so we can compare the classes for any differences
+								OperiasFile newOFile = new OperiasFile(oClass, rClass, fileDiff);
+								if (newOFile.getChanges().size() > 0) {
+									changedClasses.add(newOFile);
+								}
+							} else {
+								// @TODO: think about how to fix this? Using the current structure, a file can only be marked
+								// delete if the diff report says its deleted.
+								Main.printLine("[Warning] Found a innerclass which was deleted: " + oClass.getName());
+							}
 						}
 					}
-					
 				}
 			} else {
 				// All classes must be marked as deleted
 				for(CoberturaClass oClass : oPackage.getClasses()) {
-					DiffFile fileDiff = sourceDiffReport.getFile(sourceLocations, oClass.getFileName());
+					DiffFile fileDiff = sourceDiffReport.getFile(sourceLocations, oClass.getFileName(), SourceDiffState.DELETED);
 					OperiasFile newOFile = new OperiasFile(oClass, fileDiff);
 					if (newOFile.getChanges().size() > 0) {
 						changedClasses.add(newOFile);
@@ -133,7 +134,7 @@ public class OperiasReport {
 			if (oPackage == null) {
 				// Package was new so, all classes should be "new"
 				for(CoberturaClass rClass : rPackage.getClasses()) {
-					DiffFile fileDiff = sourceDiffReport.getFile(sourceLocations, rClass.getFileName());
+					DiffFile fileDiff = sourceDiffReport.getFile(sourceLocations, rClass.getFileName(), SourceDiffState.NEW);
 					OperiasFile newOFile = new OperiasFile(rClass, fileDiff);
 					if (newOFile.getChanges().size() > 0) {
 						changedClasses.add(newOFile);
@@ -144,17 +145,19 @@ public class OperiasReport {
 				for(CoberturaClass rClass : rPackage.getClasses()) {
 					CoberturaClass oClass = oPackage.getClass(rClass.getName());
 					
-					if (oClass == null) {
+
+					DiffFile fileDiff = sourceDiffReport.getFile(sourceLocations, rClass.getFileName(), SourceDiffState.NEW);
+					
+					
+					if (fileDiff != null && oClass == null) {
 						// Class was new
-						DiffFile fileDiff = sourceDiffReport.getFile(sourceLocations, rClass.getFileName());
-						if (fileDiff.getSourceState() == SourceDiffState.NEW) {
-							OperiasFile newOFile = new OperiasFile(rClass, fileDiff);
-							if (newOFile.getChanges().size() > 0) {
-								changedClasses.add(newOFile);
-							}
-						} else {
-							Main.printLine("[Warning] Found a innerclass which was added: " + rClass.getName());
+						OperiasFile newOFile = new OperiasFile(rClass, fileDiff);
+						if (newOFile.getChanges().size() > 0) {
+							changedClasses.add(newOFile);
 						}
+					} else if (oClass == null) {
+						Main.printLine("[Warning] Found a innerclass which was added: " + rClass.getName());
+					
 					}
 				}
 			}

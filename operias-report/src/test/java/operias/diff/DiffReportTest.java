@@ -11,6 +11,18 @@ import org.junit.Test;
 
 public class DiffReportTest {
 
+	
+	@Test
+	public void testModuleChangeName() {
+		try {
+			DiffReport diffReport = new DiffReport("src/test/resources/multiProjectModuleNameChange1", "src/test/resources/multiProjectModuleNameChange2");
+
+	
+		} catch (Exception e) {
+			
+			
+		}
+	}
 	/**
 	 * Test the same directory
 	 * @throws IOException 
@@ -249,17 +261,17 @@ public class DiffReportTest {
 		DiffReport diffReport;
 		try {
 			diffReport = new DiffReport("src/test/resources/simpleMavenProject", "src/test/resources/simpleMavenProject2");
-			DiffFile file = diffReport.getFile(sourceLocations, "simpleMavenProject/Simple.java");
+			DiffFile file = diffReport.getFile(sourceLocations, "simpleMavenProject/Simple.java", SourceDiffState.DELETED);
 			
 			assertNotNull(file);
 			assertEquals((new File("src/test/resources/simpleMavenProject", "src/main/java/simpleMavenProject/Simple.java")).getAbsolutePath(), file.getOriginalFileName());
 
-			file = diffReport.getFile(sourceLocations, "simpleMavenProject/Simple2.java");
+			file = diffReport.getFile(sourceLocations, "simpleMavenProject/Simple2.java", SourceDiffState.NEW);
 	
 			assertNotNull(file);
 			assertEquals((new File("src/test/resources/simpleMavenProject2", "src/main/java/simpleMavenProject/Simple2.java")).getAbsolutePath(), file.getRevisedFileName());
 			
-			file = diffReport.getFile(sourceLocations, "simpleMavenProject/DOESNOTEXISTS.java");
+			file = diffReport.getFile(sourceLocations, "simpleMavenProject/DOESNOTEXISTS.java", SourceDiffState.NEW);
 			
 			assertNull(file);
 		} catch (IOException e) {
