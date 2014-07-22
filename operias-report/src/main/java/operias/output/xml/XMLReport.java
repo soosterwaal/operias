@@ -133,31 +133,31 @@ public class XMLReport {
 
 		// Element for removed lines
 		if (totalRelevantLineCountRemoved > 0) {
-			Element relevantLinesRemoved = doc.createElement("totalRelevantLinesRemoved");
-			Element relevantLinesRemovedCount = doc.createElement("lineCount");
-			Element relevantLinesRemovedPercentage = doc.createElement("lineRate");
+			Element coverableLinesRemoved = doc.createElement("totalCoverableLinesRemoved");
+			Element coverableLinesRemovedCount = doc.createElement("lineCount");
+			Element coverableLinesRemovedPercentage = doc.createElement("lineRate");
 			
-			relevantLinesRemovedCount.appendChild(doc.createTextNode("" + totalRelevantLineCountRemoved));
-			relevantLinesRemovedPercentage.appendChild(doc.createTextNode("" + Math.round((double)totalRelevantLineCountCoveredAndRemoved / (double)totalRelevantLineCountRemoved * 100.0f) / (double)100));
-			relevantLinesRemoved.appendChild(relevantLinesRemovedCount);
-			relevantLinesRemoved.appendChild(relevantLinesRemovedPercentage);
+			coverableLinesRemovedCount.appendChild(doc.createTextNode("" + totalRelevantLineCountRemoved));
+			coverableLinesRemovedPercentage.appendChild(doc.createTextNode("" + Math.round((double)totalRelevantLineCountCoveredAndRemoved / (double)totalRelevantLineCountRemoved * 100.0f) / (double)100));
+			coverableLinesRemoved.appendChild(coverableLinesRemovedCount);
+			coverableLinesRemoved.appendChild(coverableLinesRemovedPercentage);
 			
-			coverageChanges.appendChild(relevantLinesRemoved);
+			coverageChanges.appendChild(coverableLinesRemoved);
 		}
 		
 		// Elements for added lines
 
 		if (totalRelevantLineCountAdded > 0) {
-			Element relevantLinesAdded = doc.createElement("totalRelevantLinesAdded");
-			Element relevantLinesAddedCount = doc.createElement("lineCount");
-			Element relevantLinesAddedPercentage = doc.createElement("lineRate");
+			Element coverableLinesAdded = doc.createElement("totalCoverableLinesAdded");
+			Element coverableLinesAddedCount = doc.createElement("lineCount");
+			Element coverableLinesAddedPercentage = doc.createElement("lineRate");
 			
-			relevantLinesAddedCount.appendChild(doc.createTextNode("" + totalRelevantLineCountAdded));
-			relevantLinesAddedPercentage.appendChild(doc.createTextNode("" + Math.round((double)totalRelevantLineCountCoveredAndAdded / (double)totalRelevantLineCountAdded * 100.0f) / (double)100));
-			relevantLinesAdded.appendChild(relevantLinesAddedCount);
-			relevantLinesAdded.appendChild(relevantLinesAddedPercentage);
+			coverableLinesAddedCount.appendChild(doc.createTextNode("" + totalRelevantLineCountAdded));
+			coverableLinesAddedPercentage.appendChild(doc.createTextNode("" + Math.round((double)totalRelevantLineCountCoveredAndAdded / (double)totalRelevantLineCountAdded * 100.0f) / (double)100));
+			coverableLinesAdded.appendChild(coverableLinesAddedCount);
+			coverableLinesAdded.appendChild(coverableLinesAddedPercentage);
 			
-			coverageChanges.appendChild(relevantLinesAdded);
+			coverageChanges.appendChild(coverableLinesAdded);
 		}
 
 		
@@ -286,31 +286,31 @@ public class XMLReport {
 			
 			// Element for removed lines
 			if (relevantLineCountRemoved > 0) {
-				Element relevantLinesRemoved = doc.createElement("relevantLinesRemoved");
-				Element relevantLinesRemovedCount = doc.createElement("lineCount");
-				Element relevantLinesRemovedPercentage = doc.createElement("lineRate");
+				Element coverableLinesRemoved = doc.createElement("coverableLinesRemoved");
+				Element coverableLinesRemovedCount = doc.createElement("lineCount");
+				Element coverableLinesRemovedPercentage = doc.createElement("lineRate");
 				
-				relevantLinesRemovedCount.appendChild(doc.createTextNode("" + relevantLineCountRemoved));
-				relevantLinesRemovedPercentage.appendChild(doc.createTextNode("" + Math.round((double)relevantLineCountCoveredAndRemoved / (double)relevantLineCountRemoved * 100.0f) / (double)100));
-				relevantLinesRemoved.appendChild(relevantLinesRemovedCount);
-				relevantLinesRemoved.appendChild(relevantLinesRemovedPercentage);
+				coverableLinesRemovedCount.appendChild(doc.createTextNode("" + relevantLineCountRemoved));
+				coverableLinesRemovedPercentage.appendChild(doc.createTextNode("" + Math.round((double)relevantLineCountCoveredAndRemoved / (double)relevantLineCountRemoved * 100.0f) / (double)100));
+				coverableLinesRemoved.appendChild(coverableLinesRemovedCount);
+				coverableLinesRemoved.appendChild(coverableLinesRemovedPercentage);
 				
-				coverageChanges.appendChild(relevantLinesRemoved);
+				coverageChanges.appendChild(coverableLinesRemoved);
 			}
 			
 			// Elements for added lines
 
 			if (relevantLineCountAdded > 0) {
-				Element relevantLinesAdded = doc.createElement("relevantLinesAdded");
-				Element relevantLinesAddedCount = doc.createElement("lineCount");
-				Element relevantLinesAddedPercentage = doc.createElement("lineRate");
+				Element coverableLinesAdded = doc.createElement("coverableLinesAdded");
+				Element coverableLinesAddedCount = doc.createElement("lineCount");
+				Element coverableLinesAddedPercentage = doc.createElement("lineRate");
 				
-				relevantLinesAddedCount.appendChild(doc.createTextNode("" + relevantLineCountAdded));
-				relevantLinesAddedPercentage.appendChild(doc.createTextNode("" + Math.round((double)relevantLineCountCoveredAndAdded / (double)relevantLineCountCoveredAndAdded * 100.0f) / (double)100));
-				relevantLinesAdded.appendChild(relevantLinesAddedCount);
-				relevantLinesAdded.appendChild(relevantLinesAddedPercentage);
+				coverableLinesAddedCount.appendChild(doc.createTextNode("" + relevantLineCountAdded));
+				coverableLinesAddedPercentage.appendChild(doc.createTextNode("" + Math.round((double)relevantLineCountCoveredAndAdded / (double)relevantLineCountCoveredAndAdded * 100.0f) / (double)100));
+				coverableLinesAdded.appendChild(coverableLinesAddedCount);
+				coverableLinesAdded.appendChild(coverableLinesAddedPercentage);
 				
-				coverageChanges.appendChild(relevantLinesAdded);
+				coverageChanges.appendChild(coverableLinesAdded);
 			}
 
 			

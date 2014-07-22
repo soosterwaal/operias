@@ -93,11 +93,11 @@ public class XMLReportTest {
 			assertEquals("0.6666666666666666", xpath.compile("/operias/summary/classChanges/coverageChanges/@revisedLineRate").evaluate(doc));
 			assertEquals("0.8461538461538461", xpath.compile("/operias/summary/classChanges/coverageChanges/@revisedConditionRate").evaluate(doc));
 			
-			assertEquals("15" , xpath.compile("/operias/summary/classChanges/coverageChanges/totalRelevantLinesAdded/lineCount").evaluate(doc));	
-			assertEquals("0.47" , xpath.compile("/operias/summary/classChanges/coverageChanges/totalRelevantLinesAdded/lineRate").evaluate(doc));	
+			assertEquals("15" , xpath.compile("/operias/summary/classChanges/coverageChanges/totalCoverableLinesAdded/lineCount").evaluate(doc));	
+			assertEquals("0.47" , xpath.compile("/operias/summary/classChanges/coverageChanges/totalCoverableLinesAdded/lineRate").evaluate(doc));	
 			
-			assertEquals("5" , xpath.compile("/operias/summary/classChanges/coverageChanges/totalRelevantLinesRemoved/lineCount").evaluate(doc));	
-			assertEquals("0.8" , xpath.compile("/operias/summary/classChanges/coverageChanges/totalRelevantLinesRemoved/lineRate").evaluate(doc));	
+			assertEquals("5" , xpath.compile("/operias/summary/classChanges/coverageChanges/totalCoverableLinesRemoved/lineCount").evaluate(doc));	
+			assertEquals("0.8" , xpath.compile("/operias/summary/classChanges/coverageChanges/totalCoverableLinesRemoved/lineRate").evaluate(doc));	
 
 			
 			assertEquals("32 (66.67%)" , xpath.compile("/operias/summary/classChanges/sourceChanges/addedLineCount").evaluate(doc));	
@@ -117,10 +117,10 @@ public class XMLReportTest {
 			assertEquals("CHANGED" , xpath.compile("/operias/changedFiles/changedClasses/classFile[1]/@sourceState").evaluate(doc));		
 			assertEquals("/src/main/java/example/Calculations.java" , xpath.compile("/operias/changedFiles/changedClasses/classFile[1]/@filename").evaluate(doc));	
 			
-			assertEquals("6" , xpath.compile("/operias/changedFiles/changedClasses/classFile[1]/coverageChanges/relevantLinesAdded/lineCount").evaluate(doc));	
-			assertEquals("1.0" , xpath.compile("/operias/changedFiles/changedClasses/classFile[1]/coverageChanges/relevantLinesAdded/lineRate").evaluate(doc));		
-			assertEquals("2" , xpath.compile("/operias/changedFiles/changedClasses/classFile[1]/coverageChanges/relevantLinesRemoved/lineCount").evaluate(doc));		
-			assertEquals("0.5" , xpath.compile("/operias/changedFiles/changedClasses/classFile[1]/coverageChanges/relevantLinesRemoved/lineRate").evaluate(doc));	
+			assertEquals("6" , xpath.compile("/operias/changedFiles/changedClasses/classFile[1]/coverageChanges/coverableLinesAdded/lineCount").evaluate(doc));	
+			assertEquals("1.0" , xpath.compile("/operias/changedFiles/changedClasses/classFile[1]/coverageChanges/coverableLinesAdded/lineRate").evaluate(doc));		
+			assertEquals("2" , xpath.compile("/operias/changedFiles/changedClasses/classFile[1]/coverageChanges/coverableLinesRemoved/lineCount").evaluate(doc));		
+			assertEquals("0.5" , xpath.compile("/operias/changedFiles/changedClasses/classFile[1]/coverageChanges/coverableLinesRemoved/lineRate").evaluate(doc));	
 		
 			assertEquals("8 (57.14%)" , xpath.compile("/operias/changedFiles/changedClasses/classFile[1]/sourceChanges/@sizeChange").evaluate(doc));	
 			assertEquals("2 (14.29%)" , xpath.compile("/operias/changedFiles/changedClasses/classFile[1]/sourceChanges/removedLineCount").evaluate(doc));		
@@ -148,8 +148,8 @@ public class XMLReportTest {
 			assertEquals("CHANGED" , xpath.compile("/operias/changedFiles/changedClasses/classFile[3]/@sourceState").evaluate(doc));		
 			assertEquals("/src/main/java/example/Music.java" , xpath.compile("/operias/changedFiles/changedClasses/classFile[3]/@filename").evaluate(doc));	
 			
-			assertEquals("3" , xpath.compile("/operias/changedFiles/changedClasses/classFile[3]/coverageChanges/relevantLinesRemoved/lineCount").evaluate(doc));	
-			assertEquals("1.0" , xpath.compile("/operias/changedFiles/changedClasses/classFile[3]/coverageChanges/relevantLinesRemoved/lineRate").evaluate(doc));		
+			assertEquals("3" , xpath.compile("/operias/changedFiles/changedClasses/classFile[3]/coverageChanges/coverableLinesRemoved/lineCount").evaluate(doc));	
+			assertEquals("1.0" , xpath.compile("/operias/changedFiles/changedClasses/classFile[3]/coverageChanges/coverableLinesRemoved/lineRate").evaluate(doc));		
 			
 			
 			assertEquals("-5 (-35.71%)" , xpath.compile("/operias/changedFiles/changedClasses/classFile[3]/sourceChanges/@sizeChange").evaluate(doc));	
@@ -172,8 +172,8 @@ public class XMLReportTest {
 			assertEquals("NEW" , xpath.compile("/operias/changedFiles/changedClasses/classFile[5]/@sourceState").evaluate(doc));		
 			assertEquals("/src/main/java/example/NewClass.java" , xpath.compile("/operias/changedFiles/changedClasses/classFile[5]/@filename").evaluate(doc));	
 			
-			assertEquals("4" , xpath.compile("/operias/changedFiles/changedClasses/classFile[5]/coverageChanges/relevantLinesAdded/lineCount").evaluate(doc));	
-			assertEquals("0.0" , xpath.compile("/operias/changedFiles/changedClasses/classFile[5]/coverageChanges/relevantLinesAdded/lineRate").evaluate(doc));			
+			assertEquals("4" , xpath.compile("/operias/changedFiles/changedClasses/classFile[5]/coverageChanges/coverableLinesAdded/lineCount").evaluate(doc));	
+			assertEquals("0.0" , xpath.compile("/operias/changedFiles/changedClasses/classFile[5]/coverageChanges/coverableLinesAdded/lineRate").evaluate(doc));			
 		
 			assertEquals("9 (100.0%)" , xpath.compile("/operias/changedFiles/changedClasses/classFile[5]/sourceChanges/@sizeChange").evaluate(doc));	
 			assertEquals("9 (100.0%)" , xpath.compile("/operias/changedFiles/changedClasses/classFile[5]/sourceChanges/addedLineCount").evaluate(doc));	
@@ -184,8 +184,8 @@ public class XMLReportTest {
 			assertEquals("NEW" , xpath.compile("/operias/changedFiles/changedClasses/classFile[6]/@sourceState").evaluate(doc));		
 			assertEquals("/src/main/java/moreExamples/Switch.java" , xpath.compile("/operias/changedFiles/changedClasses/classFile[6]/@filename").evaluate(doc));	
 			
-			assertEquals("5" , xpath.compile("/operias/changedFiles/changedClasses/classFile[6]/coverageChanges/relevantLinesAdded/lineCount").evaluate(doc));	
-			assertEquals("1.0" , xpath.compile("/operias/changedFiles/changedClasses/classFile[6]/coverageChanges/relevantLinesAdded/lineRate").evaluate(doc));			
+			assertEquals("5" , xpath.compile("/operias/changedFiles/changedClasses/classFile[6]/coverageChanges/coverableLinesAdded/lineCount").evaluate(doc));	
+			assertEquals("1.0" , xpath.compile("/operias/changedFiles/changedClasses/classFile[6]/coverageChanges/coverableLinesAdded/lineRate").evaluate(doc));			
 		
 			assertEquals("12 (100.0%)" , xpath.compile("/operias/changedFiles/changedClasses/classFile[6]/sourceChanges/@sizeChange").evaluate(doc));	
 			assertEquals("12 (100.0%)" , xpath.compile("/operias/changedFiles/changedClasses/classFile[6]/sourceChanges/addedLineCount").evaluate(doc));	
