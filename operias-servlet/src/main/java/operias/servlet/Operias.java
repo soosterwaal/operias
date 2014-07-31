@@ -134,11 +134,11 @@ public class Operias {
 				
 				Element classRelevantLinesAdded = null, classRelevantLinesRemoved = null;
 				
-				if (classCoverageChanges.getElementsByTagName("totalRelevantLinesAdded").getLength() > 0) {
-					classRelevantLinesAdded = (Element)classCoverageChanges.getElementsByTagName("totalRelevantLinesAdded").item(0);
+				if (classCoverageChanges.getElementsByTagName("totalCoverableLinesAdded").getLength() > 0) {
+					classRelevantLinesAdded = (Element)classCoverageChanges.getElementsByTagName("totalCoverableLinesAdded").item(0);
 				}
-				if (classCoverageChanges.getElementsByTagName("totalRelevantLinesRemoved").getLength() > 0) {
-					classRelevantLinesRemoved = (Element)classCoverageChanges.getElementsByTagName("totalRelevantLinesRemoved").item(0);
+				if (classCoverageChanges.getElementsByTagName("totalCoverableLinesRemoved").getLength() > 0) {
+					classRelevantLinesRemoved = (Element)classCoverageChanges.getElementsByTagName("totalCoverableLinesRemoved").item(0);
 				}
 				
 				String summaryMessage = "This pull request will have the following effects on the line and condition coverage of the project:\n";

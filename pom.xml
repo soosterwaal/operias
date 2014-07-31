@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.operias</groupId>
   <artifactId>operias</artifactId>
-  <version>0.5.2</version>
+  <version>1.0.0</version>
   <name>operias</name>
   <packaging>pom</packaging>
 <modules>
