@@ -6,6 +6,7 @@ import difflib.ChangeDelta;
 import difflib.DeleteDelta;
 import difflib.Delta;
 import difflib.InsertDelta;
+import operias.Main;
 import operias.OperiasStatus;
 import operias.coverage.CoberturaClass;
 import operias.coverage.CoberturaLine;
@@ -74,38 +75,42 @@ public class OperiasFile {
 		this.originalClass = null;
 		this.revisedClass = null;
 		this.sourceDiff = sourceDiff;
-		
-		if (sourceDiff.getSourceState() == SourceDiffState.NEW) {
-			this.revisedClass = cClass;
-			InsertSourceChange insertChange = new InsertSourceChange(1, 1, (InsertDelta) sourceDiff.getChanges().get(0));
+		if (sourceDiff != null) {
 			
-			for(int i = 0; i < sourceDiff.getChanges().get(0).getRevised().getLines().size(); i++) {
-				// Add offset
-				CoberturaLine line = revisedClass.tryGetLine(i + 1);
+			if (sourceDiff.getSourceState() == SourceDiffState.NEW) {
+				this.revisedClass = cClass;
+				InsertSourceChange insertChange = new InsertSourceChange(1, 1, (InsertDelta) sourceDiff.getChanges().get(0));
 				
-				if (line != null) {
-					insertChange.addRevisedCoverageLine(line.isCovered());
-				} else {
-					insertChange.addRevisedCoverageLine(null);
+				for(int i = 0; i < sourceDiff.getChanges().get(0).getRevised().getLines().size(); i++) {
+					// Add offset
+					CoberturaLine line = revisedClass.tryGetLine(i + 1);
+					
+					if (line != null) {
+						insertChange.addRevisedCoverageLine(line.isCovered());
+					} else {
+						insertChange.addRevisedCoverageLine(null);
+					}
 				}
+				changes.add(insertChange);
+			} else {
+				this.originalClass = cClass;
+				DeleteSourceChange deleteChange = new DeleteSourceChange(1, 1, (DeleteDelta) sourceDiff.getChanges().get(0));
+				
+				for(int i = 0; i < sourceDiff.getChanges().get(0).getRevised().getLines().size(); i++) {
+					// Add offset
+					CoberturaLine line = originalClass.tryGetLine(i + 1);
+					
+					if (line != null) {
+						deleteChange.addOriginalCoverageLine(line.isCovered());
+					} else {
+						deleteChange.addOriginalCoverageLine(null);
+					}
+				}
+				changes.add(deleteChange);
+				
 			}
-			changes.add(insertChange);
 		} else {
-			this.originalClass = cClass;
-			DeleteSourceChange deleteChange = new DeleteSourceChange(1, 1, (DeleteDelta) sourceDiff.getChanges().get(0));
-			
-			for(int i = 0; i < sourceDiff.getChanges().get(0).getRevised().getLines().size(); i++) {
-				// Add offset
-				CoberturaLine line = originalClass.tryGetLine(i + 1);
-				
-				if (line != null) {
-					deleteChange.addOriginalCoverageLine(line.isCovered());
-				} else {
-					deleteChange.addOriginalCoverageLine(null);
-				}
-			}
-			changes.add(deleteChange);
-			
+			Main.printLine("[Warning] No source differences were found for file: " + cClass.getFileName());
 		}
 		
 	}
