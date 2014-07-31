@@ -100,7 +100,7 @@ public class Cobertura {
 		process = builder.start();
 		
 		process.waitFor();
-		
+
 		int exitValue = process.exitValue();
 		process.destroy();
 

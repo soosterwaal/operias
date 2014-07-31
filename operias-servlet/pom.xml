@@ -22,11 +22,6 @@
       <version>${junitVersion}</version>
     </dependency>
     <dependency>
-    	<groupId>com.operias.report</groupId>
-    	<artifactId>operias-report</artifactId>
-    	<version>0.5.2</version>
-    </dependency>
-    <dependency>
     	<groupId>org.eclipse.jetty</groupId>
     	<artifactId>jetty-server</artifactId>
     	<version>8.1.15.v20140411</version>
@@ -35,6 +30,11 @@
     	<groupId>com.google.code.gson</groupId>
     	<artifactId>gson</artifactId>
     	<version>2.2.4</version>
+    </dependency>
+    <dependency>
+    	<groupId>com.operias.report</groupId>
+    	<artifactId>operias-report</artifactId>
+    	<version>1.0.0</version>
     </dependency>
   </dependencies>
   <build>
@@ -112,8 +112,16 @@
   <parent>
   	<groupId>com.operias</groupId>
   	<artifactId>operias</artifactId>
-  	<version>0.5.2</version>
+  	<version>1.0.0</version>
   </parent>
   <groupId>com.operias.servlet</groupId>
-  <version>0.3.0</version>
+  <dependencyManagement>
+  	<dependencies>
+  		<dependency>
+  			<groupId>com.operias.report</groupId>
+  			<artifactId>operias-report</artifactId>
+  			<version>1.0.0</version>
+  		</dependency>
+  	</dependencies>
+  </dependencyManagement>
 </project>

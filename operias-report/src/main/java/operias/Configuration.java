@@ -240,7 +240,7 @@ public class Configuration {
 				Git.checkout(repositoryDirectory, branchName);
 			}
 			
-			if (Configuration.getOriginalCommitID() != null) {
+			if (commitID != null) {
 				Git.checkout(repositoryDirectory, commitID);
 			}
 		}
@@ -261,7 +261,7 @@ public class Configuration {
 				Configuration.setRevisedDirectory(setUpDirectoriesThroughGit(Configuration.getRevisedRepositoryURL(), Configuration.getRevisedBranchName(), Configuration.getRevisedCommitID()));
 			}
 		} catch(Exception e) {
-
+			e.printStackTrace();
 			Main.printLine("[Error] Error setting up directory through git");
 			System.exit(OperiasStatus.INVALID_ARGUMENTS.ordinal());
 		}

@@ -15,7 +15,7 @@ public class DiffReportTest {
 	@Test
 	public void testModuleChangeName() {
 		try {
-			DiffReport diffReport = new DiffReport("src/test/resources/multiProjectModuleNameChange1", "src/test/resources/multiProjectModuleNameChange2");
+			new DiffReport("src/test/resources/multiProjectModuleNameChange1", "src/test/resources/multiProjectModuleNameChange2");
 
 	
 		} catch (Exception e) {
