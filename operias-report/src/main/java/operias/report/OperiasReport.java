@@ -171,7 +171,11 @@ public class OperiasReport {
 		for(String sourceLocation : sourceLocations) {
 			String baseLocation = sourceLocation.replaceAll("src/main/java", "src/test/java");
 			DiffDirectory testDirectory = sourceDiffReport.getDirectory(baseLocation);
-			collectChangedTests(testDirectory);
+			if (testDirectory != null) {
+				collectChangedTests(testDirectory);
+			} else {
+				Main.printLine("[Warning] No test directory found in: " + baseLocation);
+			}
 		}
 		
 		// And loop through all files to collect the changed ones
