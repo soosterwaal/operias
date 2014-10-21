@@ -12,6 +12,27 @@ import operias.git.Git;
  *
  */
 public class Configuration {
+	
+    public static final String USAGE_INSTRUCTIONS = "" +
+            "Usage: operias-report -d <directory> -od <directory> -rd <directory> [options] \n" +
+            "   or: operias-report -d <directory> -ru <url> -oc <commit-id> -obn <branch-name> -rc <commit-id> -rbn <branch-name> [options] \n" +
+            "   or: operias-report -d <directory> -oru <url> -oc <commit-id> -obn <branch-name> -rru <url> -rc <commit-id> -rbn <branch-name> [options] \n" +
+            "\n" +
+            "Parameters: \n" +
+            "       -d,--destination-directory	The directory where the generated site will be placed\n" +
+    		"       -od,--original-directory		This directory contains the original source code, unchanged. This should be the project directory containing the main pom.xml.\n" +
+            "       -rd,--revised-directory		This directory contains the revised source code, this directory will be compared to the original directory. This should be the project directory containing the main pom.xml.\n" +
+            "       -ru,--repository-url		Instead of providing a directories containing the versions, you can also give a git url. Operias will clone the repository into it's own temporary repository directory.\n" +
+            "       -oru,--original-repository-url	The git url used for the original version of the source code.\n" +
+            "       -oc,--original-commit-id		Operias will checkout to this commit to use as original source code.\n" +
+            "       -obn,--original-branch-name	Operias will checkout to this branch to use as original source code.\n" +
+            "       -rru,--revised-repository-url	The git url used for the revised version of the source code.\n" +
+            "       -rc,--revised-commit-id		Operias will checkout to this commit to use as revised source code.\n"+
+            "       -rbn,--revised-branch-name	Operias will checkout to this branch to use as revised source code.\n"+
+            "\n" +
+            "Options: \n" +
+            "       -td,--temp-directory	If Operias fails to execute, it is possible it does not have the rights to create a temporary folder, use this parameter to set your own temporary directory for Operias. Be aware, it will delete all the contents of the temporary folder when the execution has completed.\n" +
+            "       -v,--verbose		Provide this parameter enable the output of errors, warnings and info messages.\n";    
 
 	/**
 	 * Static class, so private constructor
@@ -84,6 +105,9 @@ public class Configuration {
 	public static void parseArguments(String[] args) {
 		try {
 			int i = 0;
+			if (args.length == 0) {
+				printInstructions();
+			}
 			while(i < args.length) {
 				if (args[i].equals("-d") || args[i].equals("--destination-directory")) {
 					// Destination folder
@@ -125,10 +149,12 @@ public class Configuration {
 					i++;
 				} else {
 					Main.printLine("[Error] Unknown option \"" + args[i] + "\"");
+					printInstructions();
 					System.exit(OperiasStatus.INVALID_ARGUMENTS.ordinal());
 				}
 			}
 		} catch (Exception e) {
+			printInstructions();
 			System.exit(OperiasStatus.INVALID_ARGUMENTS.ordinal());
 		}
 
@@ -397,5 +423,10 @@ public class Configuration {
 	 */
 	public static void setOutputEnabled(boolean outputEnabled) {
 		Configuration.outputEnabled = outputEnabled;
+	}
+
+
+	private static void printInstructions() {
+		System.out.println(USAGE_INSTRUCTIONS);
 	}
 }
