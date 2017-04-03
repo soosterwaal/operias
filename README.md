@@ -28,7 +28,7 @@ Parameter | Short parameter name | Description |
 --original-repository-url | -oru | The git url used for the original version of the source code.
 --original-commit-id | -oc | Operias will checkout to this commit to use as original source code. 
 --original-branch-name | -obn | Operias will checkout to this branch to use as original source code. 
---revised-repository-url | -oru | The git url used for the revised version of the source code.
+--revised-repository-url | -rru | The git url used for the revised version of the source code.
 --revised-commit-id | -rc | Operias will checkout to this commit to use as revised source code.
 --revised-branch-name | -rbn | Operias will checkout to this branch to use as revised source code.
 --temp-directory | -td | If Operias fails to execute, it is possible it does not have the rights to create a temporary folder, use this parameter to set your own temporary directory for Operias. Be aware, it will delete all the contents of the temporary folder when the execution has completed
